@@ -1,9 +1,9 @@
 # React + TypeScript + Vite
 
-node 18.13
+Sử dụng yarn 
 
-npm install 
+yarn install
 
-npm run dev
+yarn dev
 
 Vào http://localhost:5173/login
