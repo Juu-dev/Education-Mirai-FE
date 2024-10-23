@@ -11,6 +11,7 @@ import {
     TEACHER,
 } from "../../constants/mocks/class";
 import StudentProfileModal from "../../components/admin/modal/StudentProfileModal";
+import AttendanceModal from "../../components/admin/modal/AttendanceModal";
 
 // Table columns
 const columns = [
@@ -55,6 +56,8 @@ const AdminClassPage: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [isProfileModalVisible, setIsProfileModalVisible] =
         useState<boolean>(false);
+    const [isAttendanceModalVisible, setIsAttendanceModalVisible] =
+        useState<boolean>(false);
     const [selectedStudent, setSelectedStudent] =
         useState<AssignmentDetails | null>(null); // State for selected student
     const studentData = generateStudentData(50);
@@ -81,6 +84,10 @@ const AdminClassPage: React.FC = () => {
         setSelectedStudent(null); // Reset the selected student
     };
 
+    const showAttendanceModal = () => setIsAttendanceModalVisible(true);
+    const handleCancelAttendanceModal = () =>
+        setIsAttendanceModalVisible(false);
+
     return (
         <div className="flex flex-col min-h-screen">
             {/* Profile Section */}
@@ -102,7 +109,10 @@ const AdminClassPage: React.FC = () => {
             </Card>
 
             {/* Footer Buttons Section */}
-            <FooterButtons onShowModal={showModal} />
+            <FooterButtons
+                onShowModal={showModal}
+                onShowAttendanceModal={showAttendanceModal}
+            />
 
             {/* Assignment Modal */}
             <AdminAssignmentModal
@@ -116,6 +126,12 @@ const AdminClassPage: React.FC = () => {
                 visible={isProfileModalVisible}
                 onCancel={handleCancelProfileModal}
                 studentData={selectedStudent}
+            />
+
+            <AttendanceModal
+                visible={isAttendanceModalVisible}
+                onCancel={handleCancelAttendanceModal}
+                studentData={studentData} // Truyền dữ liệu học sinh vào modal
             />
         </div>
     );
@@ -150,15 +166,18 @@ const SearchSection: React.FC = () => (
     </Card>
 );
 
-const FooterButtons: React.FC<{ onShowModal: () => void }> = ({
-    onShowModal,
-}) => (
+const FooterButtons: React.FC<{
+    onShowModal: () => void;
+    onShowAttendanceModal: () => void;
+}> = ({ onShowModal, onShowAttendanceModal }) => (
     <div className="mt-auto bg-white p-4 flex justify-end space-x-4">
         <Button type="primary">Xem lịch báo giảng</Button>
         <Button type="primary" onClick={onShowModal}>
             Giao bài tập
         </Button>
-        <Button type="primary">Điểm danh</Button>
+        <Button type="primary" onClick={onShowAttendanceModal}>
+            Điểm danh
+        </Button>
     </div>
 );
 
