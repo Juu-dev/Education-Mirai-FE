@@ -24,22 +24,23 @@ const AdminLayout = () => {
     ];
 
     // Dynamic sidebar items based on role
-    const sidebarItems = role === Role.Librarian
-        ? [
-            { key: "/librarian/dashboard", label: "Dashboard" },
-            { key: "/librarian/library", label: "Thư viện" }, // Changed for librarian
-            { key: "/librarian/document", label: "Tài liệu" },
-            { key: "/librarian/books", label: "Thêm sách" },
-            { key: "/librarian/reports", label: "Gửi yêu cầu" },
-            { key: "/librarian/settings", label: "Tài khoản" },
-        ]
-        : [
-            { key: "/admin/dashboard", label: "Dashboard" },
-            { key: "/admin/class", label: "Lớp" }, // For admin or other roles
-            { key: "/admin/document", label: "Tài liệu" },
-            { key: "/admin/reports", label: "Gửi yêu cầu" },
-            { key: "/admin/settings", label: "Tài khoản" },
-        ];
+    const sidebarItems =
+        role === Role.Librarian
+            ? [
+                  { key: "/librarian/dashboard", label: "Dashboard" },
+                  { key: "/librarian/library", label: "Thư viện" }, // Changed for librarian
+                  { key: "/librarian/document", label: "Tài liệu" },
+                  { key: "/librarian/books", label: "Thêm sách" },
+                  { key: "/librarian/reports", label: "Gửi yêu cầu" },
+                  { key: "/librarian/settings", label: "Tài khoản" },
+              ]
+            : [
+                  { key: "/admin/dashboard", label: "Dashboard" },
+                  { key: "/admin/class", label: "Lớp" }, // For admin or other roles
+                  { key: "/admin/document", label: "Tài liệu" },
+                  { key: "/admin/reports", label: "Gửi yêu cầu" },
+                  { key: "/admin/settings", label: "Tài khoản" },
+              ];
 
     const isActive = (path: string) => location.pathname === path; // Check if current path is active
 
@@ -54,19 +55,19 @@ const AdminLayout = () => {
                     theme="dark"
                     mode="inline"
                     defaultSelectedKeys={[location.pathname]}
-                    className="flex-grow"
-                >
+                    className="flex-grow">
                     {sidebarItems.map((item) => (
                         <Menu.Item
                             key={item.key}
-                            className={isActive(item.key) ? "bg-gray-700" : ""}
-                        >
+                            className={isActive(item.key) ? "bg-gray-700" : ""}>
                             <a href={item.key}>{item.label}</a>
                         </Menu.Item>
                     ))}
                 </Menu>
                 <div className="flex flex-col items-center py-6">
-                    <BellOutlined style={{ fontSize: "1.5rem", color: "#ffffff" }} />
+                    <BellOutlined
+                        style={{ fontSize: "1.5rem", color: "#ffffff" }}
+                    />
                     <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
                         <div className="flex items-center cursor-pointer mt-4">
                             <Avatar size={32} icon={<UserOutlined />} />

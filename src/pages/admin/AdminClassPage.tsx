@@ -3,22 +3,13 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import AdminAssignmentModal from "../../components/modal/AdminAssignmentModal";
 import { AssignmentDetails } from "../../components/assignment/interface/assginment-interface";
-
-// Mock data for students
-const studentData = Array.from({ length: 50 }, (_, index) => ({
-    id: index + 1,
-    name: "Nguyễn Bình An",
-    birthDate: "09/03/2004",
-    parentName: "Bình Tống",
-    phone: "0914549798",
-}));
-
-// Mock data for student groups
-const studentGroups = [
-    { id: "1", name: "Group A" },
-    { id: "2", name: "Group B" },
-    { id: "3", name: "Group C" },
-];
+import PageTitle from "../../components/common/SectionTitle";
+import { Typography } from "antd";
+import {
+    generateStudentData,
+    STUDENT_GROUPS,
+    TEACHER,
+} from "../../constants/mocks/class";
 
 // Table columns
 const columns = [
@@ -59,84 +50,139 @@ const columns = [
     },
 ];
 
-const AdminClassPage = () => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
+const AdminClassPage: React.FC = () => {
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const studentData = generateStudentData(50);
 
     // Function to show the modal
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
+    const showModal = () => setIsModalVisible(true);
 
     // Function to handle closing the modal
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
+    const handleCancel = () => setIsModalVisible(false);
 
     // Function to handle form submission from modal
     const handleAssign = (values: AssignmentDetails) => {
         console.log("Assignment Details:", values);
-        // Here you can call an API or perform any action to create the assignment
         setIsModalVisible(false);
     };
 
     return (
         <div className="flex flex-col min-h-screen">
             {/* Profile Section */}
-            <Card className="mb-4">
-                <div className="flex items-center space-x-4">
-                    <Avatar size={64} src="https://i.pravatar.cc/150?img=4" />
-                    <div className="flex-grow">
-                        <h2 className="text-xl font-semibold">Đặng Tuấn Linh</h2>
-                        <div className="grid grid-cols-2 gap-2 mt-2">
-                            <div className="text-gray-500">Lớp chủ nhiệm:</div>
-                            <div className="text-gray-900">5A</div>
-                            <div className="text-gray-500">Số lượng học sinh:</div>
-                            <div className="text-gray-900">30</div>
-                            <div className="text-gray-500">Mã số:</div>
-                            <div className="text-gray-900">20120122</div>
-                            <div className="text-gray-500">Ngày sinh:</div>
-                            <div className="text-gray-900">14/10/2012</div>
-                            <div className="text-gray-500">Email:</div>
-                            <div className="text-gray-900">nga4@gmail.com</div>
-                        </div>
-                    </div>
-                </div>
-            </Card>
-
+            <ProfileSection teacher={TEACHER} />
             {/* Search Section */}
-            <Card className="mb-4">
-                <div className="grid grid-cols-3 gap-4">
-                    <Input placeholder="Tìm kiếm theo ID" />
-                    <Input placeholder="Tìm kiếm theo tên" />
-                    <Input placeholder="Tìm kiếm theo sdt" />
-                    <Button type="primary">Tìm kiếm</Button>
-                </div>
-            </Card>
+            <SearchSection />
 
             {/* Student Table Section */}
             <Card className="flex-grow mb-4 overflow-auto">
-                <Table 
-                    columns={columns} 
-                    dataSource={studentData} 
-                    pagination={{ pageSize: 10 }} 
+                <PageTitle title="Danh sách học sinh" className="mb-3" />
+                <Table
+                    columns={columns}
+                    dataSource={studentData}
+                    pagination={{ pageSize: 10 }}
                 />
             </Card>
 
-            {/* Footer Buttons Section (sticky to the bottom of the page) */}
-            <div className="mt-auto bg-white p-4 flex justify-end space-x-4">
-                <Button type="primary">Xem lịch báo giảng</Button>
-                <Button type="primary" onClick={showModal}>Giao bài tập</Button>
-                <Button type="primary">Điểm danh</Button>
-            </div>
+            {/* Footer Buttons Section */}
+            <FooterButtons onShowModal={showModal} />
 
             {/* Assignment Modal */}
             <AdminAssignmentModal
                 visible={isModalVisible}
                 onCancel={handleCancel}
                 onAssign={handleAssign}
-                groups={studentGroups}  // Pass the group data here
+                groups={STUDENT_GROUPS}
             />
         </div>
+    );
+};
+
+const SearchSection: React.FC = () => (
+    <Card className="mb-4 shadow-md">
+        <PageTitle title="Lớp" className="mb-3" />
+
+        <div className="flex items-center space-x-4">
+            <Input
+                placeholder="Tìm kiếm theo ID"
+                className="flex-1 border rounded-md"
+                allowClear
+            />
+            <Input
+                placeholder="Tìm kiếm theo tên"
+                className="flex-1 border rounded-md"
+                allowClear
+            />
+            <Input
+                placeholder="Tìm kiếm theo số điện thoại"
+                className="flex-1 border rounded-md"
+                allowClear
+            />
+            <Button type="primary" className="h-10 w-32">
+                {" "}
+                {/* Thay đổi kích thước nút ở đây */}
+                Tìm kiếm
+            </Button>
+        </div>
+    </Card>
+);
+
+const FooterButtons: React.FC<{ onShowModal: () => void }> = ({
+    onShowModal,
+}) => (
+    <div className="mt-auto bg-white p-4 flex justify-end space-x-4">
+        <Button type="primary">Xem lịch báo giảng</Button>
+        <Button type="primary" onClick={onShowModal}>
+            Giao bài tập
+        </Button>
+        <Button type="primary">Điểm danh</Button>
+    </div>
+);
+
+const { Title, Text } = Typography;
+const ProfileSection: React.FC<{ teacher: any }> = ({ teacher }) => {
+    return (
+        <Card className="mb-4">
+            <div className="flex items-center space-x-4">
+                <Avatar
+                    size={64}
+                    src="https://i.pravatar.cc/150?img=4"
+                    style={{ marginBottom: "auto" }}
+                />
+                <div className="flex-grow">
+                    <Title level={3} className="text-gray-800 mb-0">
+                        {teacher.name}
+                    </Title>
+                    <div className="grid grid-cols-5 gap-2 mt-2">
+                        <Text strong className="col-span-1">
+                            Lớp chủ nhiệm:
+                        </Text>
+                        <Text className="col-span-4">{teacher.class}</Text>
+
+                        <Text strong className="col-span-1">
+                            Số lượng học sinh:
+                        </Text>
+                        <Text className="col-span-4">
+                            {teacher.studentCount}
+                        </Text>
+
+                        <Text strong className="col-span-1">
+                            Mã số:
+                        </Text>
+                        <Text className="col-span-4">{teacher.code}</Text>
+
+                        <Text strong className="col-span-1">
+                            Ngày sinh:
+                        </Text>
+                        <Text className="col-span-4">{teacher.birthDate}</Text>
+
+                        <Text strong className="col-span-1">
+                            Email:
+                        </Text>
+                        <Text className="col-span-4">{teacher.email}</Text>
+                    </div>
+                </div>
+            </div>
+        </Card>
     );
 };
 
