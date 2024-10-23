@@ -25,3 +25,24 @@ export const TEACHER = {
     birthDate: "14/10/2012",
     email: "nga4@gmail.com",
 };
+
+export const ASSIGNMENT_DATA = [
+    // Dữ liệu ví dụ cho bài tập
+    {
+        id: 1,
+        name: "Bài tập 1",
+        assignedDate: "2024-10-01",
+        questionCount: 10,
+        subject: "Toán",
+        type: "Thực hành",
+    },
+    {
+        id: 2,
+        name: "Bài tập 2",
+        assignedDate: "2024-10-02",
+        questionCount: 5,
+        subject: "Văn",
+        type: "Kiểm tra",
+    },
+    // Thêm dữ liệu khác nếu cần
+];

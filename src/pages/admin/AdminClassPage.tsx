@@ -6,12 +6,14 @@ import { AssignmentDetails } from "../../components/assignment/interface/assginm
 import PageTitle from "../../components/common/SectionTitle";
 import { Typography } from "antd";
 import {
+    ASSIGNMENT_DATA,
     generateStudentData,
     STUDENT_GROUPS,
     TEACHER,
 } from "../../constants/mocks/class";
 import StudentProfileModal from "../../components/admin/modal/StudentProfileModal";
 import AttendanceModal from "../../components/admin/modal/AttendanceModal";
+import AssignmentModal from "../../components/admin/modal/AssignmentModal";
 
 // Table columns
 const columns = [
@@ -58,6 +60,8 @@ const AdminClassPage: React.FC = () => {
         useState<boolean>(false);
     const [isAttendanceModalVisible, setIsAttendanceModalVisible] =
         useState<boolean>(false);
+    const [isAssignmentModalVisible, setIsAssignmentModalVisible] =
+        useState<boolean>(false);
     const [selectedStudent, setSelectedStudent] =
         useState<AssignmentDetails | null>(null); // State for selected student
     const studentData = generateStudentData(50);
@@ -87,6 +91,10 @@ const AdminClassPage: React.FC = () => {
     const showAttendanceModal = () => setIsAttendanceModalVisible(true);
     const handleCancelAttendanceModal = () =>
         setIsAttendanceModalVisible(false);
+
+    const showAssignmentModal = () => setIsAssignmentModalVisible(true);
+    const handleCancelAssignmentModal = () =>
+        setIsAssignmentModalVisible(false);
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -132,6 +140,12 @@ const AdminClassPage: React.FC = () => {
                 visible={isAttendanceModalVisible}
                 onCancel={handleCancelAttendanceModal}
                 studentData={studentData} // Truyền dữ liệu học sinh vào modal
+            />
+
+            <AssignmentModal
+                visible={isAssignmentModalVisible}
+                onCancel={handleCancelAssignmentModal}
+                assignmentData={ASSIGNMENT_DATA}
             />
         </div>
     );

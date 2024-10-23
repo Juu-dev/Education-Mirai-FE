@@ -37,7 +37,7 @@ const AttendanceModal: React.FC<AttendanceModalProps> = ({
 
     return (
         <Modal
-            title="Điểm danh"
+            title="Danh sách học sinh"
             visible={visible}
             onCancel={onCancel}
             footer={[
