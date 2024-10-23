@@ -10,6 +10,7 @@ import {
     STUDENT_GROUPS,
     TEACHER,
 } from "../../constants/mocks/class";
+import StudentProfileModal from "../../components/admin/modal/StudentProfileModal";
 
 // Table columns
 const columns = [
@@ -52,6 +53,10 @@ const columns = [
 
 const AdminClassPage: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [isProfileModalVisible, setIsProfileModalVisible] =
+        useState<boolean>(false);
+    const [selectedStudent, setSelectedStudent] =
+        useState<AssignmentDetails | null>(null); // State for selected student
     const studentData = generateStudentData(50);
 
     // Function to show the modal
@@ -64,6 +69,16 @@ const AdminClassPage: React.FC = () => {
     const handleAssign = (values: AssignmentDetails) => {
         console.log("Assignment Details:", values);
         setIsModalVisible(false);
+    };
+
+    const showProfileModal = (student: AssignmentDetails) => {
+        setSelectedStudent(student);
+        setIsProfileModalVisible(true);
+    };
+
+    const handleCancelProfileModal = () => {
+        setIsProfileModalVisible(false);
+        setSelectedStudent(null); // Reset the selected student
     };
 
     return (
@@ -80,6 +95,9 @@ const AdminClassPage: React.FC = () => {
                     columns={columns}
                     dataSource={studentData}
                     pagination={{ pageSize: 10 }}
+                    onRow={(record) => ({
+                        onClick: () => showProfileModal(record),
+                    })}
                 />
             </Card>
 
@@ -92,6 +110,12 @@ const AdminClassPage: React.FC = () => {
                 onCancel={handleCancel}
                 onAssign={handleAssign}
                 groups={STUDENT_GROUPS}
+            />
+
+            <StudentProfileModal
+                visible={isProfileModalVisible}
+                onCancel={handleCancelProfileModal}
+                studentData={selectedStudent}
             />
         </div>
     );
