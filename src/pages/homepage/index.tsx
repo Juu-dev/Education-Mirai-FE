@@ -9,7 +9,7 @@ const HomePage = () => {
     navigate('/signup')
   };
     return (
-      <div className="flex min-h-screen w-full bg-gray-100">
+      <div className="flex min-h-screen w-screen bg-gray-100">
         <div className="flex flex-col flex-grow">
         {/* Header  */}
         <header className="bg-white shadow p-4 items-center">
