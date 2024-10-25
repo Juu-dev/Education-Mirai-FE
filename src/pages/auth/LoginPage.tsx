@@ -59,7 +59,7 @@ const Login: React.FC = () => {
   // //   }, [navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 w-screen ">
       <div className="bg-white p-8 rounded shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-6 text-center uppercase">Login to your acccount</h2>
         <div className="mb-4">
@@ -69,7 +69,7 @@ const Login: React.FC = () => {
             onChange={(e) => setCurrentRole(e.target.value as Role)}
             className="w-full p-2 border border-gray-300 rounded"
           >
-            <option value="" disabled>Choose a role</option>
+            <option value="">Choose a role</option>
             <option value={Role.Admin}>Admin</option>
             <option value={Role.User}>User</option>
             <option value={Role.Librarian}>Librarian</option>

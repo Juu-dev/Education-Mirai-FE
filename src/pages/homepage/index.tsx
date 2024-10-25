@@ -49,7 +49,9 @@ const HomePage = () => {
           <p className="text-lg mb-3">
             Đọc sách mọi lúc, mọi nơi.
           </p>
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-md transition duration-300 ease-in-out hover:bg-white hover:text-blue-700 hover:border hover:border-blue-700">Bắt đầu khám phá</button>
+                    <button onClick={handleLoginClick} className="bg-blue-500 text-white px-6 py-3 rounded-md transition duration-300 ease-in-out hover:bg-white hover:text-blue-700 hover:border hover:border-blue-700">
+                        Bắt đầu khám phá
+                    </button>
         </main>
   
          {/* Footer  */}
