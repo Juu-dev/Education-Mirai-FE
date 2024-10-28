@@ -22,7 +22,7 @@ import LibraryStatisticalPage from './pages/librarian/LibraryStatisticalPage';
 import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
 import { LibrarianAddBookPage } from './pages/librarian/LibrarianAddBookPage';
 import LoginPage from './pages/auth/LoginPage';
-
+import SignUpPage from './pages/auth/SignUpPage'
 
 const App: React.FC = () => {
 	return (
@@ -31,6 +31,7 @@ const App: React.FC = () => {
 				<Route path="/" element={<HomePage />} />
 				<Route path="/unauthorized" element={<Unauthorized />} />
 				<Route path="/login" element={<LoginPage />} />
+				<Route path="/signup" element={<SignUpPage />} />
 				{/* Admin Routes */}
 				<Route element={<ProtectedRoute allowedRole={Role.Admin} />}>
 					<Route element={<AdminLayout />}>
