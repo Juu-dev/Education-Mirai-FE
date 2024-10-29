@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Table, Button, Space } from "antd";
 import { DownloadOutlined, ShareAltOutlined } from "@ant-design/icons";
-import { DATA_SOURCE } from "../../constants/mocks/document";
 import useFetchApi from "../../hooks/useFetchApi";
+import { formatDate } from "../../helpers/date";
 
 interface Props {
     handleShareClick: () => void;
@@ -52,7 +52,7 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick }) => {
         key: e.documentId,
         id: e.documentId,
         name: e.documentDescription,
-        createdAt: e.createdAt,
+        createdAt: formatDate(e.createdAt),
         owner: e.teacherEntity?.name,
 
     }))
