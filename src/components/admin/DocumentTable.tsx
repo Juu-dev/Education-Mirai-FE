@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table, Button, Space } from "antd";
 import { DownloadOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { DATA_SOURCE } from "../../constants/mocks/document";
+import useFetchApi from "../../hooks/useFetchApi";
 
 interface Props {
     handleShareClick: () => void;
@@ -44,8 +45,20 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick }) => {
         },
     ];
 
+    // const [data, setData] = useState();
+    const {data, count, pagination} = useFetchApi({url: '/documents', auth: true})
+
+    const parseData = (data: any) => data.map((e: any) => ({
+        key: e.documentId,
+        id: e.documentId,
+        name: e.documentDescription,
+        createdAt: e.createdAt,
+        owner: e.teacherEntity?.name,
+
+    }))
+
     return (
-        <Table dataSource={DATA_SOURCE} columns={columns} pagination={false} />
+        <Table dataSource={parseData(data)} columns={columns} pagination={false} />
     );
 };
 

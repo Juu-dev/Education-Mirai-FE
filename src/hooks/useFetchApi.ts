@@ -11,6 +11,7 @@ interface UseFetchApiProps<T> {
     successCallback?: (data: T[]) => void;
     method?: "GET" | "POST" | "PUT" | "DELETE";
     postData?: any;
+    auth?: boolean;
 }
 
 interface FetchApiParams {
@@ -37,6 +38,7 @@ export default function useFetchApi<T>({
     successCallback = () => {},
     method = "GET",
     postData = {},
+    auth = true,
 }: UseFetchApiProps<T>) {
     const [loading, setLoading] = useState(initLoad);
     const [fetched, setFetched] = useState(false);
@@ -65,7 +67,7 @@ export default function useFetchApi<T>({
                 }),
             };
 
-            const resp = await api(path + query, options);
+            const resp = await api(path + query, options, auth);
 
             if (resp.hasOwnProperty("count")) {
                 setCount(resp.count);
