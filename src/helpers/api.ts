@@ -2,11 +2,11 @@ import axios from "axios";
 
 const client = axios.create({ timeout: 60000 });
 
-const baseUrl = 'http://localhost:8080/api'
+const baseUrl = 'http://localhost:9001/api/v1'
 
 // TODO: Replace with logic get authentication token
 function getAuthToken() {
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyaGV2MiIsInVzZXJJZCI6IjQ1ZDE5ZmI5LTNkYzktNGZkYi05ZjhjLTAwMDFlOWViYzY2ZSIsImlhdCI6MTczMDIxMDIwNSwiZXhwIjoxNzMwMjk2NjA1fQ.17kAzowJf8ftwoZ38uJEjHjqPZjZSlE5kDyZXo_ntRU'
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNhNjM0MzIzLThlZDAtNGQ0OS04ZGEyLTVhNjcyZWNjNTE3MiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3MzA2NDk5OTcsImV4cCI6MTczMDY1MDg5N30.LEDuOyQF8nLLKAPlYfF4mMzizq6khuoxlGztaoES2Vw'
 
     return token;
 
@@ -38,7 +38,7 @@ function createApi() {
         }
 
         console.log('options: ', options);
-        
+
 
         const response = await client.request({
             url: baseUrl + uri,

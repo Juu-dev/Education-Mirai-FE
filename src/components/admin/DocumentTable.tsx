@@ -46,14 +46,14 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick }) => {
     ];
 
     // const [data, setData] = useState();
-    const {data, count, pagination} = useFetchApi({url: '/documents', auth: true})
+    const {data, count, pagination} = useFetchApi({url: '/documents/pagination', auth: true})
 
     const parseData = (data: any) => data.map((e: any) => ({
-        key: e.documentId,
-        id: e.documentId,
-        name: e.documentDescription,
+        key: e.id,
+        id: e.id,
+        name: e.description,
         createdAt: formatDate(e.createdAt),
-        owner: e.teacherEntity?.name,
+        owner: e.teacherId
 
     }))
 

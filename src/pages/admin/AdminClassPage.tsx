@@ -14,6 +14,8 @@ import {
 import StudentProfileModal from "../../components/admin/modal/StudentProfileModal";
 import AttendanceModal from "../../components/admin/modal/AttendanceModal";
 import AssignmentModal from "../../components/admin/modal/AssignmentModal";
+import useFetchApi from "../../hooks/useFetchApi.ts";
+import {formatDate} from "../../helpers/date.ts";
 
 // Table columns
 const columns = [
@@ -64,7 +66,20 @@ const AdminClassPage: React.FC = () => {
         useState<boolean>(false);
     const [selectedStudent, setSelectedStudent] =
         useState<AssignmentDetails | null>(null); // State for selected student
-    const studentData = generateStudentData(50);
+    // const studentData = generateStudentData(50);
+    const {data, count, pagination} = useFetchApi({url: '/students/pagination', auth: true})
+
+    const parseData = (data: any) => data.map((e: any) => ({
+        key: e.id,
+        id: e.id,
+        userId: e.userId,
+        classId: e.classId,
+        metadataUrl: e.metadataUrl,
+        name: e.name,
+        birthDate: formatDate(e.birthDate),
+        parentName: e.parentName,
+        level: e.level,
+    }))
 
     // Function to show the modal
     const showModal = () => setIsModalVisible(true);
@@ -108,7 +123,7 @@ const AdminClassPage: React.FC = () => {
                 <PageTitle title="Danh sách học sinh" className="mb-3" />
                 <Table
                     columns={columns}
-                    dataSource={studentData}
+                    dataSource={parseData(data)}
                     pagination={{ pageSize: 10 }}
                     onRow={(record) => ({
                         onClick: () => showProfileModal(record),
@@ -139,7 +154,7 @@ const AdminClassPage: React.FC = () => {
             <AttendanceModal
                 visible={isAttendanceModalVisible}
                 onCancel={handleCancelAttendanceModal}
-                studentData={studentData} // Truyền dữ liệu học sinh vào modal
+                studentData={parseData(data)} // Truyền dữ liệu học sinh vào modal
             />
 
             <AssignmentModal

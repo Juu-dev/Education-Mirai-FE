@@ -67,7 +67,8 @@ export default function useFetchApi<T>({
                 }),
             };
 
-            const resp = await api(path + query, options, auth);
+            const respApi = await api(path + query, options, auth);
+            const resp = respApi.result
 
             if (resp.hasOwnProperty("count")) {
                 setCount(resp.count);
