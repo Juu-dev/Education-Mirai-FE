@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '../../context/RoleContext';
 import { Role } from '../../constants/roles/routes';
+import useAuth from "../../hooks/useAuth.ts";
 
 const Login: React.FC = () => {
   const { setRole } = useRole();
@@ -12,12 +13,14 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [savePassword, setSavePassword] = useState<boolean>(false);
 
-  const validEmail = (email: string): boolean => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
+  const {login} = useAuth()
 
-  const handleLogin = (e: React.FormEvent) => {
+  // const validEmail = (email: string): boolean => {
+  //   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   return re.test(email);
+  // };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password || !currentRole) {
@@ -25,35 +28,37 @@ const Login: React.FC = () => {
       return;
     }
 
-    if (!validEmail(email)) {
-      setError('Email không hợp lệ.');
-      return;
-    }
+    // if (!validEmail(email)) {
+    //   setError('Email không hợp lệ.');
+    //   return;
+    // }
 
-    if (password.length < 6) {
-      setError('Mật khẩu phải có ít nhất 6 ký tự.');
-      return;
-    }
+    // if (password.length < 6) {
+    //   setError('Mật khẩu phải có ít nhất 6 ký tự.');
+    //   return;
+    // }
 
-    setRole(currentRole);
-    console.log('Role:', currentRole);
-    if (currentRole === Role.Admin) {
-      navigate('/admin/dashboard');
-    } else if (currentRole === Role.User) {
-      navigate('/user/books');
-    } else if (currentRole === Role.Librarian) {
-      navigate('/librarian/dashboard');
-    }
+    await login({username: email, password})
 
     setRole(currentRole);
-    console.log('Role:', currentRole);
-    if (savePassword) {
-      localStorage.setItem('email', email);
-      localStorage.setItem('password', password);
-    } else {
-      localStorage.removeItem('email');
-      localStorage.removeItem('password');
-    }
+    // console.log('Role:', currentRole);
+    // if (currentRole === Role.Admin) {
+    //   navigate('/admin/dashboard');
+    // } else if (currentRole === Role.User) {
+    //   navigate('/user/books');
+    // } else if (currentRole === Role.Librarian) {
+    //   navigate('/librarian/dashboard');
+    // }
+    //
+    setRole(currentRole);
+    // console.log('Role:', currentRole);
+    // if (savePassword) {
+    //   localStorage.setItem('email', email);
+    //   localStorage.setItem('password', password);
+    // } else {
+    //   localStorage.removeItem('email');
+    //   localStorage.removeItem('password');
+    // }
   };
 
 
@@ -107,7 +112,6 @@ const Login: React.FC = () => {
             <div className="mb-3">
               <label htmlFor="email" className="block text-gray-700 mb-1">Tên đăng nhập</label>
               <input
-                type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

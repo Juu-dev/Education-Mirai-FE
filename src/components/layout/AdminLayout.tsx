@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Link } from "react-router-dom";
 import logo from "../../assets/logo/san-sang.png";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu } from "antd";
@@ -6,47 +6,47 @@ import { useRole } from "../../context/RoleContext";
 import { Role } from "../../constants/roles/routes";
 
 const AdminLayout = () => {
-    const { role } = useRole(); // Get the role from the context
-    const location = useLocation(); // Get the current location
+    const { role } = useRole(); // Lấy vai trò từ context
+    const location = useLocation(); // Lấy đường dẫn hiện tại
 
-    // Menu for the profile dropdown
+    // Menu thả xuống cho hồ sơ
     const menuItems = [
-        { key: "profile", label: <a href="/profile">Profile</a> },
-        { key: "settings", label: <a href="/settings">Settings</a> },
+        { key: "profile", label: <Link to="/profile">Hồ sơ</Link> },
+        { key: "settings", label: <Link to="/settings">Cài đặt</Link> },
         {
             key: "logout",
             label: (
-                <a href="/login" className="text-red-500">
-                    Logout
-                </a>
+                <Link to="/login" className="text-red-500">
+                    Đăng xuất
+                </Link>
             ),
         },
     ];
 
-    // Dynamic sidebar items based on role
+    // Các mục sidebar động dựa trên vai trò
     const sidebarItems =
         role === Role.Librarian
             ? [
-                  { key: "/librarian/dashboard", label: "Dashboard" },
-                  { key: "/librarian/library", label: "Thư viện" }, // Changed for librarian
-                  { key: "/librarian/document", label: "Tài liệu" },
-                  { key: "/librarian/books", label: "Thêm sách" },
-                  { key: "/librarian/reports", label: "Gửi yêu cầu" },
-                  { key: "/librarian/settings", label: "Tài khoản" },
-              ]
+                { key: "/librarian/dashboard", label: "Bảng điều khiển" },
+                { key: "/librarian/library", label: "Thư viện" },
+                { key: "/librarian/document", label: "Tài liệu" },
+                { key: "/librarian/books", label: "Thêm sách" },
+                { key: "/librarian/reports", label: "Gửi yêu cầu" },
+                { key: "/librarian/settings", label: "Tài khoản" },
+            ]
             : [
-                  { key: "/admin/dashboard", label: "Dashboard" },
-                  { key: "/admin/class", label: "Lớp" }, // For admin or other roles
-                  { key: "/admin/document", label: "Tài liệu" },
-                  { key: "/admin/reports", label: "Gửi yêu cầu" },
-                  { key: "/admin/settings", label: "Tài khoản" },
-              ];
+                { key: "/admin/dashboard", label: "Bảng điều khiển" },
+                { key: "/admin/class", label: "Lớp" },
+                { key: "/admin/document", label: "Tài liệu" },
+                { key: "/admin/reports", label: "Gửi yêu cầu" },
+                { key: "/admin/settings", label: "Tài khoản" },
+            ];
 
-    const isActive = (path: string) => location.pathname === path; // Check if current path is active
+    const isActive = (path: string) => location.pathname === path; // Kiểm tra xem đường dẫn hiện tại có khớp không
 
     return (
         <div className="flex min-h-screen w-screen">
-            {/* Sidebar */}
+            {/* Thanh bên */}
             <aside className="bg-gray-800 text-white w-64 min-h-screen flex flex-col">
                 <div className="p-4 flex items-center justify-center">
                     <img src={logo} alt="logo" className="h-10" />
@@ -60,7 +60,7 @@ const AdminLayout = () => {
                         <Menu.Item
                             key={item.key}
                             className={isActive(item.key) ? "bg-gray-700" : ""}>
-                            <a href={item.key}>{item.label}</a>
+                            <Link to={item.key}>{item.label}</Link>
                         </Menu.Item>
                     ))}
                 </Menu>
@@ -68,30 +68,22 @@ const AdminLayout = () => {
                     <BellOutlined
                         style={{ fontSize: "1.5rem", color: "#ffffff" }}
                     />
-                    <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
-                        <div className="flex items-center cursor-pointer mt-4">
-                            <Avatar size={32} icon={<UserOutlined />} />
-                            <div className="px-2">
-                                <div className="ml-2 text-white">John Doe</div>
-                                <div className="ml-2 text-blue-400">
-                                    {role === Role.Admin
-                                        ? "Administrator"
-                                        : role === Role.Librarian
-                                        ? "Librarian"
-                                        : "User"}
-                                </div>
-                            </div>
-                        </div>
+                    <Dropdown
+                        overlay={<Menu items={menuItems} />}
+                        trigger={['click']}
+                    >
+                        <Avatar
+                            size="large"
+                            icon={<UserOutlined />}
+                            style={{ backgroundColor: '#87d068', cursor: 'pointer' }}
+                        />
                     </Dropdown>
                 </div>
             </aside>
-
-            {/* Main Content */}
-            <div className="flex-grow p-6 bg-gray-100">
-                <div className="bg-white p-6 rounded-lg shadow">
-                    <Outlet />
-                </div>
-            </div>
+            {/* Nội dung chính */}
+            <main className="flex-grow bg-gray-100 p-4">
+                <Outlet />
+            </main>
         </div>
     );
 };

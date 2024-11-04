@@ -1,17 +1,9 @@
 import axios from "axios";
+import tokenFactory from "./token";
 
 const client = axios.create({ timeout: 60000 });
 
 const baseUrl = 'http://localhost:9001/api/v1'
-
-// TODO: Replace with logic get authentication token
-function getAuthToken() {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNhNjM0MzIzLThlZDAtNGQ0OS04ZGEyLTVhNjcyZWNjNTE3MiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3MzA2NDk5OTcsImV4cCI6MTczMDY1MDg5N30.LEDuOyQF8nLLKAPlYfF4mMzizq6khuoxlGztaoES2Vw'
-
-    return token;
-
-    // return localStorage.getItem("token");
-}
 
 function createApi() {
     return async (
@@ -30,7 +22,7 @@ function createApi() {
         }
 
         if (auth) {
-            const token = getAuthToken();
+            const token = tokenFactory.getAccessToken();
             if (token) {
                 options.headers = options.headers || {};
                 options.headers["Authorization"] = `Bearer ${token}`;
