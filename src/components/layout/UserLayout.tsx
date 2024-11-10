@@ -60,7 +60,7 @@ const UserLayout: React.FC = () => {
                 <div className="bg-white shadow p-4 flex justify-between items-center">
                     <div>
                         <img src={logo} alt="logo" className="h-8" />
-                    </div>     
+                    </div>
                     <nav className="space-x-6">
                         <a
                             href="/user/books"
@@ -133,9 +133,11 @@ const UserLayout: React.FC = () => {
                                 <div className="px-2">
                                     <div className="ml-2 text-gray-700">John Doe</div>
                                     <div className="ml-2 text-blue-700">
-                                        {role === Role.Admin
+                                        {role === Role.Teacher
                                             ? "Giáo viên"
-                                            : role === Role.User
+                                            : role === Role.Principal
+                                            ? "Hiệu trưởng"
+                                            : role === Role.Student
                                             ? "Học sinh"
                                             : "Thủ thư"}
                                     </div>

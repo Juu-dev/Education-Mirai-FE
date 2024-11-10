@@ -1,5 +1,6 @@
 export enum Role {
-    Admin = 'admin',
-    User = 'user',
+    Principal = 'principal',
+    Teacher = 'teacher',
+    Student = 'Student',
     Librarian = 'librarian',
 }

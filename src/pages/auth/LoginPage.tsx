@@ -97,13 +97,14 @@ const Login: React.FC = () => {
           <div className="mb-3">
             <label className="block text-gray-700 mb-1">Role</label>
             <select
-              value={currentRole}
-              onChange={(e) => setCurrentRole(e.target.value as Role)}
-              className="w-full p-2 border border-gray-300 rounded"
+                value={currentRole}
+                onChange={(e) => setCurrentRole(e.target.value as Role)}
+                className="w-full p-2 border border-gray-300 rounded"
             >
               <option value="">Choose a role</option>
-              <option value={Role.Admin}>Admin</option>
-              <option value={Role.User}>User</option>
+              <option value={Role.Principal}>Principal</option>
+              <option value={Role.Teacher}>Teacher</option>
+              <option value={Role.Student}>Student</option>
               <option value={Role.Librarian}>Librarian</option>
             </select>
           </div>

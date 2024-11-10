@@ -54,7 +54,6 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick }) => {
         name: e.description,
         createdAt: formatDate(e.createdAt),
         owner: e.teacherId
-
     }))
 
     return (

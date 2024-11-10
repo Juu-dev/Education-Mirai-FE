@@ -62,7 +62,8 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
       try {
         const response = await loginApi(data);
 
-        const { accessToken, user } = response.result;
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        const { accessToken, user } = response?.result;
         saveMe(user);
 
         token.setAccessToken(accessToken);

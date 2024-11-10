@@ -3,7 +3,7 @@ import tokenFactory from "./token";
 
 const client = axios.create({ timeout: 60000 });
 
-const baseUrl = 'http://localhost:9001/api/v1'
+const baseUrl = 'http://localhost:9001/api/v1';
 
 function createApi() {
     return async (
@@ -15,7 +15,11 @@ function createApi() {
         } = {},
         auth: boolean = true
     ) => {
-        if (options.body) {
+        if (options.body instanceof FormData) {
+            // When using FormData, let the browser set the appropriate Content-Type with boundary
+            options.headers = options.headers || {};
+        } else if (options.body) {
+            // For JSON requests, stringify the body and set the Content-Type header
             options.body = JSON.stringify(options.body);
             options.headers = options.headers || {};
             options.headers["Content-Type"] = "application/json";
@@ -30,7 +34,6 @@ function createApi() {
         }
 
         console.log('options: ', options);
-
 
         const response = await client.request({
             url: baseUrl + uri,

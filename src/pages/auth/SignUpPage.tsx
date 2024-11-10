@@ -44,9 +44,9 @@ const Login: React.FC = () => {
 
         setRole(currentRole);
         console.log('Role:', currentRole);
-        if (currentRole === Role.Admin) {
+        if (currentRole === Role.Teacher) {
             navigate('/admin/dashboard');
-        } else if (currentRole === Role.User) {
+        } else if (currentRole === Role.Student) {
             navigate('/user/books');
         } else if (currentRole === Role.Librarian) {
             navigate('/librarian/dashboard');
@@ -79,8 +79,9 @@ const Login: React.FC = () => {
                             className="w-full p-2 border border-gray-300 rounded"
                         >
                             <option value="">Choose your role</option>
-                            <option value={Role.Admin}>Admin</option>
-                            <option value={Role.User}>User</option>
+                            <option value={Role.Principal}>Principal</option>
+                            <option value={Role.Teacher}>Teacher</option>
+                            <option value={Role.Student}>Student</option>
                             <option value={Role.Librarian}>Librarian</option>
                         </select>
                     </div>
