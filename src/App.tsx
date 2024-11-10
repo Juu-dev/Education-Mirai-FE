@@ -36,26 +36,36 @@ const App: React.FC = () => {
 						<Route path="/unauthorized" element={<Unauthorized />} />
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/signup" element={<SignUpPage />} />
-						{/* Admin Routes */}
-						<Route element={<ProtectedRoute allowedRole={Role.Teacher} />}>
+						{/* Principal Routes */}
+						<Route element={<ProtectedRoute allowedRole={Role.Principal} />}>
 							<Route element={<AdminLayout />}>
-								<Route path="/admin" element={<AdminPage />} />
-								<Route path="/admin/page-one" element={<PageOne />} />
-								<Route path="/admin/dashboard" element={<AdminDashboard />} />
-								<Route path="/admin/class" element={<AdminClassPage />} />
-								<Route path="/admin/document" element={<AdminDocumentPage />} />
+								<Route path="/principal" element={<AdminPage />} />
+								<Route path="/principal/page-one" element={<PageOne />} />
+								<Route path="/principal/dashboard" element={<AdminDashboard />} />
+								<Route path="/principal/class" element={<AdminClassPage />} />
+								<Route path="/principal/document" element={<AdminDocumentPage />} />
 							</Route>
 						</Route>
-						{/* User Routes */}
+						{/*.Teacher Routes */}
+						<Route element={<ProtectedRoute allowedRole={Role.Teacher} />}>
+							<Route element={<AdminLayout />}>
+								<Route path="/teacher" element={<AdminPage />} />
+								<Route path="/teacher/page-one" element={<PageOne />} />
+								<Route path="/teacher/dashboard" element={<AdminDashboard />} />
+								<Route path="/teacher/class" element={<AdminClassPage />} />
+								<Route path="/teacher/document" element={<AdminDocumentPage />} />
+							</Route>
+						</Route>
+						{/* Student Routes */}
 						<Route element={<ProtectedRoute allowedRole={Role.Student} />}>
 							<Route element={<UserLayout />}>
-								<Route path="/user" element={<UserPage />} />
-								{/* <Route path="/user/page-one" element={<PageOne />} /> */}
-								<Route path="/user/books" element={<UserBookList />} />
-								<Route path='/user/reading-books' element={<UserBookReadingList />} />
-								<Route path="/user/reading-books/book/:id" element={<BookDetailPage />} />
-								<Route path="/user/assignments" element={<AssignmentPage />} />
-								<Route path="/user/assignments/:id" element={<AssignmentDetailPage />} />
+								<Route path="/student" element={<UserPage />} />
+								{/* <Route path="/student/page-one" element={<PageOne />} /> */}
+								<Route path="/student/books" element={<UserBookList />} />
+								<Route path='/student/reading-books' element={<UserBookReadingList />} />
+								<Route path="/student/reading-books/book/:id" element={<BookDetailPage />} />
+								<Route path="/student/assignments" element={<AssignmentPage />} />
+								<Route path="/student/assignments/:id" element={<AssignmentDetailPage />} />
 							</Route>
 						</Route>
 						{/* Librarian Routes */}

@@ -45,7 +45,9 @@ const Login: React.FC = () => {
         setRole(currentRole);
         console.log('Role:', currentRole);
         if (currentRole === Role.Teacher) {
-            navigate('/admin/dashboard');
+            navigate('/teacher/dashboard');
+        } else if (currentRole === Role.Principal) {
+            navigate('/principal/dashboard');
         } else if (currentRole === Role.Student) {
             navigate('/user/books');
         } else if (currentRole === Role.Librarian) {

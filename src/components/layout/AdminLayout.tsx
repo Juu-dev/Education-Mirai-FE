@@ -34,12 +34,20 @@ const AdminLayout = () => {
                 { key: "/librarian/reports", label: "Gửi yêu cầu" },
                 { key: "/librarian/settings", label: "Tài khoản" },
             ]
+            : role === Role.Teacher
+            ? [
+                    { key: "/teacher/dashboard", label: "Bảng điều khiển" },
+                    { key: "/teacher/class", label: "Lớp" },
+                    { key: "/teacher/document", label: "Tài liệu" },
+                    { key: "/teacher/reports", label: "Gửi yêu cầu" },
+                    { key: "/teacher/settings", label: "Tài khoản" },
+                ]
             : [
-                { key: "/admin/dashboard", label: "Bảng điều khiển" },
-                { key: "/admin/class", label: "Lớp" },
-                { key: "/admin/document", label: "Tài liệu" },
-                { key: "/admin/reports", label: "Gửi yêu cầu" },
-                { key: "/admin/settings", label: "Tài khoản" },
+                { key: "/principal/dashboard", label: "Bảng điều khiển" },
+                { key: "/principal/class", label: "Lớp" },
+                { key: "/principal/document", label: "Tài liệu" },
+                { key: "/principal/reports", label: "Gửi yêu cầu" },
+                { key: "/principal/settings", label: "Tài khoản" },
             ];
 
     const isActive = (path: string) => location.pathname === path; // Kiểm tra xem đường dẫn hiện tại có khớp không

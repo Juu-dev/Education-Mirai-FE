@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import token from "../helpers/token.ts";
 import useCreateApi from "../hooks/useCreateApi.ts";
+import {Role} from "../constants/roles/routes.ts";
+import {useRole} from "./RoleContext.tsx";
 
 interface IAuthContext {
   isAuthenticated: boolean | null;
@@ -31,6 +33,8 @@ interface IAuthProviderProps {
 
 const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
   const navigate = useNavigate();
+  const role = localStorage.getItem('role')
+  console.log("Role: ", role)
 
   const {handleCreate: loginApi} = useCreateApi({url: "/auth/login", fullResp: true})
   const {handleCreate: logoutApi} = useCreateApi({url: "/auth/logout"})
@@ -71,7 +75,15 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
         setIsAuthenticated(true);
 
         onSuccess?.();
-        navigate('/admin/dashboard', { replace: true });
+        if (role === Role.Teacher) {
+          navigate('/teacher/dashboard');
+        } else if (role === Role.Principal) {
+          navigate('/principal/dashboard');
+        } else if (role === Role.Student) {
+          navigate('/user/books');
+        } else if (role === Role.Librarian) {
+          navigate('/librarian/dashboard');
+        }
       } catch (error: any) {
         if (onError) onError?.(error as AxiosError<any>);
         console.log("login error api: ", error.message);
