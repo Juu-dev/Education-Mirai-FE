@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRole } from '../../context/RoleContext';
-import { Role } from '../../constants/roles/routes';
 
 const Login: React.FC = () => {
-    const { setRole } = useRole();
     const navigate = useNavigate();
     const [fullName, setFullName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [currentRole, setCurrentRole] = useState<Role | undefined>(undefined);
     const [error, setError] = useState<string>('');
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
@@ -22,7 +18,7 @@ const Login: React.FC = () => {
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!email || !password || !currentRole || !acceptedTerms) {
+        if (!email || !password || !acceptedTerms) {
             setError('Vui lòng nhập đủ email, mật khẩu, chọn vai trò và chấp nhận điều khoản.');
             return;
         }
@@ -40,18 +36,6 @@ const Login: React.FC = () => {
         if (password !== confirmPassword) {
             setError('Mật khẩu xác nhận không khớp.');
             return;
-        }
-
-        setRole(currentRole);
-        console.log('Role:', currentRole);
-        if (currentRole === Role.Teacher) {
-            navigate('/teacher/dashboard');
-        } else if (currentRole === Role.Principal) {
-            navigate('/principal/dashboard');
-        } else if (currentRole === Role.Student) {
-            navigate('/user/books');
-        } else if (currentRole === Role.Librarian) {
-            navigate('/librarian/dashboard');
         }
     };
 
@@ -72,21 +56,6 @@ const Login: React.FC = () => {
                         </p>
                     </div>
                     <h2 className="text-xl font-bold mb-3 text-center uppercase mt-3 text-blue-700">Đăng ký</h2>
-
-                    <div className="mb-3">
-                        <label className="block text-gray-700 mb-1">Role</label>
-                        <select
-                            value={currentRole}
-                            onChange={(e) => setCurrentRole(e.target.value as Role)}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        >
-                            <option value="">Choose your role</option>
-                            <option value={Role.Principal}>Principal</option>
-                            <option value={Role.Teacher}>Teacher</option>
-                            <option value={Role.Student}>Student</option>
-                            <option value={Role.Librarian}>Librarian</option>
-                        </select>
-                    </div>
 
                     <form onSubmit={handleLogin} className="form">
                         <div className="mb-3">

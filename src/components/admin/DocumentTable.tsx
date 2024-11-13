@@ -50,7 +50,7 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick }) => {
 
     const location = useLocation();
     const isPrincipal = location.pathname.includes("principal");
-    const path = isPrincipal ? "/documents/pagination" : `/documents/pagination/${me.teacher.id}`
+    const path = isPrincipal ? "/documents/pagination" : `/documents/pagination/${me?.teacher?.id}`
     console.log("path: ", path)
 
     // const [data, setData] = useState();

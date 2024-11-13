@@ -1,80 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRole } from '../../context/RoleContext';
-import { Role } from '../../constants/roles/routes';
 import useAuth from "../../hooks/useAuth.ts";
 
 const Login: React.FC = () => {
-  const { setRole } = useRole();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [currentRole, setCurrentRole] = useState<Role | undefined>(undefined);
   const [error, setError] = useState<string>('');
   const [savePassword, setSavePassword] = useState<boolean>(false);
 
   const {login} = useAuth()
 
-  // const validEmail = (email: string): boolean => {
-  //   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   return re.test(email);
-  // };
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password || !currentRole) {
+    if (!email || !password) {
       setError('Vui lòng nhập đủ email, mật khẩu và chọn vai trò.');
       return;
     }
 
-    // if (!validEmail(email)) {
-    //   setError('Email không hợp lệ.');
-    //   return;
-    // }
-
-    // if (password.length < 6) {
-    //   setError('Mật khẩu phải có ít nhất 6 ký tự.');
-    //   return;
-    // }
-
     await login({username: email, password})
-
-    setRole(currentRole);
-    // console.log('Role:', currentRole);
-    // if (currentRole === Role.Admin) {
-    //   navigate('/admin/dashboard');
-    // } else if (currentRole === Role.User) {
-    //   navigate('/user/books');
-    // } else if (currentRole === Role.Librarian) {
-    //   navigate('/librarian/dashboard');
-    // }
-    //
-    setRole(currentRole);
-    // console.log('Role:', currentRole);
-    // if (savePassword) {
-    //   localStorage.setItem('email', email);
-    //   localStorage.setItem('password', password);
-    // } else {
-    //   localStorage.removeItem('email');
-    //   localStorage.removeItem('password');
-    // }
   };
-
-
-
-  //   useEffect(() => {
-  //     const savedRole = localStorage.getItem('role');
-  //     if (savedRole) {
-  //       if (savedRole === Role.Admin) {
-  //         navigate('/admin');
-  //       } else if (savedRole === Role.User) {
-  //         navigate('/user');
-  //       } else if (savedRole === Role.Librarian) {
-  //         navigate('/librarian');
-  //       }
-  //     }
-  //   }, [navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 w-screen ">
@@ -93,21 +39,6 @@ const Login: React.FC = () => {
             </p>
           </div>
           <h2 className="text-xl font-bold mb-3 text-center uppercase mt-3 text-blue-700">Đăng nhập</h2>
-
-          <div className="mb-3">
-            <label className="block text-gray-700 mb-1">Role</label>
-            <select
-                value={currentRole}
-                onChange={(e) => setCurrentRole(e.target.value as Role)}
-                className="w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="">Choose a role</option>
-              <option value={Role.Principal}>Principal</option>
-              <option value={Role.Teacher}>Teacher</option>
-              <option value={Role.Student}>Student</option>
-              <option value={Role.Librarian}>Librarian</option>
-            </select>
-          </div>
 
           <form onSubmit={handleLogin} className="form">
             <div className="mb-3">

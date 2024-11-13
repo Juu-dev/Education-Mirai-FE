@@ -1,6 +1,6 @@
 export enum Role {
-    Principal = 'principal',
-    Teacher = 'teacher',
+    Principal = 'Principal',
+    Teacher = 'Teacher',
     Student = 'Student',
     Librarian = 'librarian',
 }

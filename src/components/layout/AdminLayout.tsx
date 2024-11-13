@@ -2,11 +2,12 @@ import { Outlet, useLocation, Link } from "react-router-dom";
 import logo from "../../assets/logo/san-sang.png";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu } from "antd";
-import { useRole } from "../../context/RoleContext";
+import useAuth from "../../hooks/useAuth";
 import { Role } from "../../constants/roles/routes";
 
 const AdminLayout = () => {
-    const { role } = useRole(); // Lấy vai trò từ context
+    const { me } = useAuth(); // Lấy vai trò từ context
+    const role = me?.role
     const location = useLocation(); // Lấy đường dẫn hiện tại
 
     // Menu thả xuống cho hồ sơ

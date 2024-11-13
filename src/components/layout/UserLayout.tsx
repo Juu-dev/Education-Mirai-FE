@@ -3,14 +3,15 @@ import { Outlet, useLocation, useMatch } from "react-router-dom";
 import logo from "../../assets/logo/san-sang.png";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Input, Select } from "antd";
-import { useRole } from "../../context/RoleContext";
+import useAuth from "../../hooks/useAuth";
 import { Role } from "../../constants/roles/routes";
 import { Option } from "antd/es/mentions";
 
 const { Search } = Input;
 
 const UserLayout: React.FC = () => {
-    const { role } = useRole();
+    const { me } = useAuth();
+    const role = me?.role;
     const location = useLocation(); // Get the current location
 
     // Dynamic route matcher for /user/reading-books/book/:id

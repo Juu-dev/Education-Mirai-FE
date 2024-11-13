@@ -1,7 +1,7 @@
 // src/components/ProtectedRoute.tsx
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useRole } from '../../context/RoleContext';
+import useAuth from '../../hooks/useAuth';
 import { Role } from '../../constants/roles/routes';
 
 type ProtectedRouteProps = {
@@ -9,7 +9,8 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRole }) => {
-  const { role } = useRole();
+  const {me} = useAuth()
+  const role = me?.role
 
   if (!role) {
     return <Navigate to="/login" />;

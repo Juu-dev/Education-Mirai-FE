@@ -37,7 +37,7 @@ const UploadButton: React.FC = () => {
             }
 
             const resultDocument = await updateDocument({
-                teacherId: me.teacher.id,
+                teacherId: me?.teacher?.id,
                 url: uploadedFile.data.Location,
                 createdAt: new Date().toISOString(),
                 description: uploadedFile.data.Key

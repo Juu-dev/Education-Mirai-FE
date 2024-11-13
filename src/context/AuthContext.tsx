@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import token from "../helpers/token.ts";
 import useCreateApi from "../hooks/useCreateApi.ts";
 import {Role} from "../constants/roles/routes.ts";
-import {useRole} from "./RoleContext.tsx";
+import useFetchApi from "../hooks/useFetchApi.ts";
 
 interface IAuthContext {
   isAuthenticated: boolean | null;
@@ -33,27 +33,23 @@ interface IAuthProviderProps {
 
 const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
   const navigate = useNavigate();
-  const role = localStorage.getItem('role')
-  console.log("Role: ", role)
 
   const {handleCreate: loginApi} = useCreateApi({url: "/auth/login", fullResp: true})
   const {handleCreate: logoutApi} = useCreateApi({url: "/auth/logout"})
+  const {fetchApi: refreshTokenApi} = useFetchApi({url: "/auth/refresh-token"})
 
   const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
   const [me, setMe] = useState(null);
 
-  useEffect(() => {
-    console.log("me change: ", me)
-  }, [me])
-
   const saveMe = useCallback(
     (data: any) => {
-      const me = {
+      const me: any = {
         id: data.id,
         username: data.username,
         email: data.email,
         teacher: data.Teacher,
         student: data.Student,
+        role: data.roles[0].role.name
       };
 
       setMe(me);
@@ -75,6 +71,9 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
         setIsAuthenticated(true);
 
         onSuccess?.();
+        const role = user?.roles[0].role.name;
+        console.log(role, role === Role.Teacher);
+        navigate('/teacher/dashboard')
         if (role === Role.Teacher) {
           navigate('/teacher/dashboard');
         } else if (role === Role.Principal) {
@@ -95,7 +94,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
   const logout = useCallback(async () => {
     try {
       token.removeRefreshToken();
-      await logoutApi();
+      await logoutApi({});
       console.log('Đăng xuất thành công');
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -119,6 +118,32 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
     }),
     [isAuthenticated, login, logout, me, saveMe],
   );
+
+  const loginWithToken = useCallback(async () => {
+    try {
+      const response: any = await refreshTokenApi();
+
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      const { accessToken, user } = response?.result?.data;
+
+      saveMe(user);
+
+      token.setAccessToken(accessToken);
+
+      setIsAuthenticated(true);
+    } catch (error) {
+      token.removeAccessToken();
+      setIsAuthenticated(false);
+    }
+  }, [saveMe]);
+
+  useEffect(() => {
+    if (me === null)
+      loginWithToken().then(
+          () => {},
+          () => {},
+      );
+  }, [loginWithToken, me]);
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
