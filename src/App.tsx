@@ -24,8 +24,11 @@ import { LibrarianAddBookPage } from './pages/librarian/LibrarianAddBookPage';
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage'
 import AuthProvider from "./context/AuthContext";
+import useAuth from "./hooks/useAuth.ts";
 
 const App: React.FC = () => {
+	const {isAuthenticated} = useAuth()
+
 	return (
 		<Router>
 			<AuthProvider>
@@ -35,7 +38,7 @@ const App: React.FC = () => {
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/signup" element={<SignUpPage />} />
 					{/* Principal Routes */}
-					<Route element={<ProtectedRoute allowedRole={Role.Principal} />}>
+					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/principal" element={<AdminPage />} />
 							<Route path="/principal/page-one" element={<PageOne />} />
@@ -45,7 +48,7 @@ const App: React.FC = () => {
 						</Route>
 					</Route>
 					{/*.Teacher Routes */}
-					<Route element={<ProtectedRoute allowedRole={Role.Teacher} />}>
+					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/teacher" element={<AdminPage />} />
 							<Route path="/teacher/page-one" element={<PageOne />} />
@@ -55,7 +58,7 @@ const App: React.FC = () => {
 						</Route>
 					</Route>
 					{/* Student Routes */}
-					<Route element={<ProtectedRoute allowedRole={Role.Student} />}>
+					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<UserLayout />}>
 							<Route path="/student" element={<UserPage />} />
 							{/* <Route path="/student/page-one" element={<PageOne />} /> */}

@@ -12,6 +12,7 @@ interface UseFetchApiProps<T> {
     method?: "GET" | "POST" | "PUT" | "DELETE";
     postData?: any;
     auth?: boolean;
+    isWithCredentials?: boolean;
 }
 
 interface FetchApiParams {
@@ -39,6 +40,7 @@ export default function useFetchApi<T>({
     method = "GET",
     postData = {},
     auth = true,
+    isWithCredentials = false,
 }: UseFetchApiProps<T>) {
     const [loading, setLoading] = useState(initLoad);
     const [fetched, setFetched] = useState(false);
@@ -67,7 +69,7 @@ export default function useFetchApi<T>({
                 }),
             };
 
-            const respApi = await api(path + query, options, auth);
+            const respApi = await api(path + query, options, auth, isWithCredentials);
             const resp = respApi.result
 
             if (resp.hasOwnProperty("count")) {

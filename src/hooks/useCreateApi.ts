@@ -6,6 +6,8 @@ interface UseCreateApiProps {
     fullResp?: boolean;
     successMsg?: string;
     errorMsg?: string;
+    isAuth?: boolean;
+    isWithCredentials?: boolean;
 }
 
 interface CreateApiResponse {
@@ -20,6 +22,8 @@ export default function useCreateApi({
     fullResp = false,
     successMsg = "Saved successfully",
     errorMsg = "Failed to save",
+    isAuth = true,
+    isWithCredentials = false
 }: UseCreateApiProps) {
     const [creating, setCreating] = useState<boolean>(false);
     const [errorData, setErrorData] = useState<any>(null);
@@ -36,7 +40,7 @@ export default function useCreateApi({
             const resp: CreateApiResponse = await api(url, {
                 body: data,
                 method: "POST",
-            });
+            }, isAuth, isWithCredentials);
 
             if (resp.success) {
                 console.log(successMsg);

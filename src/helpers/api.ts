@@ -13,7 +13,8 @@ function createApi() {
             body?: any;
             method?: "GET" | "POST" | "PUT" | "DELETE";
         } = {},
-        auth: boolean = true
+        auth: boolean = true,
+        withCredentials: boolean = false,
     ) => {
         if (options.body instanceof FormData) {
             // When using FormData, let the browser set the appropriate Content-Type with boundary
@@ -43,6 +44,7 @@ function createApi() {
                 accept: "application/json",
                 ...(options.headers || {}),
             },
+            withCredentials: withCredentials,
         });
 
         return response.data;

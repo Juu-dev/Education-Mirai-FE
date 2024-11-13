@@ -1,22 +1,40 @@
 import { AxiosError } from 'axios';
-import React, {createContext, useCallback, useEffect, useMemo, useState} from 'react';
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import token from "../helpers/token.ts";
-import useCreateApi from "../hooks/useCreateApi.ts";
-import {Role} from "../constants/roles/routes.ts";
-import useFetchApi from "../hooks/useFetchApi.ts";
+import token from '../helpers/token';
+import useCreateApi from '../hooks/useCreateApi';
+import { Role } from '../constants/roles/routes';
+import useFetchApi from '../hooks/useFetchApi';
+
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  teacher?: object;
+  student?: object;
+  role: string;
+}
+
+interface LoginData {
+  username: string;
+  password: string;
+}
 
 interface IAuthContext {
   isAuthenticated: boolean | null;
   login: (
-    _data: { username: string; password: string },
-    _onSuccess?: () => void,
-    _onError?: (_error: AxiosError<any>) => void,
+      data: LoginData,
+      onSuccess?: () => void,
+      onError?: (error: AxiosError<unknown>) => void,
   ) => Promise<void>;
   logout: () => Promise<void>;
-  me: any;
-  saveMe: any
+  me: User | null;
+  saveMe: (data: User) => void;
+}
+
+interface IAuthProviderProps {
+  children?: React.ReactNode;
 }
 
 export const AuthContext = createContext<IAuthContext>({
@@ -31,75 +49,66 @@ interface IAuthProviderProps {
   children?: React.ReactNode;
 }
 
-const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
+const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
-  const {handleCreate: loginApi} = useCreateApi({url: "/auth/login", fullResp: true})
-  const {handleCreate: logoutApi} = useCreateApi({url: "/auth/logout"})
-  const {fetchApi: refreshTokenApi} = useFetchApi({url: "/auth/refresh-token"})
+  const { handleCreate: loginApi } = useCreateApi({ url: '/auth/login', fullResp: true, isWithCredentials: true });
+  const { handleCreate: logoutApi } = useCreateApi({ url: '/auth/logout' });
+  const { fetchApi: refreshTokenApi } = useFetchApi({ url: '/auth/refresh-token', isWithCredentials: true });
 
   const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
-  const [me, setMe] = useState(null);
+  const [me, setMe] = useState<User | null>(null);
 
-  const saveMe = useCallback(
-    (data: any) => {
-      const me: any = {
-        id: data.id,
-        username: data.username,
-        email: data.email,
-        teacher: data.Teacher,
-        student: data.Student,
-        role: data.roles[0].role.name
-      };
-
-      setMe(me);
-    },
-    [],
-  );
+  const saveMe = useCallback((data: any) => {
+    setMe({
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      teacher: data.Teacher,
+      student: data.Student,
+      role: data.roles[0].role.name,
+    });
+  }, []);
 
   const login: IAuthContext['login'] = useCallback(
-    async (data, onSuccess, onError) => {
-      try {
-        const response = await loginApi(data);
+      async (data: LoginData, onSuccess, onError) => {
+        try {
+          const response = await loginApi(data);
+          const { accessToken, user } = response?.result;
 
-        // eslint-disable-next-line no-unsafe-optional-chaining
-        const { accessToken, user } = response?.result;
-        saveMe(user);
+          saveMe(user as User);
+          token.setAccessToken(accessToken);
+          setIsAuthenticated(true);
 
-        token.setAccessToken(accessToken);
+          const role = user.roles[0].role.name;
+          navigateRoleBasedPath(role);
 
-        setIsAuthenticated(true);
-
-        onSuccess?.();
-        const role = user?.roles[0].role.name;
-        console.log(role, role === Role.Teacher);
-        navigate('/teacher/dashboard')
-        if (role === Role.Teacher) {
-          navigate('/teacher/dashboard');
-        } else if (role === Role.Principal) {
-          navigate('/principal/dashboard');
-        } else if (role === Role.Student) {
-          navigate('/user/books');
-        } else if (role === Role.Librarian) {
-          navigate('/librarian/dashboard');
+          onSuccess?.();
+        } catch (error) {
+          onError?.(error as AxiosError<unknown>);
+          console.error('Login error:', (error as AxiosError).message);
         }
-      } catch (error: any) {
-        if (onError) onError?.(error as AxiosError<any>);
-        console.log("login error api: ", error.message);
-      }
-    },
-    [saveMe, navigate],
+      },
+      [saveMe, navigate]
   );
+
+  const navigateRoleBasedPath = (role: Role) => {
+    const rolePaths = {
+      [Role.Teacher]: '/teacher/dashboard',
+      [Role.Principal]: '/principal/dashboard',
+      [Role.Student]: '/user/books',
+      [Role.Librarian]: '/librarian/dashboard',
+    };
+    navigate(rolePaths[role] || '/');
+  };
 
   const logout = useCallback(async () => {
     try {
       token.removeRefreshToken();
       await logoutApi({});
-      console.log('Đăng xuất thành công');
+      console.log('Logout successful');
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      console.log('Sign out failed');
+      console.error('Logout failed:', error);
     } finally {
       token.removeAccessToken();
       setIsAuthenticated(false);
@@ -108,42 +117,39 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }: any) => {
     }
   }, [navigate]);
 
-  const contextValue = useMemo(
-    () => ({
-      isAuthenticated,
-      login,
-      logout,
-      me,
-      saveMe,
-    }),
-    [isAuthenticated, login, logout, me, saveMe],
-  );
-
   const loginWithToken = useCallback(async () => {
     try {
-      const response: any = await refreshTokenApi();
-
-      // eslint-disable-next-line no-unsafe-optional-chaining
+      const response = await refreshTokenApi();
       const { accessToken, user } = response?.result?.data;
 
       saveMe(user);
-
       token.setAccessToken(accessToken);
-
       setIsAuthenticated(true);
-    } catch (error) {
+    } catch {
       token.removeAccessToken();
       setIsAuthenticated(false);
     }
   }, [saveMe]);
 
   useEffect(() => {
-    if (me === null)
+    if (!me) {
       loginWithToken().then(
           () => {},
           () => {},
       );
+    }
   }, [loginWithToken, me]);
+
+  const contextValue = useMemo(
+      () => ({
+        isAuthenticated,
+        login,
+        logout,
+        me,
+        saveMe,
+      }),
+      [isAuthenticated, login, logout, me, saveMe]
+  );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
