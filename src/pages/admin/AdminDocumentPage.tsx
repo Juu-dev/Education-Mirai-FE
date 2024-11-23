@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "antd";
-import { FolderAddOutlined, FileAddOutlined } from "@ant-design/icons";
+import { FolderAddOutlined, FileAddOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import PageTitle from "../../components/common/SectionTitle";
 import UploadButton from "../../components/admin/UploadButton";
 import DocumentTable from "../../components/admin/DocumentTable";
@@ -15,26 +16,59 @@ const AdminDocumentPage: React.FC = () => {
         useState(false);
     const [isShareModalVisible, setIsShareModalVisible] = useState(false);
 
+    const { teacherID } = useParams(); 
+    const navigate = useNavigate(); 
+    const location = useLocation();
+
+    const isPrincipal = location.pathname.includes("principal");
+
+    const handleBackToFolder = () => {
+        navigate("/principal/document"); 
+    };
+
     return (
         <div className="p-5">
-            {/* Button Section */}
-            <div className="flex gap-4 pb-3">
-                <Button
-                    type="primary"
-                    icon={<FolderAddOutlined />}
-                    className="p-4">
-                    New Folder
-                </Button>
+            {/* Back Button*/}
+            {teacherID && isPrincipal && (
                 <Button
                     type="default"
-                    icon={<FileAddOutlined />}
-                    className="p-4"
-                    onClick={() => setIsChooseTemplateModalVisible(true)}>
-                    Use Template
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleBackToFolder}
+                    className="mb-3"
+                >
+                    Quay lại danh sách folder
                 </Button>
-                <UploadButton />
-            </div>
-            <PageTitle title="Danh sách tài liệu" className="mb-3" />
+            )}
+
+            {/* Button Section */}
+            {!teacherID && isPrincipal && (
+                <div className="flex gap-4 pb-3">
+                    <Button
+                        type="primary"
+                        icon={<FolderAddOutlined />}
+                        className="p-4">
+                        New Folder
+                    </Button>
+                    <Button
+                        type="default"
+                        icon={<FileAddOutlined />}
+                        className="p-4"
+                        onClick={() => setIsChooseTemplateModalVisible(true)}>
+                        Use Template
+                    </Button>
+                    <UploadButton />
+                </div>
+            )}
+
+            {/* Page Title */}
+            <PageTitle
+                title={
+                    teacherID
+                        ? `Danh sách tài liệu của giáo viên`
+                        : "Danh sách giáo viên"
+                }
+                className="mb-3"
+            />
 
             {/* Table Section */}
             <DocumentTable
