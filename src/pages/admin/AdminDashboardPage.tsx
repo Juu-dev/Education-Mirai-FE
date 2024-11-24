@@ -1,8 +1,9 @@
 import { Avatar, Button, Table, Card, Progress, Modal } from "antd";
 import { CheckOutlined, PaperClipOutlined, SendOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { useState, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { useState } from "react";
+import useAuth from "../../hooks/useAuth.ts";
+import {Role} from "../../constants/roles/role.ts";
 
 interface Task {
     key: number;
@@ -45,9 +46,9 @@ const columns: ColumnsType<Task> = [
 ];
 
 const tasks: Task[] = [
-    { key: 1, task: "Bổ sung hồ sơ abcxyz", assignedBy: "Hiệu trưởng", action: "" },
-    { key: 2, task: "Bổ sung hồ sơ abcxyz", assignedBy: "Hiệu trưởng", action: "" },
-    { key: 3, task: "Bổ sung hồ sơ abcxyz", assignedBy: "Hiệu trưởng", action: "" },
+    { key: 1, task: "Bổ sung hồ sơ 2", assignedBy: "Hiệu trưởng", action: "" },
+    { key: 2, task: "Bổ sung hồ sơ 3", assignedBy: "Hiệu trưởng", action: "" },
+    { key: 3, task: "Bổ sung hồ sơ 4", assignedBy: "Hiệu trưởng", action: "" },
 ];
 
 const taskDetailsData = {
@@ -107,12 +108,19 @@ const upcomingSchedule = [
     },
 ];
 
+const roleName = {
+    [Role.Teacher]: "Giáo Viên",
+    [Role.Student]: "Học Sinh",
+    [Role.Principal]: "Hiệu Trưởng",
+    [Role.Librarian]: "Thủ thư",
+}
+
 const AdminDashboard = () => {
-    const { me } = useContext(AuthContext);
-    
-    console.log('check me data', me);
     // State for modal visibility
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const {me} = useAuth();
+    console.log("me")
+    console.log(me)
 
     // Function to show modal
     const showModal = () => {
@@ -154,7 +162,7 @@ const AdminDashboard = () => {
                         <div className="text-gray-500 text-center">
                             {goals.current} <span className="text-gray-500">/ {goals.target} mục tiêu</span>
                         </div>
-                        <Progress 
+                        <Progress
                             type="dashboard"
                             percent={(goals.current / goals.target) * 100}
                             className="mt-2" // Add margin-top for spacing

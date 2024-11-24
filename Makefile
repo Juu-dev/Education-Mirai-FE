@@ -6,7 +6,7 @@ run-serve:
 	pm2 serve build 5173 --name "education-app"
 
 run-dev:
-	pm2 start npm --name "education-app" -- run start
+	pm2 start yarn --name "education-app" -- dev
 
 logs:
 	pm2 logs education-app

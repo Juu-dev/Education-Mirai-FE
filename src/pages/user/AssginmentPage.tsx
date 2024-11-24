@@ -75,7 +75,7 @@ export const AssignmentPage = () => {
     // };
 
     const handleDoAssignment = (id: number) => {
-        navigate(`/user/assignments/${id}`);
+        navigate(`/student/assignments/${id}`);
     }
 
     return (

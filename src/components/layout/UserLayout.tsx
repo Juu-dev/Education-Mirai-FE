@@ -4,7 +4,7 @@ import logo from "../../assets/logo/san-sang.png";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Input, Select } from "antd";
 import useAuth from "../../hooks/useAuth";
-import { Role } from "../../constants/roles/routes";
+import { Role } from "../../constants/roles/role.ts";
 import { Option } from "antd/es/mentions";
 
 const { Search } = Input;
@@ -15,8 +15,8 @@ const UserLayout: React.FC = () => {
     const location = useLocation(); // Get the current location
 
     // Dynamic route matcher for /user/reading-books/book/:id
-    const bookDetailMatch = useMatch("/user/reading-books/book/:id");
-    const assignmentDetailMatch = useMatch("/user/assignments/:id");
+    const bookDetailMatch = useMatch("/student/reading-books/book/:id");
+    const assignmentDetailMatch = useMatch("/student/assignments/:id");
 
     const menuItems = [
         { key: "profile", label: <a href="/profile">Profile</a> },
@@ -36,12 +36,12 @@ const UserLayout: React.FC = () => {
         if (location.pathname === path) return true;
 
         // For dynamic path /user/reading-books/book/:id
-        if (path === "/user/reading-books/book/:id" && bookDetailMatch) {
+        if (path === "/student/reading-books/book/:id" && bookDetailMatch) {
             return true;
         }
 
         // For dynamic path /user/assignments/:id
-        if (path === "/user/assignments/:id" && assignmentDetailMatch) {
+        if (path === "/student/assignments/:id" && assignmentDetailMatch) {
             return true;
         }
 
@@ -64,9 +64,9 @@ const UserLayout: React.FC = () => {
                     </div>
                     <nav className="space-x-6">
                         <a
-                            href="/user/books"
+                            href="/student/books"
                             className={`${
-                                isActive("/user/books")
+                                isActive("/student/books")
                                     ? "text-blue-500 font-bold"
                                     : "text-gray-700"
                             } hover:text-gray-900`}
@@ -74,9 +74,9 @@ const UserLayout: React.FC = () => {
                             Thư viện
                         </a>
                         <a
-                            href="/user/reading-books"
+                            href="/student/reading-books"
                             className={`${
-                                isActive("/user/reading-books") || isActive("/user/reading-books/book/:id")
+                                isActive("/student/reading-books") || isActive("/student/reading-books/book/:id")
                                     ? "text-blue-500 font-bold"
                                     : "text-gray-700"
                             } hover:text-gray-900`}
@@ -94,9 +94,9 @@ const UserLayout: React.FC = () => {
                             Video
                         </a> */}
                         <a
-                            href="/user/assignments"
+                            href="/student/assignments"
                             className={`${
-                                isActive("/user/assignments") || isActive("/user/assignments/:id")
+                                isActive("/student/assignments") || isActive("/student/assignments/:id")
                                     ? "text-blue-500 font-bold"
                                     : "text-gray-700"
                             } hover:text-gray-900`}

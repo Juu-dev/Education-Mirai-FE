@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import token from '../helpers/token';
 import useCreateApi from '../hooks/useCreateApi';
-import { Role } from '../constants/roles/routes';
+import { Role } from '../constants/roles/role.ts';
 import useFetchApi from '../hooks/useFetchApi';
 
 interface User {
@@ -96,7 +96,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const rolePaths = {
       [Role.Teacher]: '/teacher/dashboard',
       [Role.Principal]: '/principal/dashboard',
-      [Role.Student]: '/user/books',
+      [Role.Student]: '/student/books',
       [Role.Librarian]: '/librarian/dashboard',
     };
     navigate(rolePaths[role] || '/');

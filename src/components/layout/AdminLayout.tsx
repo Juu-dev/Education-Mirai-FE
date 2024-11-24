@@ -3,7 +3,7 @@ import logo from "../../assets/logo/san-sang.png";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu } from "antd";
 import useAuth from "../../hooks/useAuth";
-import { Role } from "../../constants/roles/routes";
+import { Role } from "../../constants/roles/role.ts";
 
 const AdminLayout = () => {
     const { me } = useAuth(); // Lấy vai trò từ context

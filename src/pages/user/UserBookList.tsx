@@ -63,7 +63,7 @@ export const UserBookList = () => {
                 <div className="flex justify-between mb-4">
                     <h2 className="text-2xl font-normal text-blue-700">Sách giáo khoa</h2>
                     <Button type="primary" onClick={() => {
-                        navigate('/user/reading-books')
+                        navigate('/student/reading-books')
                     }}>
                         Xem thêm
                     </Button>
@@ -74,7 +74,7 @@ export const UserBookList = () => {
                 <div className="flex justify-between mb-4">
                     <h2 className="text-2xl font-normal text-blue-700">Sách tham khảo</h2>
                     <Button type="primary" onClick={() => {
-                        navigate('/user/reading-books')
+                        navigate('/student/reading-books')
                     }}>
                         Xem thêm
                     </Button>
@@ -85,7 +85,7 @@ export const UserBookList = () => {
                 <div className="flex justify-between mb-4">
                     <h2 className="text-2xl font-normal text-blue-700">Sách nói</h2>
                     <Button type="primary" onClick={() => {
-                        navigate('/user/reading-books')
+                        navigate('/student/reading-books')
                     }}>
                         Xem thêm
                     </Button>

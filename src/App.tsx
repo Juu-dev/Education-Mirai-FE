@@ -4,7 +4,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import {Routes, Route} from 'react-router-dom';
 import Unauthorized from './pages/auth/Unauthorized';
 import ProtectedRoute from './components/route/ProtectedRoute';
-import { Role } from './constants/roles/routes';
 import { AdminPage, PageOne } from './pages';
 import UserPage from './pages/user';
 import HomePage from './pages/homepage';
@@ -71,7 +70,7 @@ const App: React.FC = () => {
 						</Route>
 					</Route>
 					{/* Librarian Routes */}
-					<Route element={<ProtectedRoute allowedRole={Role.Librarian} />}>
+					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
 							<Route path="/librarian/library" element={<LibraryStatisticalPage />} />
