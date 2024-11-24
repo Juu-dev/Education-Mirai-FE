@@ -3,7 +3,7 @@ import axios from "axios";
 import tokenFactory from "./token";
 
 const client = axios.create({ timeout: 60000 });
-const baseUrl = 'http://171.244.61.90:9001/api/v1';
+const baseUrl = 'http://27.71.16.104:9001/api/v1';
 
 function createApi() {
     return async (

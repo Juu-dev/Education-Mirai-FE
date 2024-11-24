@@ -45,6 +45,7 @@ const App: React.FC = () => {
 							<Route path="/principal/dashboard" element={<AdminDashboard />} />
 							<Route path="/principal/class" element={<AdminClassPage />} />
 							<Route path="/principal/document" element={<AdminDocumentPage />} />
+							<Route path="/principal/document/:teacherID" element={<AdminDocumentPage />} />
 						</Route>
 					</Route>
 					{/*.Teacher Routes */}

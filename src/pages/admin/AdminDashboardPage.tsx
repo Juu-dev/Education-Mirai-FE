@@ -1,7 +1,8 @@
 import { Avatar, Button, Table, Card, Progress, Modal } from "antd";
 import { CheckOutlined, PaperClipOutlined, SendOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 interface Task {
     key: number;
@@ -107,6 +108,9 @@ const upcomingSchedule = [
 ];
 
 const AdminDashboard = () => {
+    const { me } = useContext(AuthContext);
+    
+    console.log('check me data', me);
     // State for modal visibility
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -136,7 +140,7 @@ const AdminDashboard = () => {
                                 <div className="text-gray-500">Lớp chủ nhiệm</div>
                                 <div className="text-gray-900">12A1</div>
                                 <div className="text-gray-500">Email</div>
-                                <div className="text-gray-900">nguyenvana@gmail.com</div>
+                                <div className="text-gray-900">{me?.email}</div>
                                 <div className="text-gray-500">Tài liệu đã duyệt</div>
                                 <div className="text-gray-900">20</div>
                             </div>
