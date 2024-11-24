@@ -119,7 +119,6 @@ const AdminDashboard = () => {
     // State for modal visibility
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {me} = useAuth();
-    console.log("me")
     console.log(me)
 
     // Function to show modal
@@ -144,9 +143,9 @@ const AdminDashboard = () => {
                             <h2 className="text-lg font-semibold">Nguyễn Văn A</h2>
                             <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="text-gray-500">Vai trò</div>
-                                <div className="text-gray-900">Giáo viên</div>
+                                <div className="text-gray-900">{roleName[me?.role]}</div>
                                 <div className="text-gray-500">Lớp chủ nhiệm</div>
-                                <div className="text-gray-900">12A1</div>
+                                <div className="text-gray-900">{me?.teacher?.class?.name}</div>
                                 <div className="text-gray-500">Email</div>
                                 <div className="text-gray-900">{me?.email}</div>
                                 <div className="text-gray-500">Tài liệu đã duyệt</div>
