@@ -52,6 +52,8 @@ const UploadButton: React.FC<UploadButtonProps> = ({onUploadSuccess}) => {
             } else {
                 message.error("Document upload failed.");
             }
+
+            setFile(null)
         }
     };
 
