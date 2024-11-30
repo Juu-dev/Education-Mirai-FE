@@ -5,7 +5,11 @@ import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
 import useAuth from "../../hooks/useAuth.ts";
 import useCreateApi from "../../hooks/useCreateApi.ts";
 
-const UploadButton: React.FC = () => {
+interface UploadButtonProps {
+    onUploadSuccess: () => void;
+}
+
+const UploadButton: React.FC<UploadButtonProps> = ({onUploadSuccess}) => {
     const { creating, handleCreate: uploadApi, errorData } = useCreateApiFormData({
         url: "/file-upload/file",
         fullResp: true,
@@ -44,6 +48,7 @@ const UploadButton: React.FC = () => {
             });
             if (resultDocument && resultDocument.success) {
                 message.success("Document uploaded successfully.");
+                onUploadSuccess();
             } else {
                 message.error("Document upload failed.");
             }

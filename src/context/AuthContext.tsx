@@ -47,6 +47,10 @@ interface IAuthContext {
   logout: () => Promise<void>;
   me: User | null;
   saveMe: (data: User) => void;
+  isTeacher: boolean,
+  isStudent: boolean,
+  isPrincipal: boolean,
+  isLibrarian: boolean,
 }
 
 interface IAuthProviderProps {
@@ -59,6 +63,10 @@ export const AuthContext = createContext<IAuthContext>({
   logout: () => Promise.resolve(),
   me: null,
   saveMe: () => {},
+  isTeacher: false,
+  isStudent: false,
+  isPrincipal: false,
+  isLibrarian: false,
 });
 
 interface IAuthProviderProps {
@@ -162,6 +170,10 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         logout,
         me,
         saveMe,
+        isTeacher: me?.role === Role.Teacher,
+        isStudent: me?.role === Role.Student,
+        isPrincipal: me?.role === Role.Principal,
+        isLibrarian: me?.role === Role.Librarian,
       }),
       [isAuthenticated, login, logout, me, saveMe]
   );

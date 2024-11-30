@@ -1,21 +1,30 @@
 import {Button, Space, Table} from "antd";
 import {DeleteOutlined, DownloadOutlined, ShareAltOutlined} from "@ant-design/icons";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import useFetchApi from "../../../hooks/useFetchApi.ts";
 import DeleteDocumentModal from "../modal/DeleteDocumentModal.tsx";
 
 interface Props {
     handleShareClick: () => void;
     teacherId: string;
+    isTableDataUpdated: boolean;
 }
 
-const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId }) => {
-    const {data: documents, fetchApi: fetchDocumentsApi} = useFetchApi({url: `/documents/pagination/${teacherId}`, auth: true})
+const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId, isTableDataUpdated }) => {
+    const {data: documents, fetchApi: fetchDocumentsApi, setFetched: reloadDataDocument} = useFetchApi({url: `/documents/pagination/${teacherId}`, auth: true})
     const [selectedDocument, setSelectedDocument] = useState(null);
 
+    useEffect(() => {
+        reloadDataDocument(false);
+    },[teacherId])
+
     const handleRefresh = async () => {
-        await fetchDocumentsApi(`/documents/pagination/${teacherId}`);
+        await fetchDocumentsApi();
     };
+
+    useEffect(() => {
+        handleRefresh().then(() => {});
+    }, [isTableDataUpdated]);
 
     const [isDeleteDocumentModalVisible, setIsDeleteDocumentModalVisible] = useState(false);
 

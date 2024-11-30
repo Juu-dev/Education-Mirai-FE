@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Button, Input} from "antd";
 import { FolderAddOutlined, FileAddOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import PageTitle from "../../components/common/SectionTitle";
 import UploadButton from "../../components/admin/UploadButton";
 import TemplateModal from "../../components/admin/modal/TemplateModal";
@@ -9,19 +9,23 @@ import AddTemplateModal from "../../components/admin/modal/AddTemplateModal";
 import ShareDocumentModal from "../../components/admin/modal/ShareDocumentModal";
 import DocumentsTable from "../../components/admin/documents/DocumentsTable.tsx";
 import FolderTable from "../../components/admin/documents/FolderTable.tsx";
+import useAuth from "../../hooks/useAuth.ts";
 
 const AdminDocumentPage: React.FC = () => {
     const [isChooseTemplateModalVisible, setIsChooseTemplateModalVisible] = useState(false);
     const [isAddTemplateModalVisible, setIsAddTemplateModalVisible] = useState(false);
     const [isShareModalVisible, setIsShareModalVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const {isPrincipal, isTeacher, me} = useAuth();
+
+    const [isTableDataUpdated, setIsTableDataUpdated] = useState(false);
+
+    const handleRefreshTableData = () => {
+        setIsTableDataUpdated(prev => !prev);
+    };
 
     const { teacherID } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const isPrincipal = location.pathname.includes("principal");
-
     const handleBackToFolder = () => navigate("/principal/document");
 
     // Modal Handlers
@@ -48,7 +52,7 @@ const AdminDocumentPage: React.FC = () => {
                 onClick={handleChooseTemplateModal}>
                 Use Template
             </Button>
-            <UploadButton />
+            <UploadButton onUploadSuccess={handleRefreshTableData} />
         </div>
     );
 
@@ -57,12 +61,13 @@ const AdminDocumentPage: React.FC = () => {
         isPrincipal && !teacherID ? <FolderTable searchTerm={searchTerm} /> :
             <DocumentsTable
                 handleShareClick={handleShareModal}
-                teacherId={teacherID || ""}
+                teacherId={isTeacher ? me!.teacher!.id : teacherID!}
+                isTableDataUpdated={isTableDataUpdated}
             />
     );
 
     // Page Title
-    const pageTitle = teacherID ? `Danh sách tài liệu của giáo viên` : "Danh sách giáo viên";
+    const pageTitle = isTeacher ? `Danh sách tài liệu của giáo viên` : "Danh sách giáo viên";
 
     // Handle search change
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +77,7 @@ const AdminDocumentPage: React.FC = () => {
     return (
         <div className="p-5">
             {/* Back Button */}
-            {teacherID && isPrincipal && (
+            {isPrincipal && (
                 <Button
                     type="default"
                     icon={<ArrowLeftOutlined />}
@@ -83,10 +88,10 @@ const AdminDocumentPage: React.FC = () => {
             )}
 
             {/* Conditional Button Section */}
-            {!teacherID && isPrincipal && renderButtonSection()}
+            {isTeacher && renderButtonSection()}
 
-            {/* Search Input for Teacher */}
-            {!teacherID && isPrincipal && (
+            {/* Search Input for Principal */}
+            {isPrincipal && (
                 <div className="pb-3">
                     <Input
                         placeholder="Tìm kiếm theo tên giáo viên"

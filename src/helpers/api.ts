@@ -17,6 +17,8 @@ function createApi() {
         auth: boolean = true,
         withCredentials: boolean = false,
     ) => {
+        console.log("Creating API...", uri);
+
         if (options.body instanceof FormData) {
             // When using FormData, let the browser set the appropriate Content-Type with boundary
             options.headers = options.headers || {};
