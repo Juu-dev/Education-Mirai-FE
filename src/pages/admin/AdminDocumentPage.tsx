@@ -77,7 +77,7 @@ const AdminDocumentPage: React.FC = () => {
     return (
         <div className="p-5">
             {/* Back Button */}
-            {isPrincipal && (
+            {isPrincipal && teacherID && (
                 <Button
                     type="default"
                     icon={<ArrowLeftOutlined />}

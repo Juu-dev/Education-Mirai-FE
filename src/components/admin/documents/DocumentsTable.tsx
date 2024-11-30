@@ -1,5 +1,5 @@
 import {Button, Space, Table} from "antd";
-import {DeleteOutlined, DownloadOutlined, ShareAltOutlined} from "@ant-design/icons";
+import {DeleteOutlined, DownloadOutlined, ShareAltOutlined, LinkOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import useFetchApi from "../../../hooks/useFetchApi.ts";
 import DeleteDocumentModal from "../modal/DeleteDocumentModal.tsx";
@@ -43,7 +43,6 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId, isTableDa
 
     const columns = [
         { title: "Name", dataIndex: "name", key: "name" },
-        { title: "Link", dataIndex: "url", key: "url" },
         { title: "Người sở hữu", dataIndex: "owner", key: "owner" },
         { title: "Ngày khởi tạo", dataIndex: "createdAt", key: "createdAt" },
         {
@@ -51,6 +50,11 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId, isTableDa
             key: "action",
             render: (row: any) => (
                 <Space size="middle">
+                    <Button
+                        type="link"
+                        onClick={() => window.open(row.url, "_blank")}
+                        icon={<LinkOutlined />}
+                    />
                     <Button icon={<DownloadOutlined />} />
                     <Button
                         icon={<ShareAltOutlined />}
@@ -63,6 +67,7 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId, isTableDa
             ),
         },
     ];
+
 
     const parseData = (data: any) =>
         data.map((e: any) => ({
