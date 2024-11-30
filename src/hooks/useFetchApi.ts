@@ -13,6 +13,8 @@ interface UseFetchApiProps<T> {
     postData?: any;
     auth?: boolean;
     isWithCredentials?: boolean;
+    retryCount?: number;
+    retryDelay?: number;
 }
 
 interface FetchApiParams {
@@ -41,6 +43,8 @@ export default function useFetchApi<T>({
     postData = {},
     auth = true,
     isWithCredentials = false,
+    retryCount = 3,
+    retryDelay = 1000,
 }: UseFetchApiProps<T>) {
     const [loading, setLoading] = useState(initLoad);
     const [fetched, setFetched] = useState(false);
@@ -51,7 +55,8 @@ export default function useFetchApi<T>({
 
     const fetchApi = async (
         apiUrl = url,
-        { params = {} }: FetchApiParams = {}
+        { params = {} }: FetchApiParams = {},
+        retriesLeft = retryCount
     ) => {
         try {
             setLoading(true);
@@ -91,6 +96,14 @@ export default function useFetchApi<T>({
             }
         } catch (e: any) {
             console.error("Error fetching data:", e.message);
+            if (retriesLeft > 0) {
+                console.log(`Retrying... (${retriesLeft} retries left)`);
+                setTimeout(() => {
+                    fetchApi(apiUrl, { params }, retriesLeft - 1);
+                }, retryDelay);
+            } else {
+                console.error("Max retries reached. Could not fetch data.");
+            }
         } finally {
             setLoading(false);
             setFetched(true);

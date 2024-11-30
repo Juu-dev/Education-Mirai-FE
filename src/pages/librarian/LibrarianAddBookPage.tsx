@@ -200,7 +200,6 @@ export const LibrarianAddBookPage: React.FC = () => {
 
   // Handle Form Submission
   const handleAddBook = (values: any) => {
-    console.log("Book added:", values);
     closeModal();
     form.resetFields(); // Reset the form after submission
   };

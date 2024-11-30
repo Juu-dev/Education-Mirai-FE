@@ -69,7 +69,6 @@ const AdminClassPage: React.FC = () => {
 
     const {me} = useAuth()
     const {data: teacher} = useFetchApi({url: `/teachers/user/${me?.id || ""}`, auth: true})
-    console.log("id class:", me)
     const {data: students} = useFetchApi({url: `/students/class/${me?.teacher?.classId || ""}`, auth: true})
 
     const parseTeacherData  = (data: any) => ({
@@ -102,7 +101,6 @@ const AdminClassPage: React.FC = () => {
 
     // Function to handle form submission from modal
     const handleAssign = (values: AssignmentDetails) => {
-        console.log("Assignment Details:", values);
         setIsModalVisible(false);
     };
 
@@ -225,7 +223,6 @@ const FooterButtons: React.FC<{
 
 const { Title, Text } = Typography;
 const ProfileSection: React.FC<{ teacher: any }> = ({ teacher }) => {
-    console.log(teacher);
     return (
         <Card className="mb-4">
             <div className="flex items-center space-x-4">

@@ -119,7 +119,6 @@ const AdminDashboard = () => {
     // State for modal visibility
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {me} = useAuth();
-    console.log(me)
 
     // Function to show modal
     const showModal = () => {

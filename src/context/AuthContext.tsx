@@ -70,7 +70,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const { handleCreate: loginApi } = useCreateApi({ url: '/auth/login', fullResp: true, isWithCredentials: true });
   const { handleCreate: logoutApi } = useCreateApi({ url: '/auth/logout' });
-  const { fetchApi: refreshTokenApi } = useFetchApi({ url: '/auth/refresh-token', isWithCredentials: true });
+  const { data: refreshData, fetchApi: refreshTokenApi } = useFetchApi({ url: '/auth/refresh-token', isWithCredentials: true });
 
   const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
   const [me, setMe] = useState<User | null>(null);
@@ -84,7 +84,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
       student: data.Student,
       role: data.roles[0].role.name,
     });
-  }, []);
+  }, [refreshData]);
 
   const login: IAuthContext['login'] = useCallback(
       async (data: LoginData, onSuccess, onError) => {
@@ -135,13 +135,12 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const loginWithToken = useCallback(async () => {
     try {
-      const response = await refreshTokenApi();
-      const { accessToken, user } = response?.result?.data;
+      await refreshTokenApi();
 
-      saveMe(user);
-      token.setAccessToken(accessToken);
+      saveMe(refreshData?.user as User);
+      token.setAccessToken(refreshData?.accessToken);
       setIsAuthenticated(true);
-    } catch {
+    } catch (error) {
       token.removeAccessToken();
       setIsAuthenticated(false);
     }
