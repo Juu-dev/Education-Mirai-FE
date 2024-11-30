@@ -3,6 +3,7 @@ import { api } from "../helpers/api";
 
 interface UseDeleteApiProps {
     url: string;
+    auth: boolean;
 }
 
 interface ApiResponse {
@@ -12,21 +13,23 @@ interface ApiResponse {
     data?: any; // Có thể tùy chỉnh theo phản hồi của API
 }
 
-export default function useDeleteApi({ url }: UseDeleteApiProps) {
+export default function useDeleteApi({ url, auth = true }: UseDeleteApiProps) {
     const [deleting, setDeleting] = useState<boolean>(false);
 
     /**
      * @param {any} data
      * @returns {Promise<boolean>}
      */
-    const handleDelete = async (data: any): Promise<boolean> => {
+    const handleDelete = async (data: Record<string, any> = {}): Promise<boolean> => {
         try {
             setDeleting(true);
 
-            const resp: ApiResponse = await api(url, {
-                body: { data },
+            const options: RequestInit = {
                 method: "DELETE",
-            });
+                // ...(Object.keys(data).length > 0 && { body: data }),
+            };
+
+            const resp: ApiResponse = await api(url, options, auth);
 
             if (resp.success) {
                 console.log("Deleted successfully");

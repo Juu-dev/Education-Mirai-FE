@@ -140,7 +140,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center space-x-4">
                         <Avatar size={64} src="https://i.pravatar.cc/150?img=3" />
                         <div className="flex-grow">
-                            <h2 className="text-lg font-semibold">Nguyễn Văn A</h2>
+                            <h2 className="text-lg font-semibold">{me?.teacher?.name}</h2>
                             <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="text-gray-500">Vai trò</div>
                                 <div className="text-gray-900">{roleName[me?.role]}</div>

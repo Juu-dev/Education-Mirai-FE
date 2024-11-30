@@ -11,7 +11,23 @@ interface User {
   id: string;
   username: string;
   email: string;
-  teacher?: object;
+  teacher?: {
+    id: string;
+    userId: string;
+    classId: string;
+    metadataUrl: string;
+    name: string;
+    dob: string;
+    position: string;
+    createdAt: string;
+    updatedAt: string;
+    class: {
+      id: string;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+    }
+  };
   student?: object;
   role: string;
 }

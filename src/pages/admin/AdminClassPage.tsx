@@ -1,6 +1,6 @@
 import { Avatar, Button, Input, Table, Card } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import AdminAssignmentModal from "../../components/modal/AdminAssignmentModal";
 import { AssignmentDetails } from "../../components/assignment/interface/assginment-interface";
 import PageTitle from "../../components/common/SectionTitle";
@@ -15,7 +15,6 @@ import AssignmentModal from "../../components/admin/modal/AssignmentModal";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import {formatDate} from "../../helpers/date.ts";
 import useAuth from "../../hooks/useAuth.ts";
-import useCreateApi from "../../hooks/useCreateApi.ts";
 
 // Table columns
 const columns = [
@@ -70,7 +69,7 @@ const AdminClassPage: React.FC = () => {
 
     const {me} = useAuth()
     const {data: teacher} = useFetchApi({url: `/teachers/user/${me?.id || ""}`, auth: true})
-    console.log("id class:", me?.Teacher?.classId)
+    console.log("id class:", me)
     const {data: students} = useFetchApi({url: `/students/class/${me?.teacher?.classId || ""}`, auth: true})
 
     const parseTeacherData  = (data: any) => ({
@@ -226,6 +225,7 @@ const FooterButtons: React.FC<{
 
 const { Title, Text } = Typography;
 const ProfileSection: React.FC<{ teacher: any }> = ({ teacher }) => {
+    console.log(teacher);
     return (
         <Card className="mb-4">
             <div className="flex items-center space-x-4">

@@ -35,8 +35,6 @@ function createApi() {
             }
         }
 
-        console.log('options: ', options);
-
         const response = await client.request({
             url: baseUrl + uri,
             method: options.method || "GET",
