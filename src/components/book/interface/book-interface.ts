@@ -7,4 +7,5 @@ export interface BookInterface {
     description: string;
     nxb: string;
     rating?: number;
+    pdfUrl: string;
 }

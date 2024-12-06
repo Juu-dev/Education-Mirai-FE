@@ -19,6 +19,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 1",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 2,
@@ -28,6 +29,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 2",
             nxb: "NXB Giáo dục",
             rating: 3,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 3,
@@ -37,6 +39,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 4,
@@ -46,6 +49,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 4",
             nxb: "NXB Giáo dục",
             rating: 5,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 5,
@@ -55,6 +59,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 6,
@@ -64,6 +69,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 1",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 7,
@@ -73,6 +79,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 2",
             nxb: "NXB Giáo dục",
             rating: 3,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 8,
@@ -82,6 +89,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 9,
@@ -91,6 +99,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 4",
             nxb: "NXB Giáo dục",
             rating: 5,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 10,
@@ -100,6 +109,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 11,
@@ -109,6 +119,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 1",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 12,
@@ -118,6 +129,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 2",
             nxb: "NXB Giáo dục",
             rating: 3,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 13,
@@ -127,6 +139,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 14,
@@ -136,6 +149,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 4",
             nxb: "NXB Giáo dục",
             rating: 5,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 15,
@@ -145,6 +159,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 16,
@@ -154,6 +169,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 1",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 17,
@@ -163,6 +179,7 @@ export const BookDetailPage = () => {
             description: "Sách tiếng việt 2",
             nxb: "NXB Giáo dục",
             rating: 3,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 18,
@@ -172,6 +189,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 19,
@@ -181,6 +199,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 4",
             nxb: "NXB Giáo dục",
             rating: 5,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
         {
             id: 20,
@@ -190,6 +209,7 @@ export const BookDetailPage = () => {
             description: "Sách tin học 3",
             nxb: "NXB Giáo dục",
             rating: 4,
+            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
         },
     ]
 
@@ -201,6 +221,12 @@ export const BookDetailPage = () => {
         const book = books.find((book) => book.id.toString() === id);
         setBook(book || null);
     }, [id]);
+
+    const handleReadClick = () => {
+        if (book?.pdfUrl) {
+            window.open(book.pdfUrl, "_blank"); 
+        }
+    };
 
     // useEffect(() => {
     //     // Function to fetch book details
@@ -283,7 +309,7 @@ export const BookDetailPage = () => {
 
                     {/* Read Button */}
                     <div className="flex space-between gap-x-3">
-                        <Button type="primary" className="w-1/2">
+                        <Button type="primary" className="w-1/2" onClick={handleReadClick}>
                             Đọc
                         </Button>
                         <Button type="default" className="w-1/2 bg-green-500 text-white hover:bg-green-300">
