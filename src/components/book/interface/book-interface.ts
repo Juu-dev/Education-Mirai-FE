@@ -3,9 +3,9 @@ export interface BookInterface {
     id: number;
     title: string;
     author: string;
-    image: string;
+    coverImageUrl: string;
     description: string;
-    nxb: string;
-    rating?: number;
-    pdfUrl: string;
+    publishingHouse: string;
+    evaluate: number;
+    contentPdfUrl: string;
 }

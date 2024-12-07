@@ -6,15 +6,16 @@ import useCreateApiFormData from "../../../hooks/useCreateApiFormData.ts";
 interface Props {
     isVisible: boolean;
     onCancel: () => void;
+    onUploadSuccess: () => void;
 }
 
-const AddBookModal: React.FC<Props> = ({ isVisible, onCancel }) => {
+const AddBookModal: React.FC<Props> = ({ isVisible, onCancel, onUploadSuccess }: Props) => {
     const [form] = Form.useForm();
 
     // Sử dụng hook để tạo API upload
     const { creating, handleCreate } = useCreateApiFormData({
         url: "/books",
-        // fullResp: true,
+        fullResp: true,
         successMsg: "Thêm sách thành công",
         errorMsg: "Thêm sách thất bại",
     });
@@ -40,8 +41,9 @@ const AddBookModal: React.FC<Props> = ({ isVisible, onCancel }) => {
 
         const success = await handleCreate(formData);
         if (success) {
-            onCancel(); // Đóng modal nếu thành công
-            form.resetFields(); // Reset form
+            onCancel();
+            form.resetFields();
+            onUploadSuccess();
         }
     };
 
@@ -58,7 +60,7 @@ const AddBookModal: React.FC<Props> = ({ isVisible, onCancel }) => {
             title="Thêm sách mới"
             visible={isVisible}
             onCancel={onCancel}
-            footer={null} // Custom footer with Form submission button
+            footer={null}
         >
             <Form layout="vertical" form={form} onFinish={handleSubmit}>
                 <Form.Item
@@ -131,7 +133,6 @@ const AddBookModal: React.FC<Props> = ({ isVisible, onCancel }) => {
                         <Button icon={<UploadOutlined />}>Tải sách PDF</Button>
                     </Upload>
                 </Form.Item>
-
 
                 <Form.Item>
                     <Button type="primary"

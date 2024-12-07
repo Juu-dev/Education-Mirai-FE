@@ -22,9 +22,9 @@ interface FetchApiParams {
 }
 
 interface Pagination {
-    total?: number;
-    current?: number;
+    page?: number;
     pageSize?: number;
+    totalPage?: number;
 }
 
 /**
@@ -61,7 +61,6 @@ export default function useFetchApi<T>({
         retriesLeft = retryCount
     ) => {
         try {
-            console.log("Fetch API running in useFetchApi: ", apiUrl);
             setLoading(true);
             const path = apiUrl;
             const separateChar = path.includes("?") ? "&" : "?";

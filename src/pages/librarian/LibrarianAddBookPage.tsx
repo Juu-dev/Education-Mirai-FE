@@ -1,198 +1,16 @@
 import React, { useState } from 'react';
-import { Button, Input, Modal, Form } from 'antd';
+import { Button } from 'antd';
 import { BookList } from "../../components/book/BookList";
 
-import book1 from "../../assets/book/book1.png";
-import book2 from "../../assets/book/book2.png";
-import book3 from "../../assets/book/book3.png";
-import book4 from "../../assets/book/book4.png";
-import AddBookModal from "../../components/library/modal/AddBookModal.tsx";
 
-const books = [
-    {
-        id: 1,
-        title: "Sách tiếng việt 1",
-        author: "Nguyễn Văn A",
-        image: book1,
-        description: "Sách tiếng việt 1",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 2,
-        title: "Sách tiếng việt 2",
-        author: "Nguyễn Văn A",
-        image: book2,
-        description: "Sách tiếng việt 2",
-        nxb: "NXB Giáo dục",
-        rating: 3,
-    },
-    {
-        id: 3,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 4,
-        title: "Sách tin học 4",
-        author: "Nguyễn Văn A",
-        image: book4,
-        description: "Sách tin học 4",
-        nxb: "NXB Giáo dục",
-        rating: 5,
-    },
-    {
-        id: 5,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 6,
-        title: "Sách tiếng việt 1",
-        author: "Nguyễn Văn A",
-        image: book1,
-        description: "Sách tiếng việt 1",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 7,
-        title: "Sách tiếng việt 2",
-        author: "Nguyễn Văn A",
-        image: book2,
-        description: "Sách tiếng việt 2",
-        nxb: "NXB Giáo dục",
-        rating: 3,
-    },
-    {
-        id: 8,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 9,
-        title: "Sách tin học 4",
-        author: "Nguyễn Văn A",
-        image: book4,
-        description: "Sách tin học 4",
-        nxb: "NXB Giáo dục",
-        rating: 5,
-    },
-    {
-        id: 10,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 11,
-        title: "Sách tiếng việt 1",
-        author: "Nguyễn Văn A",
-        image: book1,
-        description: "Sách tiếng việt 1",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 12,
-        title: "Sách tiếng việt 2",
-        author: "Nguyễn Văn A",
-        image: book2,
-        description: "Sách tiếng việt 2",
-        nxb: "NXB Giáo dục",
-        rating: 3,
-    },
-    {
-        id: 13,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 14,
-        title: "Sách tin học 4",
-        author: "Nguyễn Văn A",
-        image: book4,
-        description: "Sách tin học 4",
-        nxb: "NXB Giáo dục",
-        rating: 5,
-    },
-    {
-        id: 15,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 16,
-        title: "Sách tiếng việt 1",
-        author: "Nguyễn Văn A",
-        image: book1,
-        description: "Sách tiếng việt 1",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 17,
-        title: "Sách tiếng việt 2",
-        author: "Nguyễn Văn A",
-        image: book2,
-        description: "Sách tiếng việt 2",
-        nxb: "NXB Giáo dục",
-        rating: 3,
-    },
-    {
-        id: 18,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-    {
-        id: 19,
-        title: "Sách tin học 4",
-        author: "Nguyễn Văn A",
-        image: book4,
-        description: "Sách tin học 4",
-        nxb: "NXB Giáo dục",
-        rating: 5,
-    },
-    {
-        id: 20,
-        title: "Sách tin học 3",
-        author: "Nguyễn Văn A",
-        image: book3,
-        description: "Sách tin học 3",
-        nxb: "NXB Giáo dục",
-        rating: 4,
-    },
-]
+import AddBookModal from "../../components/library/modal/AddBookModal.tsx";
 
 export const LibrarianAddBookPage: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isTableDataUpdated, setIsTableDataUpdated] = useState(false);
+    const handleRefreshTableData = () => {
+        setIsTableDataUpdated(prev => !prev);
+    };
 
   // Open and Close Modal
   const openModal = () => setIsModalVisible(true);
@@ -209,10 +27,10 @@ export const LibrarianAddBookPage: React.FC = () => {
 
       {/* Book List */}
       <div className="book-list-wrapper">
-        <BookList books={books} />
+        <BookList isRefresh={isTableDataUpdated} />
       </div>
 
-      <AddBookModal isVisible={isModalVisible} onCancel={closeModal} />
+      <AddBookModal isVisible={isModalVisible} onCancel={closeModal} onUploadSuccess={handleRefreshTableData} />
     </div>
   );
 };

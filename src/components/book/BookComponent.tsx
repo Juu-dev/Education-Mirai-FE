@@ -17,7 +17,7 @@ export const BookComponent = ({ book }: BookProps) => {
             {/* Image Section */}
             <div className="relative">
                 <img
-                    src={book.image}
+                    src={book.coverImageUrl}
                     alt={book.title}
                     className="w-full h-56 object-cover"
                 />
@@ -35,7 +35,7 @@ export const BookComponent = ({ book }: BookProps) => {
                 </p>
                 <p className="text-gray-800">
                     <span className="font-semibold">NXB: </span>
-                    <span className="font-normal">{book.nxb}</span>
+                    <span className="font-normal">{book.publishingHouse}</span>
                 </p>
             </div>
         </div>
