@@ -6,6 +6,7 @@ import book1 from "../../assets/book/book1.png";
 import book2 from "../../assets/book/book2.png";
 import book3 from "../../assets/book/book3.png";
 import book4 from "../../assets/book/book4.png";
+import AddBookModal from "../../components/library/modal/AddBookModal.tsx";
 
 const books = [
     {
@@ -192,17 +193,10 @@ const books = [
 
 export const LibrarianAddBookPage: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
 
   // Open and Close Modal
   const openModal = () => setIsModalVisible(true);
   const closeModal = () => setIsModalVisible(false);
-
-  // Handle Form Submission
-  const handleAddBook = (values: any) => {
-    closeModal();
-    form.resetFields(); // Reset the form after submission
-  };
 
   return (
     <div className="container mx-auto px-4 overflow-hidden">
@@ -218,60 +212,7 @@ export const LibrarianAddBookPage: React.FC = () => {
         <BookList books={books} />
       </div>
 
-      {/* Add Book Modal */}
-      <Modal
-        title="Thêm sách mới"
-        visible={isModalVisible}
-        onCancel={closeModal}
-        footer={null} // Custom footer with Form submission button
-      >
-        <Form layout="vertical" form={form} onFinish={handleAddBook}>
-          <Form.Item
-            name="title"
-            label="Tên sách"
-            rules={[{ required: true, message: 'Vui lòng nhập tên sách' }]}
-          >
-            <Input placeholder="Nhập tên sách" />
-          </Form.Item>
-
-          <Form.Item
-            name="author"
-            label="Tác giả"
-            rules={[{ required: true, message: 'Vui lòng nhập tác giả' }]}
-          >
-            <Input placeholder="Nhập tên tác giả" />
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Mô tả"
-          >
-            <Input.TextArea rows={4} placeholder="Nhập mô tả sách" />
-          </Form.Item>
-
-          <Form.Item
-            name="nxb"
-            label="Nhà xuất bản"
-            rules={[{ required: true, message: 'Vui lòng nhập NXB' }]}
-          >
-            <Input placeholder="Nhập nhà xuất bản" />
-          </Form.Item>
-
-          <Form.Item
-            name="rating"
-            label="Đánh giá"
-            rules={[{ required: true, message: 'Vui lòng nhập đánh giá (1-5)' }]}
-          >
-            <Input type="number" min={1} max={5} placeholder="Nhập đánh giá (1-5)" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="w-full">
-              Thêm sách
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <AddBookModal isVisible={isModalVisible} onCancel={closeModal} />
     </div>
   );
 };
