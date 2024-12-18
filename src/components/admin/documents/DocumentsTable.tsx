@@ -45,6 +45,7 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId, isTableDa
         { title: "Name", dataIndex: "name", key: "name" },
         { title: "Người sở hữu", dataIndex: "owner", key: "owner" },
         { title: "Ngày khởi tạo", dataIndex: "createdAt", key: "createdAt" },
+        { title: "Loại tài liệu", dataIndex: "type", key: "type" },
         {
             title: "Hành động",
             key: "action",
@@ -74,6 +75,7 @@ const DocumentTable: React.FC<Props> = ({ handleShareClick, teacherId, isTableDa
             key: e.id,
             id: e.id,
             name: e.description,
+            type: e.type,
             createdAt: new Date(e.createdAt).toLocaleDateString(),
             owner: e.teacher.name,
             url: e.url
