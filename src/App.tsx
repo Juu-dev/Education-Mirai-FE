@@ -20,6 +20,7 @@ import AdminDocumentPage from './pages/admin/AdminDocumentPage';
 import LibraryStatisticalPage from './pages/librarian/LibraryStatisticalPage';
 import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
 import { LibrarianAddBookPage } from './pages/librarian/LibrarianAddBookPage';
+import Report from './pages/report/Report';
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage'
 import AuthProvider from "./context/AuthContext";
@@ -45,6 +46,7 @@ const App: React.FC = () => {
 							<Route path="/principal/class" element={<AdminClassPage />} />
 							<Route path="/principal/document" element={<AdminDocumentPage />} />
 							<Route path="/principal/document/:teacherID" element={<AdminDocumentPage />} />
+							<Route path="/principal/reports" element={<Report />} />
 						</Route>
 					</Route>
 					{/*.Teacher Routes */}
@@ -55,6 +57,7 @@ const App: React.FC = () => {
 							<Route path="/teacher/dashboard" element={<AdminDashboard />} />
 							<Route path="/teacher/class" element={<AdminClassPage />} />
 							<Route path="/teacher/document" element={<AdminDocumentPage />} />
+							<Route path="/teacher/reports" element={<Report />} />
 						</Route>
 					</Route>
 					{/* Student Routes */}
