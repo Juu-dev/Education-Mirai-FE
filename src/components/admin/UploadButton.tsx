@@ -1,55 +1,67 @@
 import React, { useState } from "react";
 import { Button, Upload, message, Dropdown, Menu } from "antd";
-import { UploadOutlined, DownOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
 import useAuth from "../../hooks/useAuth.ts";
-import useCreateApi from "../../hooks/useCreateApi.ts";
 
 interface UploadButtonProps {
     onUploadSuccess: () => void;
 }
 
+interface IMenuItem {
+    key: string
+    value: string
+}
+
+const menuUpload: IMenuItem[] = [{
+    key: "lecture-plan",
+    value: "Kế hoạch bài dạy"
+},{
+    key: "continuation-education",
+    value: "Bồi dưỡng thường xuyên"
+},{
+    key: "meeting-plan",
+    value: "Hội họp"
+},{
+    key: "lecture-note",
+    value: "Ghi chú"
+},{
+    key: "group-profile",
+    value: "Hồ sơ tổ"
+},{
+    key: "others",
+    value: "Khác"
+}]
+
 const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
-    const { creating, handleCreate: uploadApi, errorData } = useCreateApiFormData({
-        url: "/file-upload/file",
-        fullResp: true,
-        successMsg: "File uploaded successfully!",
-        errorMsg: "File upload failed.",
-    });
-    const { handleCreate: updateDocument } = useCreateApi({
+    const { creating, handleCreate: updateDocument, errorData } = useCreateApiFormData({
         url: "/documents",
         fullResp: true,
+        successMsg: "Thêm tài liệu thành công",
+        errorMsg: "Thêm tài liệu thất bại",
     });
     const [file, setFile] = useState<any>(null); // Only one file to upload
     const { me } = useAuth();
-    const [selectedOption, setSelectedOption] = useState<string | null>(null); // Null until an option is selected
+    const [selectedOption, setSelectedOption] = useState<IMenuItem | null>(null); // Null until an option is selected
 
     // Handle file selection and upload immediately
-    const handleChange = async (info: any) => {
+    const handleChange = async (info: any, e: IMenuItem) => {
         if (info.fileList.length > 0) {
             const selectedFile = info.fileList[0];
             setFile(selectedFile);
 
+            console.log("selectedFile: ", selectedFile);
+            console.log("selectedFile.originFileObj: ", selectedFile.originFileObj);
+
             // Prepare the form data with file and additional data
             const formData = new FormData();
-            formData.append("file", selectedFile.originFileObj); // Append the selected file
+            formData.append("files", selectedFile.originFileObj); // Append the selected file
+            formData.append("teacherId", me?.teacher?.id);
+            formData.append("description", selectedFile.name);
+            formData.append("type", e.key);
 
-            // Call the API to upload the file and data
-            const uploadedFile = await uploadApi(formData);
-            if (uploadedFile && uploadedFile.success) {
-                message.success("File uploaded successfully.");
-            } else {
-                message.error("File upload failed.");
-            }
-
-            const resultDocument = await updateDocument({
-                teacherId: me?.teacher?.id,
-                url: uploadedFile.data.Location,
-                createdAt: new Date().toISOString(),
-                description: uploadedFile.data.Key,
-                type: selectedOption
-            });
-            if (resultDocument && resultDocument.success) {
+            const success = await updateDocument(formData);
+            if (success) {
                 message.success("Document uploaded successfully.");
                 onUploadSuccess();
             } else {
@@ -59,49 +71,38 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
             setFile(null);
         }
     };
+
     const menu = (
-        <Menu
-            onClick={(e) => {
-                setSelectedOption(e.domEvent.target.innerText); // Extract visible text
-            }}
-        >
-            <Menu.Item key="lecture-plan">Kế hoạch bài dạy</Menu.Item>
-            <Menu.Item key="continuation-education">Bồi dưỡng thường xuyên</Menu.Item>
-            <Menu.Item key="meeting-plan">Hội họp</Menu.Item>
-            <Menu.Item key="lecture-note">Ghi chú</Menu.Item>
-            <Menu.Item key="group-profile">Hồ sơ tổ</Menu.Item>
-            <Menu.Item key="others">Khác</Menu.Item>
+        <Menu>
+            {menuUpload.map((e) =>
+                <Menu.Item
+                    key={e.key}
+                    onClick={() => setSelectedOption(e)
+                }>
+                    <Upload
+                        beforeUpload={() => false} // Prevent automatic upload, handle manually
+                        onChange={(info) => handleChange(info, e)} // Handle file change and upload
+                        fileList={file ? [file] : []} // Only display the selected file
+                        accept="*" // You can restrict the file types here
+                    >
+                        {e.value}
+                    </Upload>
+                </Menu.Item>
+            )}
         </Menu>
     );
-
 
     return (
         <div>
             <Dropdown overlay={menu} trigger={["click"]}>
                 <Button>
-                    {selectedOption ? `Selected: ${selectedOption}` : "Chọn loại tài liệu:"} <DownOutlined />
-
+                    <UploadOutlined /> {creating
+                    ? "Uploading..."
+                    : selectedOption
+                    ? `Upload (${selectedOption.value})`
+                    : "Upload document"}
                 </Button>
             </Dropdown>
-            <Upload
-                beforeUpload={() => false} // Prevent automatic upload, handle manually
-                onChange={handleChange} // Handle file change and upload
-                fileList={file ? [file] : []} // Only display the selected file
-                accept="*" // You can restrict the file types here
-                disabled={!selectedOption} // Disable the upload button until an option is selected
-            >
-                <Button
-                    icon={<UploadOutlined />}
-                    loading={creating} // Show loading state during upload
-                    disabled={!selectedOption || creating} // Disable button when no option is selected or uploading
-                >
-                    {creating
-                        ? "Uploading..."
-                        : selectedOption
-                            ? `Upload (${selectedOption})`
-                            : "Upload"}
-                </Button>
-            </Upload>
             {errorData && <div>Error: {errorData}</div>}
         </div>
     );
