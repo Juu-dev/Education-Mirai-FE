@@ -64,7 +64,8 @@ const AdminLayout = () => {
                     theme="dark"
                     mode="inline"
                     defaultSelectedKeys={[location.pathname]}
-                    className="flex-grow">
+                    className="flex-grow"
+                >
                     {sidebarItems.map((item) => (
                         <Menu.Item
                             key={item.key}

@@ -41,3 +41,9 @@ export const SHARE_LIST_DATA = [
         sharedWith: "User B",
     },
 ];
+
+export const OBJECT_DATA = [
+    {value: "student", label: "Student"},
+    {value: "teacher", label: "Teacher"},
+    {value: "principal", label: "Principal"}
+]
