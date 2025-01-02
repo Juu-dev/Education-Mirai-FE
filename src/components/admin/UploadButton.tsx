@@ -1,78 +1,108 @@
-import React, {useState} from "react";
-import { Button, Upload, message } from "antd";
+import React, { useState } from "react";
+import { Button, Upload, message, Dropdown, Menu } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
 import useAuth from "../../hooks/useAuth.ts";
-import useCreateApi from "../../hooks/useCreateApi.ts";
 
 interface UploadButtonProps {
     onUploadSuccess: () => void;
 }
 
-const UploadButton: React.FC<UploadButtonProps> = ({onUploadSuccess}) => {
-    const { creating, handleCreate: uploadApi, errorData } = useCreateApiFormData({
-        url: "/file-upload/file",
-        fullResp: true,
-        successMsg: "File uploaded successfully!",
-        errorMsg: "File upload failed.",
-    });
-    const { handleCreate: updateDocument} = useCreateApi({
+interface IMenuItem {
+    key: string
+    value: string
+}
+
+const menuUpload: IMenuItem[] = [{
+    key: "lecture-plan",
+    value: "Kế hoạch bài dạy"
+},{
+    key: "continuation-education",
+    value: "Bồi dưỡng thường xuyên"
+},{
+    key: "meeting-plan",
+    value: "Hội họp"
+},{
+    key: "lecture-note",
+    value: "Ghi chú"
+},{
+    key: "group-profile",
+    value: "Hồ sơ tổ"
+},{
+    key: "others",
+    value: "Khác"
+}]
+
+const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
+    const { creating, handleCreate: updateDocument, errorData } = useCreateApiFormData({
         url: "/documents",
         fullResp: true,
+        successMsg: "Thêm tài liệu thành công",
+        errorMsg: "Thêm tài liệu thất bại",
     });
     const [file, setFile] = useState<any>(null); // Only one file to upload
-    const {me} = useAuth()
+    const { me } = useAuth();
+    const [selectedOption, setSelectedOption] = useState<IMenuItem | null>(null); // Null until an option is selected
+
     // Handle file selection and upload immediately
-    const handleChange = async (info: any) => {
+    const handleChange = async (info: any, e: IMenuItem) => {
         if (info.fileList.length > 0) {
             const selectedFile = info.fileList[0];
             setFile(selectedFile);
 
+            console.log("selectedFile: ", selectedFile);
+            console.log("selectedFile.originFileObj: ", selectedFile.originFileObj);
+
             // Prepare the form data with file and additional data
             const formData = new FormData();
-            formData.append("file", selectedFile.originFileObj); // Append the selected file
+            formData.append("files", selectedFile.originFileObj); // Append the selected file
+            formData.append("teacherId", me?.teacher?.id);
+            formData.append("description", selectedFile.name);
+            formData.append("type", e.key);
 
-            // Call the API to upload the file and data
-            const uploadedFile = await uploadApi(formData);
-            if (uploadedFile && uploadedFile.success) {
-                message.success("File uploaded successfully.");
-            } else {
-                message.error("File upload failed.");
-            }
-
-            const resultDocument = await updateDocument({
-                teacherId: me?.teacher?.id,
-                url: uploadedFile.data.Location,
-                createdAt: new Date().toISOString(),
-                description: uploadedFile.data.Key
-            });
-            if (resultDocument && resultDocument.success) {
+            const success = await updateDocument(formData);
+            if (success) {
                 message.success("Document uploaded successfully.");
                 onUploadSuccess();
             } else {
                 message.error("Document upload failed.");
             }
 
-            setFile(null)
+            setFile(null);
         }
     };
 
+    const menu = (
+        <Menu>
+            {menuUpload.map((e) =>
+                <Menu.Item
+                    key={e.key}
+                    onClick={() => setSelectedOption(e)
+                }>
+                    <Upload
+                        beforeUpload={() => false} // Prevent automatic upload, handle manually
+                        onChange={(info) => handleChange(info, e)} // Handle file change and upload
+                        fileList={file ? [file] : []} // Only display the selected file
+                        accept="*" // You can restrict the file types here
+                    >
+                        {e.value}
+                    </Upload>
+                </Menu.Item>
+            )}
+        </Menu>
+    );
+
     return (
         <div>
-            <Upload
-                beforeUpload={() => false} // Prevent automatic upload, handle manually
-                onChange={handleChange} // Handle file change and upload
-                fileList={file ? [file] : []} // Only display the selected file
-                accept="*" // You can restrict the file types here
-            >
-                <Button
-                    icon={<UploadOutlined/>}
-                    loading={creating} // Show loading state during upload
-                    disabled={creating} // Disable button when uploading
-                >
-                    {creating ? "Uploading..." : "Upload"}
+            <Dropdown overlay={menu} trigger={["click"]}>
+                <Button>
+                    <UploadOutlined /> {creating
+                    ? "Uploading..."
+                    : selectedOption
+                    ? `Upload (${selectedOption.value})`
+                    : "Upload document"}
                 </Button>
-            </Upload>
+            </Dropdown>
             {errorData && <div>Error: {errorData}</div>}
         </div>
     );
