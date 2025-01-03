@@ -16,8 +16,8 @@ import useDebounce from "../../hooks/useDebounce.ts";
 const AdminDocumentPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [filterType, setFilterType] = useState<string[]>([]);
-    const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
-    const [debouncedFilterType] = useDebounce(filterType, 500);
+    const debouncedSearchTerm = useDebounce<string>(searchTerm, 500);
+    const debouncedFilterType = useDebounce<string[]>(filterType, 500);
 
     const {isPrincipal, isTeacher, me} = useAuth();
     const [isTableDataUpdated, setIsTableDataUpdated] = useState(false);

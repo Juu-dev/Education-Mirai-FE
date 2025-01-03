@@ -11,7 +11,7 @@ interface Props {
     teacherId: string;
     isTableDataUpdated: boolean;
     searchTerm: string;
-    filterType: string;
+    filterType: string[];
 }
 
 const DocumentTable: React.FC<Props> = ({
@@ -38,10 +38,14 @@ const DocumentTable: React.FC<Props> = ({
         }
     }
 
-
     useEffect(() => {
-        documentsApi.setFetched(false);
-    },[teacherId])
+        const params = {};
+
+        if (searchTerm) params.search = searchTerm;
+        if (filterType) params.type = filterType;
+
+        documentsApi.fetchApi(`/documents/pagination/${teacherId}`, {params});
+    }, [teacherId, searchTerm, filterType?.length]);
 
     const handleRefresh = async () => {
         await documentsApi.fetchApi();
@@ -104,7 +108,6 @@ const DocumentTable: React.FC<Props> = ({
         },
     ];
 
-
     const parseData = (data: any) =>
         data.map((e: any) => ({
             key: e.id,
@@ -112,12 +115,16 @@ const DocumentTable: React.FC<Props> = ({
             name: e.description,
             type: getValueFromMenuUploadByKey(e.type),
             createdAt: new Date(e.createdAt).toLocaleDateString(),
-            owner: e.teacher.name,
+            owner: e?.teacher?.name,
             url: e.url
         }));
 
     return <>
-        <Table dataSource={parseData(documentsApi.data)} columns={columns} />
+        <Table
+            dataSource={parseData(documentsApi.data)}
+            columns={columns}
+            pagination={{ pageSize: 30 }}
+        />
         {deleteDocumentModal.modal}
     </>
 };

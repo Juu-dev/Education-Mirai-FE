@@ -42,6 +42,7 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
             }
 
             setFile(null);
+            setSelectedOption(null);
         }
     };
 
