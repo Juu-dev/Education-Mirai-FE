@@ -3,35 +3,11 @@ import { Button, Upload, message, Dropdown, Menu } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
 import useAuth from "../../hooks/useAuth.ts";
+import {IMenuItem, MENU_UPLOAD} from "../../constants/document-type.ts";
 
 interface UploadButtonProps {
     onUploadSuccess: () => void;
 }
-
-interface IMenuItem {
-    key: string
-    value: string
-}
-
-const menuUpload: IMenuItem[] = [{
-    key: "lecture-plan",
-    value: "Kế hoạch bài dạy"
-},{
-    key: "continuation-education",
-    value: "Bồi dưỡng thường xuyên"
-},{
-    key: "meeting-plan",
-    value: "Hội họp"
-},{
-    key: "lecture-note",
-    value: "Ghi chú"
-},{
-    key: "group-profile",
-    value: "Hồ sơ tổ"
-},{
-    key: "others",
-    value: "Khác"
-}]
 
 const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
     const { creating, handleCreate: updateDocument, errorData } = useCreateApiFormData({
@@ -50,9 +26,6 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
             const selectedFile = info.fileList[0];
             setFile(selectedFile);
 
-            console.log("selectedFile: ", selectedFile);
-            console.log("selectedFile.originFileObj: ", selectedFile.originFileObj);
-
             // Prepare the form data with file and additional data
             const formData = new FormData();
             formData.append("files", selectedFile.originFileObj); // Append the selected file
@@ -69,12 +42,13 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
             }
 
             setFile(null);
+            setSelectedOption(null);
         }
     };
 
     const menu = (
         <Menu>
-            {menuUpload.map((e) =>
+            {MENU_UPLOAD.map((e) =>
                 <Menu.Item
                     key={e.key}
                     onClick={() => setSelectedOption(e)

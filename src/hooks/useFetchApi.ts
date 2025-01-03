@@ -53,8 +53,6 @@ export default function useFetchApi<T>({
     const [total, setTotal] = useState(0);
     const [count, setCount] = useState(0);
 
-    console.log("url in useFetchApi: ", url);
-
     const fetchApi = async (
         apiUrl = url,
         { params = {} }: FetchApiParams = {},
@@ -113,7 +111,6 @@ export default function useFetchApi<T>({
     };
 
     useEffect(() => {
-        console.log("initLoad && !fetched: ", url, initLoad && !fetched)
         if (initLoad && !fetched) {
             fetchApi(url, { params: initQueries }).then(() => {});
         }
