@@ -68,7 +68,7 @@ const AdminClassPage: React.FC = () => {
     // const studentData = generateStudentData(50);
 
     const {me} = useAuth()
-    const {data: teacher} = useFetchApi({url: `/teachers/user/${me?.id || ""}`, auth: true})
+    1
     const {data: students} = useFetchApi({url: `/students/class/${me?.teacher?.classId || ""}`, auth: true})
 
     const parseTeacherData  = (data: any) => ({

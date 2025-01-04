@@ -40,14 +40,14 @@ const AdminLayout = () => {
                     { key: "/teacher/dashboard", label: "Bảng điều khiển" },
                     { key: "/teacher/class", label: "Trường" },
                     { key: "/teacher/document", label: "Tài liệu" },
-                    { key: "/teacher/reports", label: "Gửi yêu cầu" },
+                    { key: "/teacher/request", label: "Gửi yêu cầu" },
                     { key: "/teacher/settings", label: "Tài khoản" },
                 ]
             : [
                 { key: "/principal/dashboard", label: "Bảng điều khiển" },
                 { key: "/principal/class", label: "Trường" },
                 { key: "/principal/document", label: "Tài liệu" },
-                { key: "/principal/reports", label: "Gửi yêu cầu" },
+                { key: "/principal/request", label: "Gửi yêu cầu" },
                 { key: "/principal/settings", label: "Tài khoản" },
             ];
 
