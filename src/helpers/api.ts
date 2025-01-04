@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import tokenFactory from "./token";
+import {API_URL} from "./env.ts";
 
 const client = axios.create({ timeout: 60000 });
-// const baseUrl = 'http://27.71.16.104:9001/api/v1';
-const baseUrl = 'http://localhost:9001/api/v1';
 
 function createApi() {
     return async (
@@ -36,7 +35,7 @@ function createApi() {
         }
 
         const response = await client.request({
-            url: baseUrl + uri,
+            url: API_URL + uri,
             method: options.method || "GET",
             data: options.body,
             headers: {
