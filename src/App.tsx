@@ -1,6 +1,6 @@
 // src/App.tsx
 import React from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
+import {BrowserRouter as Router, Navigate} from "react-router-dom";
 import {Routes, Route} from 'react-router-dom';
 import Unauthorized from './pages/auth/Unauthorized';
 import ProtectedRoute from './components/route/ProtectedRoute';
@@ -18,7 +18,7 @@ import AdminDashboard from './pages/admin/AdminDashboardPage';
 import AdminClassPage from './pages/admin/AdminClassPage';
 import AdminDocumentPage from './pages/admin/AdminDocumentPage';
 import LibraryStatisticalPage from './pages/librarian/LibraryStatisticalPage';
-import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
+// import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
 import { LibrarianAddBookPage } from './pages/librarian/LibrarianAddBookPage';
 import Report from './pages/report/Report';
 import LoginPage from './pages/auth/LoginPage';
@@ -75,9 +75,10 @@ const App: React.FC = () => {
 					{/* Librarian Routes */}
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
+							<Route path="/librarian" element={<Navigate to="/librarian/dashboard" replace />} />
 							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
 							<Route path="/librarian/library" element={<LibraryStatisticalPage />} />
-							<Route path="/librarian/document" element={<LibrarianDocumentPage />} />
+							{/*<Route path="/librarian/document" element={<LibrarianDocumentPage />} />*/}
 							<Route path="/librarian/books" element={<LibrarianAddBookPage />} />
 						</Route>
 					</Route>
