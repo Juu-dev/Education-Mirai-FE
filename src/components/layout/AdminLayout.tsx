@@ -55,8 +55,8 @@ const AdminLayout = () => {
 
     return (
         <div className="flex min-h-screen w-screen">
-            {/* Thanh bên */}
-            <aside className="bg-gray-800 text-white w-64 min-h-screen flex flex-col">
+            {/* Sidebar */}
+            <aside className="bg-gray-800 text-white w-64 max-h-screen flex flex-col fixed top-0 left-0 bottom-0">
                 <div className="p-4 flex items-center justify-center">
                     <img src={logo} alt="logo" className="h-10" />
                 </div>
@@ -91,7 +91,7 @@ const AdminLayout = () => {
                 </div>
             </aside>
             {/* Nội dung chính */}
-            <main className="flex-grow bg-gray-100 p-4">
+            <main className="flex-grow bg-gray-100 p-4 ml-64 overflow-auto">
                 <Outlet />
             </main>
         </div>

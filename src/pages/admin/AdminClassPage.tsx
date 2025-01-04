@@ -248,10 +248,10 @@ const ProfileSection: React.FC<{ teacher: any }> = ({ teacher }) => {
                             {teacher.studentCount}
                         </Text>
 
-                        <Text strong className="col-span-1">
-                            Mã số:
-                        </Text>
-                        <Text className="col-span-4">{teacher.code}</Text>
+                        {/*<Text strong className="col-span-1">*/}
+                        {/*    Mã số:*/}
+                        {/*</Text>*/}
+                        {/*<Text className="col-span-4">{teacher.code}</Text>*/}
 
                         <Text strong className="col-span-1">
                             Ngày sinh:
