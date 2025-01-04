@@ -6,6 +6,7 @@ import token from '../helpers/token';
 import useCreateApi from '../hooks/useCreateApi';
 import { Role } from '../constants/roles/role.ts';
 import useFetchApi from '../hooks/useFetchApi';
+import {message} from "antd";
 
 interface User {
   id: string;
@@ -99,6 +100,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         try {
           const response = await loginApi(data);
           const { accessToken, user } = response?.result;
+          message.success('Đăng nhập thành công!')
 
           saveMe(user as User);
           token.setAccessToken(accessToken);
@@ -110,7 +112,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
           onSuccess?.();
         } catch (error) {
           onError?.(error as AxiosError<unknown>);
-          console.error('Login error:', (error as AxiosError).message);
+          message.error(`Login error:', ${(error as AxiosError).message}`)
         }
       },
       [saveMe, navigate]

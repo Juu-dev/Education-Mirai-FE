@@ -1,147 +1,182 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useCreateApi from "../../hooks/useCreateApi";
+import {Form, Checkbox, Input, Select, Alert, message, Button, Typography} from "antd";
+import useFetchApi from "../../hooks/useFetchApi";
+
+const { Title, Text, Link } = Typography;
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const [fullName, setFullName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [error, setError] = useState<string>('');
+    const [form] = Form.useForm();
+
+    const [error, setError] = useState<string>("");
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
-    const validEmail = (email: string): boolean => {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    };
+    const { creating, handleCreate, errorData } = useCreateApi({
+        url: "/auth/register/student",
+        successMsg: "Đăng ký thành công!",
+        errorMsg: "Đăng ký thất bại, vui lòng thử lại.",
+        fullResp: true,
+    });
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
+    const classesApi = useFetchApi({url: `/classes/pagination`, auth: false, initQueries: {pageSize: 100}})
 
-        if (!email || !password || !acceptedTerms) {
-            setError('Vui lòng nhập đủ email, mật khẩu, chọn vai trò và chấp nhận điều khoản.');
+    const handleSubmit = async (values: any) => {
+        console.log("handleSubmit: ", values);
+        if (!acceptedTerms) {
+            setError("Vui lòng chấp nhận điều khoản và điều kiện.");
             return;
         }
 
-        if (!validEmail(email)) {
-            setError('Email không hợp lệ.');
-            return;
+        const payload = {
+            email: values.email,
+            password: values.password,
+            name: values.name,
+            classId: values.classId,
         }
 
-        if (password.length < 6) {
-            setError('Mật khẩu phải có ít nhất 6 ký tự.');
-            return;
-        }
+        const response = await handleCreate(payload);
 
-        if (password !== confirmPassword) {
-            setError('Mật khẩu xác nhận không khớp.');
-            return;
+        if (response && typeof response !== "boolean" && response.success) {
+            message.success('Đăng ký thành công!')
+            navigate("/login");
+        } else if (response && typeof response !== "boolean") {
+            setError(response.error || "Đăng ký thất bại.");
         }
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 w-screen ">
             <div className="flex shadow-lg rounded">
-                <div className='flex w-96'>
+                <div className="flex w-96">
                     <img src="src/assets/logo/login.png" alt="Logo" />
                 </div>
-                <div className="bg-white p-8 rounded shadow-lg w-96">
+                <div className="bg-white p-8 rounded shadow-lg w-96 text-base">
                     <div className="flex flex-col items-start ">
-                        <h3 className="text-lg font-medium text-blue-700">Xin chào !</h3>
-                        <p className="text-sm font-light text-gray-500">
-                            Bạn đã có tài khoản? {''}
-                            <a onClick={() => navigate('/login')} className="font-medium inline-flex text-xs sm:text-sm text-blue-700 hover:text-blue-600 hover:underline">
-                                Đăng nhập
-                            </a>
-                        </p>
+                        <Title level={3} style={{ color: '#1d4ed8' }}>
+                            Xin chào !
+                        </Title>
+                        <Text type="secondary">
+                            Bạn đã có tài khoản?{' '}
+                            <Link onClick={() => navigate('/login')}>Đăng nhập</Link>
+                        </Text>
                     </div>
-                    <h2 className="text-xl font-bold mb-3 text-center uppercase mt-3 text-blue-700">Đăng ký</h2>
 
-                    <form onSubmit={handleLogin} className="form">
-                        <div className="mb-3">
-                            <label htmlFor="fullName" className="block text-gray-700 mb-1">Họ và tên</label>
-                            <input
-                                type="text"
-                                id="fullName"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="Nguyễn Văn A   "
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="email" className="block text-gray-700 mb-1">Tên đăng nhập</label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="name@gmail.com"
-                            />
-                        </div>
+                    <h2 className="text-xl font-bold mb-3 text-center uppercase mt-3 text-blue-700">
+                        Đăng ký
+                    </h2>
 
-                        <div className="mb-3">
-                            <label htmlFor="password" className="block text-gray-700 mb-1">Mật khẩu</label>
-                            <input
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="••••••••••"
-                            />
-                        </div>
+                    {error && <Alert message={error} type="error" showIcon className="mb-3"/>}
+                    {errorData && (
+                        <Alert
+                            message="Lỗi từ server"
+                            description={JSON.stringify(errorData)}
+                            type="error"
+                            showIcon
+                            className="mb-3"
+                        />
+                    )}
 
-                        <div className="mb-3">
-                            <label htmlFor="confirmPassword" className="block text-gray-700 mb-1">Xác nhận mật khẩu</label>
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded"
-                                placeholder="••••••••••"
-                            />
-                        </div>
-
-                        {error && <p className="text-red-500">{error}</p>}
-                        <div className='flex items-start mb-3'>
-                            <div className="flex items-center h-5">
-                                <input
-                                    id="terms"
-                                    type="checkbox"
-                                    checked={acceptedTerms}
-                                    onChange={(e) => setAcceptedTerms(e.target.checked)}
-                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300"
-                                />
-                            </div>
-                            <div className="ml-3 text-sm">
-                                <label htmlFor="terms" className="font-light text-gray-500">
-                                    I accept the {''}
-                                    <a className="font-medium text-primary-600 hover:underline" href="#">
-                                        Terms and Conditions
-                                    </a>
-                                </label>
-                            </div>
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                    <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                        <Form.Item
+                            label="Họ và tên"
+                            name="name"
+                            rules={[{required: true, message: "Vui lòng nhập họ và tên."}]}
                         >
-                            Đăng ký
-                        </button>
-                    </form>
+                            <Input className="h-10" placeholder="Nhập họ và tên"/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Chọn lớp"
+                            name="class"
+                            required>
+                            <Select
+                                filterOption={false}
+                                placeholder="Chọn lớp"
+                                className="h-10"
+                            >
+                                {classesApi?.data.map((classOption, index) => (
+                                    <Select.Option key={index} value={classOption?.id}>
+                                        {classOption?.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Tên đăng nhập"
+                            name="email"
+                            rules={[
+                                {required: true, message: "Vui lòng nhập email."},
+                                {type: "email", message: "Email không hợp lệ."},
+                            ]}
+                        >
+                            <Input className="h-10" placeholder="Nhập tên đăng nhập"/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Mật khẩu"
+                            name="password"
+                            rules={[
+                                {required: true, message: "Vui lòng nhập mật khẩu."},
+                                {min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự."},
+                            ]}
+                        >
+                            <Input.Password className="h-10" placeholder="Nhập mật khẩu"/>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Xác nhận mật khẩu"
+                            name="confirmPassword"
+                            dependencies={["password"]}
+                            rules={[
+                                {required: true, message: "Vui lòng xác nhận mật khẩu."},
+                                ({getFieldValue}) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue("password") === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error("Mật khẩu xác nhận không khớp."));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input.Password className="h-10" placeholder="Nhập lại mật khẩu"/>
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Checkbox checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)}>
+                                I accept the{" "}
+                                <a
+                                    onClick={() => message.info('Chức năng Terms and Conditions chưa được triển khai.')}
+                                    href="#" className="text-blue-700 hover:underline">
+                                    Terms and Conditions
+                                </a>
+                            </Checkbox>
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block style={{height: "40px"}}>
+                                {creating ? "Đang đăng ký..." : "Đăng ký"}
+                            </Button>
+                        </Form.Item>
+                    </Form>
+
                     <div className="flex justify-center space-x-2 mt-3 mb-3">
                         <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
                         <span className="flex-none uppercase text-xs text-gray-400 font-semibold">or</span>
                         <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
                     </div>
-                    <div className='justify-center items-center'>
-                        <button className="bg-red-600 w-full text-white py-2 px-4 rounded hover:bg-red-500">
-                            Signup with Google
-                        </button>
-                    </div>
+
+                    <Button
+                        type="default"
+                        block
+                        style={{backgroundColor: '#dc2626', color: 'white', height: "40px"}}
+                        onClick={() => message.info('Chức năng Google signup chưa được triển khai.')}
+                    >
+                        Đăng ký với Google
+                    </Button>
                 </div>
             </div>
         </div>

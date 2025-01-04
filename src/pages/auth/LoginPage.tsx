@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Typography,
+  message,
+} from 'antd';
 import useAuth from "../../hooks/useAuth.ts";
+
+const { Title, Text, Link } = Typography;
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
   const [savePassword, setSavePassword] = useState<boolean>(false);
-
   const {login} = useAuth()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (values: any) => {
+    const { email, password } = values;
 
     if (!email || !password) {
-      setError('Vui lòng nhập đủ email, mật khẩu và chọn vai trò.');
+      message.error('Vui lòng nhập đủ email, mật khẩu và chọn vai trò.');
       return;
     }
 
@@ -23,82 +29,96 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 w-screen ">
-      <div className="flex shadow-lg rounded">
-        <div className='flex w-96'>
-          <img src="src/assets/logo/login.png" alt="Logo" />
-        </div>
-        <div className="bg-white p-8 rounded shadow-lg w-96">
-          <div className="flex flex-col items-start ">
-            <h3 className="text-lg font-medium text-blue-700">Xin chào !</h3>
-            <p className="text-sm font-light text-gray-500">
-              Bạn chưa có tài khoản? {''}
-              <a onClick={() => navigate('/signup')} className="font-medium inline-flex text-xs sm:text-sm text-blue-700 hover:text-blue-600 hover:underline">
-                Đăng ký
-              </a>
-            </p>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 w-screen">
+        <div className="flex shadow-lg rounded">
+          <div className="flex w-96">
+            <img src="src/assets/logo/login.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
-          <h2 className="text-xl font-bold mb-3 text-center uppercase mt-3 text-blue-700">Đăng nhập</h2>
-
-          <form onSubmit={handleLogin} className="form">
-            <div className="mb-3">
-              <label htmlFor="email" className="block text-gray-700 mb-1">Tên đăng nhập</label>
-              <input
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="name@gmail.com"
-              />
+          <div className="bg-white p-8 rounded shadow-lg w-96">
+            <div className="flex flex-col items-start mb-4">
+              <Title level={3} style={{ color: '#1d4ed8' }}>
+                Xin chào !
+              </Title>
+              <Text type="secondary">
+                Bạn chưa có tài khoản?{' '}
+                <Link onClick={() => navigate('/signup')}>Đăng ký</Link>
+              </Text>
             </div>
-
-            <div className="mb-3">
-              <label htmlFor="password" className="block text-gray-700 mb-1">Mật khẩu</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="••••••••••"
-              />
-            </div>
-
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="flex items-center justify-between mb-3 mt-3">
-              <label className="flex items-center text-xs sm:text-sm text-gray-500">
-                <input
-                  type="checkbox"
-                  checked={savePassword}
-                  onChange={() => setSavePassword(!savePassword)}
-                  className="mr-2"
-                />
-                Nhớ mật khẩu
-              </label>
-              <a onClick={() => navigate('/forgotpassword')} className="inline-flex text-xs sm:text-sm text-blue-700 hover:text-blue-600 hover:underline">
-                Quên mật khẩu?
-              </a>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-600"
-            >
+            <Title level={4} style={{ textAlign: 'center', color: '#1d4ed8' }}>
               Đăng nhập
-            </button>
-          </form>
-          <div className="flex justify-center space-x-2 mt-3 mb-3">
-            <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
-            <span className="flex-none uppercase text-xs text-gray-400 font-semibold">or</span>
-            <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
-          </div>
-          <div className='justify-center items-center'>
-            <button className="bg-red-600 w-full text-white py-2 px-4 rounded hover:bg-red-500">
-              Login with Google
-            </button>
+            </Title>
+
+            <Form
+                layout="vertical"
+                onFinish={handleLogin}
+                initialValues={{
+                  email: localStorage.getItem('email') || '',
+                  password: localStorage.getItem('password') || '',
+                }}
+            >
+              <Form.Item
+                  name="email"
+                  label="Tên đăng nhập"
+                  rules={[
+                    { required: true, message: 'Vui lòng nhập email!' },
+                    {
+                      type: 'email',
+                      message: 'Email không hợp lệ!',
+                    },
+                  ]}
+              >
+                <Input className="h-10" placeholder="Nhập tên đăng nhập" />
+              </Form.Item>
+
+              <Form.Item
+                  name="password"
+                  label="Mật khẩu"
+                  rules={[
+                    { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                    { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+                  ]}
+              >
+                <Input.Password className="h-10" placeholder="Nhập mật khẩu" />
+              </Form.Item>
+
+              <Form.Item>
+                <div className="flex items-center justify-between">
+                  <Checkbox
+                      checked={savePassword}
+                      onChange={() => setSavePassword(!savePassword)}
+                  >
+                    Nhớ mật khẩu
+                  </Checkbox>
+                  <Link onClick={() => message.info('Chức năng quên mật khẩu chưa được triển khai.')}>
+                    Quên mật khẩu?
+                  </Link>
+                </div>
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" block style={{height: "40px"}}>
+                  Đăng nhập
+                </Button>
+              </Form.Item>
+
+              <div className="flex justify-center space-x-2 mb-3">
+                <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
+                <span className="flex-none uppercase text-xs text-gray-400 font-semibold">or</span>
+                <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
+              </div>
+
+              <Button
+                  type="default"
+                  block
+                  style={{backgroundColor: '#dc2626', color: 'white', height: "40px"}}
+                  onClick={() => message.info('Chức năng Google login chưa được triển khai.')}
+              >
+                Đăng nhập với Google
+              </Button>
+            </Form>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
