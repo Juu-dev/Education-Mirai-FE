@@ -78,7 +78,7 @@ const App: React.FC = () => {
 							<Route path="/librarian" element={<Navigate to="/librarian/dashboard" replace />} />
 							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
 							<Route path="/librarian/library" element={<LibraryStatisticalPage />} />
-							{/*<Route path="/librarian/document" element={<LibrarianDocumentPage />} />*/}
+							<Route path="/librarian/document" element={<AdminDocumentPage />} />
 							<Route path="/librarian/books" element={<LibrarianAddBookPage />} />
 						</Route>
 					</Route>

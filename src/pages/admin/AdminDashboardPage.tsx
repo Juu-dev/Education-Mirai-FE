@@ -1,64 +1,13 @@
-import { Avatar, Button, Table, Card, Progress, Modal } from "antd";
-import { CheckOutlined, PaperClipOutlined, SendOutlined } from "@ant-design/icons";
-import type { ColumnsType } from "antd/es/table";
-import { useState } from "react";
+import { Avatar, Button, Card, Progress } from "antd";
+import { CheckOutlined, SendOutlined } from "@ant-design/icons";
 import useAuth from "../../hooks/useAuth.ts";
 import {Role} from "../../constants/roles/role.ts";
-
-interface Task {
-    key: number;
-    task: string;
-    assignedBy: string;
-    action: string;
-}
+import {RequestTable} from "../request/RequestTable.tsx";
 
 const goals = {
     current: 10,
     target: 20,
 }
-
-const columns: ColumnsType<Task> = [
-    {
-        title: "STT",
-        dataIndex: "key",
-        key: "key",
-    },
-    {
-        title: "Công việc",
-        dataIndex: "task",
-        key: "task",
-    },
-    {
-        title: "Giao bởi",
-        dataIndex: "assignedBy",
-        key: "assignedBy",
-    },
-    {
-        title: "Hành động",
-        key: "action",
-        render: () => (
-            <div className="flex space-x-2">
-                <Button icon={<CheckOutlined />} type="primary" />
-                <Button icon={<SendOutlined />} type="default" />
-            </div>
-        ),
-    },
-];
-
-const tasks: Task[] = [
-    { key: 1, task: "Bổ sung hồ sơ 2", assignedBy: "Hiệu trưởng", action: "" },
-    { key: 2, task: "Bổ sung hồ sơ 3", assignedBy: "Hiệu trưởng", action: "" },
-    { key: 3, task: "Bổ sung hồ sơ 4", assignedBy: "Hiệu trưởng", action: "" },
-];
-
-const taskDetailsData = {
-    title: "Bổ sung hồ sơ",
-    status: "Chưa hoàn thành",
-    dateRange: "09/05/2024 - 10/05/2024",
-    assignedBy: "Hiệu trưởng",
-    content: "Em cần bổ sung xxx tài liệu",
-    attachment: "file.pdf",
-};
 
 const upcomingLessons = [
     {
@@ -116,19 +65,7 @@ const roleName = {
 }
 
 const AdminDashboard = () => {
-    // State for modal visibility
-    const [isModalVisible, setIsModalVisible] = useState(false);
     const {me} = useAuth();
-
-    // Function to show modal
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
-    // Function to close modal
-    const handleClose = () => {
-        setIsModalVisible(false);
-    };
 
     return (
         <div>
@@ -232,42 +169,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Task Table */}
-            <Card title="Phân công công việc" className="mt-6">
-                <Table
-                    columns={columns}
-                    dataSource={tasks}
-                    pagination={false}
-                    onRow={() => {
-                        return {
-                            onClick: () => showModal(), // Click row to show modal
-                        };
-                    }}
-                />
-            </Card>
-
-            {/* Task Detail Modal */}
-            <Modal
-                title={taskDetailsData.title}
-                open={isModalVisible}
-                onCancel={handleClose}
-                footer={[
-                    <Button key="back" onClick={handleClose}>
-                        Đóng
-                    </Button>,
-                    <Button key="submit" type="primary" onClick={handleClose}>
-                        Hoàn thành
-                    </Button>,
-                ]}
-                width={800}    // Increase modal width
-                centered       // Center the modal
-            >
-                <p><strong>Tên nhiệm vụ:</strong> {taskDetailsData.title}</p>
-                <p><strong>Trạng thái:</strong> {taskDetailsData.status}</p>
-                <p><strong>Thời gian:</strong> {taskDetailsData.dateRange}</p>
-                <p><strong>Được giao bởi:</strong> {taskDetailsData.assignedBy}</p>
-                <p><strong>Nội dung:</strong> {taskDetailsData.content}</p>
-                <p><strong>Đính kèm:</strong> <PaperClipOutlined /> {taskDetailsData.attachment}</p>
-            </Modal>
+            <RequestTable />
         </div>
     );
 };

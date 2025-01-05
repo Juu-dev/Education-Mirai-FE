@@ -30,7 +30,7 @@ const AdminLayout = () => {
             ? [
                 { key: "/librarian/dashboard", label: "Bảng điều khiển" },
                 { key: "/librarian/library", label: "Thư viện" },
-                // { key: "/librarian/document", label: "Tài liệu" },
+                { key: "/librarian/document", label: "Tài liệu" },
                 { key: "/librarian/books", label: "Thêm sách" },
                 // { key: "/librarian/reports", label: "Gửi yêu cầu" },
                 // { key: "/librarian/settings", label: "Tài khoản" },
