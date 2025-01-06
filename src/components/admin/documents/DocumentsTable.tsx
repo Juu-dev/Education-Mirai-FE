@@ -8,7 +8,7 @@ import useDeleteApi from "../../../hooks/useDeleteApi.ts";
 
 interface Props {
     handleShareClick: () => void;
-    teacherId: string;
+    userId: string;
     isTableDataUpdated: boolean;
     searchTerm: string;
     filterType: string[];
@@ -16,7 +16,7 @@ interface Props {
 
 const DocumentTable: React.FC<Props> = ({
     handleShareClick,
-    teacherId,
+    userId,
     isTableDataUpdated,
     searchTerm,
     filterType,
@@ -24,7 +24,7 @@ const DocumentTable: React.FC<Props> = ({
     const [selectedDocument, setSelectedDocument] = useState(null);
 
     const {deleting, handleDelete} = useDeleteApi({url: `/documents/${selectedDocument?.id}`, auth: true})
-    const documentsApi = useFetchApi({url: `/documents/pagination/${teacherId}`, auth: true})
+    const documentsApi = useFetchApi({url: `/documents/pagination/${userId}`, auth: true})
 
     const handleOkClick = async () => {
         const success = await handleDelete();
@@ -44,8 +44,8 @@ const DocumentTable: React.FC<Props> = ({
         if (searchTerm) params.search = searchTerm;
         if (filterType) params.type = filterType;
 
-        documentsApi.fetchApi(`/documents/pagination/${teacherId}`, {params});
-    }, [teacherId, searchTerm, filterType?.length]);
+        documentsApi.fetchApi(`/documents/pagination/${userId}`, {params});
+    }, [userId, searchTerm, filterType?.length]);
 
     const handleRefresh = async () => {
         await documentsApi.fetchApi();
@@ -115,7 +115,7 @@ const DocumentTable: React.FC<Props> = ({
             name: e.description,
             type: getValueFromMenuUploadByKey(e.type),
             createdAt: new Date(e.createdAt).toLocaleDateString(),
-            owner: e?.teacher?.name,
+            owner: e?.user?.name,
             url: e.url
         }));
 

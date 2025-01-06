@@ -9,14 +9,14 @@ interface Props {
 
 const FolderTable = ({searchTerm}: Props) => {
     const navigate = useNavigate();
-    const {data: teachers} = useFetchApi({url: `/teachers`, auth: true})
+    const {data: users} = useFetchApi({url: `/users/librarian-and-teacher`, auth: true})
 
-    const handleFolderClick = (teacherId: string) => {
-        navigate(`/principal/document/${teacherId}`);
+    const handleFolderClick = (userId: string) => {
+        navigate(`/principal/document/${userId}`);
     };
 
-    const filteredTeachers = teachers.filter(teacher =>
-        teacher!.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredTeachers = users.filter(user =>
+        user!.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const columns = [
@@ -50,8 +50,8 @@ const FolderTable = ({searchTerm}: Props) => {
         },
     ];
 
-    const parseTeachers = (teachers: any) =>
-        teachers.map((t: any) => ({
+    const parseTeachers = (users: any) =>
+        users.map((t: any) => ({
             key: t.id,
             id: t.id,
             name: t.name,

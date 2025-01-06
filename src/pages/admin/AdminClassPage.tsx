@@ -1,6 +1,6 @@
 import { Avatar, Button, Input, Table, Card } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AdminAssignmentModal from "../../components/modal/AdminAssignmentModal";
 import { AssignmentDetails } from "../../components/assignment/interface/assginment-interface";
 import PageTitle from "../../components/common/SectionTitle";
@@ -68,27 +68,33 @@ const AdminClassPage: React.FC = () => {
     // const studentData = generateStudentData(50);
 
     const {me} = useAuth()
-    1
-    const {data: students} = useFetchApi({url: `/students/class/${me?.teacher?.classId || ""}`, auth: true})
+
+    const studentsApi = useFetchApi({url: `/students/class/${me?.class.id}`, auth: true})
+
+    useEffect(() => {
+        if (me?.id) {
+            studentsApi.fetchApi(`/students/class/${me?.class.id}`)
+        }
+    }, [me?.id]);
 
     const parseTeacherData  = (data: any) => ({
         avatar: "https://i.pravatar.cc/150?img=4",
         name: data?.name,
         class: data?.class?.name,
-        studentCount: data?.class?.amount,
+        studentCount: data?.class?._count.user,
         code: data?.id,
         birthDate: formatDate(data?.dob),
-        email: data?.user?.email,
+        email: data?.email,
     })
 
     const parseData = (data: any) => data?.map((e: any) => ({
         key: e.id,
         id: e.id,
         userId: e.userId,
-        classId: e.classId,
+        classId: e?.user?.class.id,
         metadataUrl: e.metadataUrl,
-        name: e.name,
-        birthDate: formatDate(e.birthDate),
+        name: e?.user?.name,
+        birthDate: formatDate(e?.user?.birthDate),
         parentName: e.parentName,
         level: e.level,
     }))
@@ -125,7 +131,7 @@ const AdminClassPage: React.FC = () => {
     return (
         <div className="flex flex-col min-h-screen">
             {/* Profile Section */}
-            <ProfileSection teacher={parseTeacherData(teacher)} />
+            <ProfileSection teacher={parseTeacherData(me)} />
             {/* Search Section */}
             <SearchSection />
 
@@ -134,7 +140,7 @@ const AdminClassPage: React.FC = () => {
                 <PageTitle title="Danh sách học sinh" className="mb-3" />
                 <Table
                     columns={columns}
-                    dataSource={parseData(students)}
+                    dataSource={parseData(studentsApi.data)}
                     pagination={{ pageSize: 10 }}
                     onRow={(record) => ({
                         onClick: () => showProfileModal(record),
@@ -165,7 +171,7 @@ const AdminClassPage: React.FC = () => {
             <AttendanceModal
                 visible={isAttendanceModalVisible}
                 onCancel={handleCancelAttendanceModal}
-                studentData={parseData(students)} // Truyền dữ liệu học sinh vào modal
+                studentData={parseData(studentsApi.data)} // Truyền dữ liệu học sinh vào modal
             />
 
             <AssignmentModal

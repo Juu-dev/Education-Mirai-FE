@@ -19,14 +19,14 @@ const AdminDocumentPage: React.FC = () => {
     const debouncedSearchTerm = useDebounce<string>(searchTerm, 500);
     const debouncedFilterType = useDebounce<string[]>(filterType, 500);
 
-    const {isPrincipal, isTeacher, me} = useAuth();
+    const {isPrincipal, isUploadableDocument, me} = useAuth();
     const [isTableDataUpdated, setIsTableDataUpdated] = useState(false);
 
     const handleRefreshTableData = () => {
         setIsTableDataUpdated(prev => !prev);
     };
 
-    const { teacherID } = useParams();
+    const { userId } = useParams();
     const navigate = useNavigate();
     const handleBackToFolder = () => navigate("/principal/document");
 
@@ -115,10 +115,10 @@ const AdminDocumentPage: React.FC = () => {
 
     // Table Section Rendering
     const renderTable = () => (
-        isPrincipal && !teacherID ? <FolderTable searchTerm={searchTerm} /> :
+        isPrincipal && !userId ? <FolderTable searchTerm={searchTerm} /> :
             <DocumentsTable
                 handleShareClick={shareDocumentModal.openModal}
-                teacherId={isTeacher ? me!.teacher!.id : teacherID!}
+                userId={isUploadableDocument ? me!.id : userId!}
                 isTableDataUpdated={isTableDataUpdated}
                 searchTerm={debouncedSearchTerm}
                 filterType={debouncedFilterType}
@@ -126,7 +126,7 @@ const AdminDocumentPage: React.FC = () => {
     );
 
     // Page Title
-    const pageTitle = isTeacher ? `Danh sách tài liệu của giáo viên` : "Danh sách giáo viên";
+    const pageTitle = isUploadableDocument ? `Danh sách tài liệu của giáo viên` : "Danh sách giáo viên";
 
     // Handle search change
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +140,7 @@ const AdminDocumentPage: React.FC = () => {
     return (
         <div className="p-5">
             {/* Back Button */}
-            {isPrincipal && teacherID && (
+            {isPrincipal && userId && (
                 <Button
                     type="default"
                     icon={<ArrowLeftOutlined />}
@@ -151,9 +151,9 @@ const AdminDocumentPage: React.FC = () => {
             )}
 
             {/* Conditional Button Section */}
-            {isTeacher && renderButtonSection()}
+            {isUploadableDocument && renderButtonSection()}
 
-            {isPrincipal && !teacherID && (
+            {isPrincipal && !userId && (
                 <div className="pb-3">
                     <Input
                         placeholder="Tìm kiếm theo tên giáo viên"
@@ -164,7 +164,7 @@ const AdminDocumentPage: React.FC = () => {
                 </div>)}
 
             {/* Search Input for Principal */}
-            {isPrincipal && teacherID && (
+            {isPrincipal && userId && (
                 <div className="pb-3">
                     <Input
                         placeholder="Tìm kiếm theo tên tài liệu"

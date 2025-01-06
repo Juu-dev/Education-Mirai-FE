@@ -29,7 +29,7 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
             // Prepare the form data with file and additional data
             const formData = new FormData();
             formData.append("files", selectedFile.originFileObj); // Append the selected file
-            formData.append("teacherId", me?.teacher?.id);
+            formData.append("userId", me?.id);
             formData.append("description", selectedFile.name);
             formData.append("type", e.key);
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useCreateApi from "../../hooks/useCreateApi";
 import {Form, Checkbox, Input, Select, Alert, message, Button, Typography} from "antd";
 import useFetchApi from "../../hooks/useFetchApi";
+import {classPath, registerPath} from "../../helpers/api-params/auth.ts";
 
 const { Title, Text, Link } = Typography;
 
@@ -13,17 +14,10 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
-    const { creating, handleCreate, errorData } = useCreateApi({
-        url: "/auth/register/student",
-        successMsg: "Đăng ký thành công!",
-        errorMsg: "Đăng ký thất bại, vui lòng thử lại.",
-        fullResp: true,
-    });
-
-    const classesApi = useFetchApi({url: `/classes/pagination`, auth: false, initQueries: {pageSize: 100}})
+    const registerApi = useCreateApi(registerPath);
+    const classesApi = useFetchApi(classPath)
 
     const handleSubmit = async (values: any) => {
-        console.log("handleSubmit: ", values);
         if (!acceptedTerms) {
             setError("Vui lòng chấp nhận điều khoản và điều kiện.");
             return;
@@ -36,7 +30,7 @@ const Login: React.FC = () => {
             classId: values.classId,
         }
 
-        const response = await handleCreate(payload);
+        const response = await registerApi.handleCreate(payload);
 
         if (response && typeof response !== "boolean" && response.success) {
             message.success('Đăng ký thành công!')
@@ -68,10 +62,10 @@ const Login: React.FC = () => {
                     </h2>
 
                     {error && <Alert message={error} type="error" showIcon className="mb-3"/>}
-                    {errorData && (
+                    {registerApi.errorData && (
                         <Alert
                             message="Lỗi từ server"
-                            description={JSON.stringify(errorData)}
+                            description={JSON.stringify(registerApi.errorData)}
                             type="error"
                             showIcon
                             className="mb-3"
@@ -158,7 +152,7 @@ const Login: React.FC = () => {
 
                         <Form.Item>
                             <Button type="primary" htmlType="submit" block style={{height: "40px"}}>
-                                {creating ? "Đang đăng ký..." : "Đăng ký"}
+                                {registerApi.creating ? "Đang đăng ký..." : "Đăng ký"}
                             </Button>
                         </Form.Item>
                     </Form>

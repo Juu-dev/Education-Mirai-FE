@@ -7,29 +7,36 @@ import useCreateApi from '../hooks/useCreateApi';
 import { Role } from '../constants/roles/role.ts';
 import useFetchApi from '../hooks/useFetchApi';
 import {message} from "antd";
+import {loginPath, logoutPath, refreshTokenPath} from "../helpers/api-params/auth.ts";
 
 interface User {
   id: string;
   username: string;
   email: string;
+  name: string;
+  dob: string;
   teacher?: {
     id: string;
     userId: string;
     classId: string;
     metadataUrl: string;
-    name: string;
     dob: string;
     position: string;
     createdAt: string;
     updatedAt: string;
-    class: {
-      id: string;
-      name: string;
-      createdAt: string;
-      updatedAt: string;
-    }
+
   };
+  librarian?: object;
   student?: object;
+  class: {
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    _count: {
+      user: number
+    }
+  }
   role: string;
 }
 
@@ -52,6 +59,7 @@ interface IAuthContext {
   isStudent: boolean,
   isPrincipal: boolean,
   isLibrarian: boolean,
+  isUploadableDocument: boolean
 }
 
 interface IAuthProviderProps {
@@ -68,6 +76,7 @@ export const AuthContext = createContext<IAuthContext>({
   isStudent: false,
   isPrincipal: false,
   isLibrarian: false,
+  isUploadableDocument: false,
 });
 
 interface IAuthProviderProps {
@@ -77,9 +86,9 @@ interface IAuthProviderProps {
 const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
-  const { handleCreate: loginApi } = useCreateApi({ url: '/auth/login', fullResp: true, isWithCredentials: true });
-  const { handleCreate: logoutApi } = useCreateApi({ url: '/auth/logout' });
-  const { data: refreshData, fetchApi: refreshTokenApi } = useFetchApi({ url: '/auth/refresh-token', isWithCredentials: true });
+  const loginApi = useCreateApi(loginPath);
+  const logoutApi = useCreateApi(logoutPath);
+  const refreshTokenApi = useFetchApi(refreshTokenPath);
 
   const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
   const [me, setMe] = useState<User | null>(null);
@@ -89,16 +98,20 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
       id: data.id,
       username: data.username,
       email: data.email,
-      teacher: data.Teacher,
-      student: data.Student,
+      name: data.name,
+      dob: data.birthDate,
+      teacher: data.teacher,
+      student: data.student,
+      librarian: data.librarian,
+      class: data.class,
       role: data.roles[0].role.name,
     });
-  }, [refreshData]);
+  }, [refreshTokenApi.data]);
 
   const login: IAuthContext['login'] = useCallback(
       async (data: LoginData, onSuccess, onError) => {
         try {
-          const response = await loginApi(data);
+          const response = await loginApi.handleCreate(data);
           const { accessToken, user } = response?.result;
           message.success('Đăng nhập thành công!')
 
@@ -131,7 +144,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       token.removeRefreshToken();
-      await logoutApi({});
+      await logoutApi.handleCreate({});
       console.log('Logout successful');
     } catch (error) {
       console.error('Logout failed:', error);
@@ -145,10 +158,10 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const loginWithToken = useCallback(async () => {
     try {
-      await refreshTokenApi();
+      await refreshTokenApi.fetchApi();
 
-      saveMe(refreshData?.user as User);
-      token.setAccessToken(refreshData?.accessToken);
+      saveMe(refreshTokenApi.data?.user as User);
+      token.setAccessToken(refreshTokenApi.data?.accessToken);
       setIsAuthenticated(true);
     } catch (error) {
       token.removeAccessToken();
@@ -176,6 +189,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         isStudent: me?.role === Role.Student,
         isPrincipal: me?.role === Role.Principal,
         isLibrarian: me?.role === Role.Librarian,
+        isUploadableDocument: me?.role === Role.Teacher || me?.role === Role.Librarian
       }),
       [isAuthenticated, login, logout, me, saveMe]
   );
