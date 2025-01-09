@@ -1,42 +1,42 @@
-import { useEffect, useState, useCallback } from "react";
 import { BookList } from "../../components/book/BookList"
 import { FilterSection } from "../../components/book/filter/FilterSection"
-import { books } from "../../constants/mocks/book";
 import { filters } from "../../constants/mocks/filters";
-import { debounce } from "../../utils/debounce";
+// import { books } from "../../constants/mocks/book";
+// import { debounce } from "../../utils/debounce";
+// import useFetchApi from "../../hooks/useFetchApi.ts";
+// import {BookInterface} from "../../components/book/interface/book-interface.ts";
+// import { useEffect, useState, useCallback } from "react";
 
 export const UserBookReadingList = () => {
-    const [displayedBooks, setDisplayedBooks] = useState(books.slice(0, 10));
-    const [hasMore, setHasMore] = useState(true);
 
-    const loadMoreBooks = useCallback(() => {
-        const currentLength = displayedBooks.length;
-        const moreBooks = books.slice(currentLength, currentLength + 10);
+    // const loadMoreBooks = useCallback(() => {
+    //     const currentLength = displayedBooks.length;
+    //     const moreBooks = books.slice(currentLength, currentLength + 10);
+    //
+    //     if (moreBooks.length > 0) {
+    //         setDisplayedBooks((prevBooks) => [...prevBooks, ...moreBooks]);
+    //     }
+    //
+    //     if (displayedBooks.length >= books.length) {
+    //         setHasMore(false);
+    //     }
+    // }, [displayedBooks]);
 
-        if (moreBooks.length > 0) {
-            setDisplayedBooks((prevBooks) => [...prevBooks, ...moreBooks]);
-        }
-        
-        if (displayedBooks.length >= books.length) {
-            setHasMore(false);
-        }
-    }, [displayedBooks]);
+    // const handleScroll = debounce(() => {
+    //     if (!hasMore) return;
+    //
+    //     const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+    //     const threshold = document.documentElement.offsetHeight - 200;
+    //
+    //     if (scrollPosition >= threshold) {
+    //         loadMoreBooks();
+    //     }
+    // }, 200);
 
-    const handleScroll = debounce(() => {
-        if (!hasMore) return;
-
-        const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
-        const threshold = document.documentElement.offsetHeight - 200; 
-
-        if (scrollPosition >= threshold) {
-            loadMoreBooks();
-        }
-    }, 200);
-
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [handleScroll]);
+    // useEffect(() => {
+    //     window.addEventListener("scroll", handleScroll);
+    //     return () => window.removeEventListener("scroll", handleScroll);
+    // }, [handleScroll]);
 
     // Handle filter change
     const handleFilterChange = (value: string, filterKey: string) => {
@@ -55,15 +55,15 @@ export const UserBookReadingList = () => {
         // setFilteredBooks(updatedBooks);
     };
 
-    
+
     return (
         <div className="container mx-auto px-4 overflow-hidden">
             {/* Filter Section */}
             <FilterSection filters={filters} onFilterChange={handleFilterChange} />
-                
+
             {/* Book List */}
             <div className="book-list-wrapper mb-4 overflow-auto">
-                <BookList books={displayedBooks} />
+                <BookList/>
             </div>
         </div>
     )

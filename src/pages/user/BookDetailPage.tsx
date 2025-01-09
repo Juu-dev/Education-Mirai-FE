@@ -1,272 +1,31 @@
 import { useParams } from "react-router-dom";
 import { CommentSection } from "../../components/book/comment/CommentSection";
-import book1 from "../../assets/book/book1.png";
-import book2 from "../../assets/book/book2.png";
-import book3 from "../../assets/book/book3.png";
-import book4 from "../../assets/book/book4.png";
 import { BookInterface } from "../../components/book/interface/book-interface";
-import { useEffect, useState } from "react";
 import { Button } from "antd";
+import useFetchApi from "../../hooks/useFetchApi.ts";
 
 export const BookDetailPage = () => {
     const { id } = useParams<{ id: string }>();
-    const books = [
-        {
-            id: 1,
-            title: "Sách tiếng việt 1",
-            author: "Nguyễn Văn A",
-            image: book1,
-            description: "Sách tiếng việt 1",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 2,
-            title: "Sách tiếng việt 2",
-            author: "Nguyễn Văn A",
-            image: book2,
-            description: "Sách tiếng việt 2",
-            nxb: "NXB Giáo dục",
-            rating: 3,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 3,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 4,
-            title: "Sách tin học 4",
-            author: "Nguyễn Văn A",
-            image: book4,
-            description: "Sách tin học 4",
-            nxb: "NXB Giáo dục",
-            rating: 5,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 5,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 6,
-            title: "Sách tiếng việt 1",
-            author: "Nguyễn Văn A",
-            image: book1,
-            description: "Sách tiếng việt 1",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 7,
-            title: "Sách tiếng việt 2",
-            author: "Nguyễn Văn A",
-            image: book2,
-            description: "Sách tiếng việt 2",
-            nxb: "NXB Giáo dục",
-            rating: 3,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 8,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 9,
-            title: "Sách tin học 4",
-            author: "Nguyễn Văn A",
-            image: book4,
-            description: "Sách tin học 4",
-            nxb: "NXB Giáo dục",
-            rating: 5,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 10,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 11,
-            title: "Sách tiếng việt 1",
-            author: "Nguyễn Văn A",
-            image: book1,
-            description: "Sách tiếng việt 1",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 12,
-            title: "Sách tiếng việt 2",
-            author: "Nguyễn Văn A",
-            image: book2,
-            description: "Sách tiếng việt 2",
-            nxb: "NXB Giáo dục",
-            rating: 3,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 13,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 14,
-            title: "Sách tin học 4",
-            author: "Nguyễn Văn A",
-            image: book4,
-            description: "Sách tin học 4",
-            nxb: "NXB Giáo dục",
-            rating: 5,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 15,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 16,
-            title: "Sách tiếng việt 1",
-            author: "Nguyễn Văn A",
-            image: book1,
-            description: "Sách tiếng việt 1",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 17,
-            title: "Sách tiếng việt 2",
-            author: "Nguyễn Văn A",
-            image: book2,
-            description: "Sách tiếng việt 2",
-            nxb: "NXB Giáo dục",
-            rating: 3,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 18,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 19,
-            title: "Sách tin học 4",
-            author: "Nguyễn Văn A",
-            image: book4,
-            description: "Sách tin học 4",
-            nxb: "NXB Giáo dục",
-            rating: 5,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-        {
-            id: 20,
-            title: "Sách tin học 3",
-            author: "Nguyễn Văn A",
-            image: book3,
-            description: "Sách tin học 3",
-            nxb: "NXB Giáo dục",
-            rating: 4,
-            pdfUrl: "https://drive.google.com/file/d/1bdw4NPUB_GCROq9S0fDUB8MmAJ0TihTz/view"
-        },
-    ]
 
-    const [book, setBook] = useState<BookInterface | null>(null); // Book state
-    // const [loading, setLoading] = useState(true); // Loading state
-    // const [error, setError] = useState<string | null>(null); // Error state
+    const booksApi = useFetchApi<BookInterface[]>({
+        url: `/books/${id}`,
+        auth: true,
+    });
 
-    useEffect(() => {
-        const book = books.find((book) => book.id.toString() === id);
-        setBook(book || null);
-    }, [id]);
+    const book = booksApi?.data
 
     const handleReadClick = () => {
-        if (book?.pdfUrl) {
-            window.open(book.pdfUrl, "_blank"); 
+        if (book?.contentPdfUrl) {
+            window.open(book.contentPdfUrl, "_blank");
         }
     };
-
-    // useEffect(() => {
-    //     // Function to fetch book details
-    //     const fetchBook = async () => {
-    //         try {
-    //             setLoading(true); // Set loading state to true
-    //             const response = await fetch(`/api/books/${id}`); // Fetch book by ID
-    //             if (!response.ok) {
-    //                 throw new Error("Failed to fetch book details");
-    //             }
-    //             const data: BookInterface = await response.json();
-    //             setBook(data); // Set the book data
-    //         } catch (err: any) {
-    //             setError(err.message); // Set the error message
-    //         } finally {
-    //             setLoading(false); // Set loading state to false
-    //         }
-    //     };
-
-    //     fetchBook();
-    // }, [id]);
-
-    // if (loading) {
-    //     return <div>Loading...</div>; // Show loading indicator
-    // }
-
-    // if (error) {
-    //     return <div>Error: {error}</div>; // Show error message if there's an error
-    // }
-
-    // if (!book) {
-    //     return <div>Book not found</div>; // Handle case when book is not found
-    // }
 
     return (
         <div className="max-w-5xl mx-auto mt-10 p-4 space-y-10">
             {/* First Section: Book Info */}
             <div className="flex gap-10">
                 <img
-                    src={book?.image}
+                    src={book?.coverImageUrl}
                     alt={book?.title}
                     className="w-2/5 rounded-lg shadow-lg"
                 />
@@ -282,7 +41,7 @@ export const BookDetailPage = () => {
                                         <span
                                             key={index}
                                             className={`${
-                                                index < Math.floor(book?.rating || 0)
+                                                index < Math.floor(book?.evaluate || 0)
                                                     ? "text-yellow-400"
                                                     : "text-gray-300"
                                             } text-xl`}
@@ -290,7 +49,7 @@ export const BookDetailPage = () => {
                                             ★
                                         </span>
                                     ))}
-                                <span className="text-gray-600">({book?.rating || 0})</span>
+                                <span className="text-gray-600">({book?.evaluate || 0})</span>
                             </div>
                         </div>
                         <p className="text-lg text-gray-700">
@@ -299,7 +58,7 @@ export const BookDetailPage = () => {
                         </p>
                         <p className="text-lg text-gray-700">
                             <span className="font-semibold">NXB: </span>
-                            {book?.nxb}
+                            {book?.publishingHouse}
                         </p>
                         <p className="text-lg text-gray-700">
                             <span className="font-semibold">Mô tả: </span>

@@ -8,7 +8,7 @@ interface BookProps {
 export const BookComponent = ({ book }: BookProps) => {
     const navigate = useNavigate();
     return (
-        <div className="max-w-sm bg-white rounded-lg shadow-lg overflow-hidden border hover:shadow-xl transition-shadow duration-300"
+        <div className="max-w-sm bg-white rounded-lg shadow-lg overflow-hidden border hover:shadow-xl transition-shadow duration-300 cursor-pointer"
         onClick={() => {
                 console.log(book.id)
                 navigate(`/student/reading-books/book/${book.id}`)
