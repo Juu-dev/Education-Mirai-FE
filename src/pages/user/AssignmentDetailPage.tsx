@@ -161,7 +161,7 @@ export const AssignmentDetailPage = () => {
                     <Button
                         icon={<SaveOutlined />}
                         type="primary"
-                        onClick={showModal} // Trigger modal on submit
+                        onClick={showModal} // Trigger form on submit
                     >
                         Submit Assignment
                     </Button>

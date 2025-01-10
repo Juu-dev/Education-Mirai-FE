@@ -16,7 +16,7 @@ export const DATA_SOURCE = [
     },
 ];
 
-// Template data for modal
+// Template data for form
 export const TEMPLATE_DATA = [
     {
         key: "1",

@@ -43,7 +43,7 @@ const LibrarianDocumentPage: React.FC = () => {
     },
   ];
 
-  // Template data for modal
+  // Template data for form
   const templateData = [
     {
       key: '1',
@@ -110,12 +110,12 @@ const LibrarianDocumentPage: React.FC = () => {
     },
   ];
 
-  // Show modal for choosing template
+  // Show form for choosing template
   const showChooseTemplateModal = () => {
     setIsChooseTemplateModalVisible(true);
   };
 
-  // Show modal for adding template
+  // Show form for adding template
   const showAddTemplateModal = () => {
     setIsAddTemplateModalVisible(true);
   };

@@ -14,7 +14,7 @@ export const RequestTable = () => {
         setIsModalVisible(true);
     };
 
-    // Đóng modal
+    // Đóng form
     const handleClose = () => {
         setIsModalVisible(false);
         setSelectedTask(null);
@@ -93,8 +93,8 @@ export const RequestTable = () => {
                             Hoàn thành
                         </Button>,
                     ]}
-                    width={800}    // Increase modal width
-                    centered       // Center the modal
+                    width={800}    // Increase form width
+                    centered       // Center the form
                 >
                     {selectedTask && (
                         <>

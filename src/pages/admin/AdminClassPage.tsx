@@ -1,20 +1,15 @@
 import { Avatar, Button, Input, Table, Card } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
-import AdminAssignmentModal from "../../components/modal/AdminAssignmentModal";
+import AssignmentForm from "../../components/form/AssignmentForm.tsx";
 import { AssignmentDetails } from "../../components/assignment/interface/assginment-interface";
 import PageTitle from "../../components/common/SectionTitle";
 import { Typography } from "antd";
-import {
-    ASSIGNMENT_DATA,
-    STUDENT_GROUPS,
-} from "../../constants/mocks/class";
-import StudentProfileModal from "../../components/admin/modal/StudentProfileModal";
-import AttendanceModal from "../../components/admin/modal/AttendanceModal";
-import AssignmentModal from "../../components/admin/modal/AssignmentModal";
 import useFetchApi from "../../hooks/useFetchApi.ts";
-import {formatDate} from "../../helpers/date.ts";
 import useAuth from "../../hooks/useAuth.ts";
+import useModal from "../../hooks/modal/useModal.tsx";
+import StudentProfileForm from "../../components/admin/modal/StudentProfileForm.tsx";
+import {parseStudentData, parseTeacherData} from "../../utils/parse-data.ts";
 
 // Table columns
 const columns = [
@@ -56,20 +51,36 @@ const columns = [
 ];
 
 const AdminClassPage: React.FC = () => {
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-    const [isProfileModalVisible, setIsProfileModalVisible] =
-        useState<boolean>(false);
-    const [isAttendanceModalVisible, setIsAttendanceModalVisible] =
-        useState<boolean>(false);
-    const [isAssignmentModalVisible, setIsAssignmentModalVisible] =
-        useState<boolean>(false);
-    const [selectedStudent, setSelectedStudent] =
-        useState<AssignmentDetails | null>(null); // State for selected student
-    // const studentData = generateStudentData(50);
-
     const {me} = useAuth()
-
+    const [selectedStudent, setSelectedStudent] = useState<AssignmentDetails | null>(null);
     const studentsApi = useFetchApi({url: `/students/class/${me?.class.id}`, auth: true})
+
+    const assignment = useModal({
+        title: "Tạo và giao bài tập",
+        content: <AssignmentForm />,
+        handleOk: () => {},
+    })
+
+    const studentProfile = useModal({
+        title: selectedStudent ? selectedStudent.name : "Student Profile",
+        content: <StudentProfileForm studentData={selectedStudent} />,
+        handleOk: () => {},
+    })
+
+    const attendanceFooter = [
+        <Button key="check" type="primary">
+            Điểm danh
+        </Button>,
+        <Button key="checkAll" type="primary">
+            Điểm danh tất cả
+        </Button>,
+    ]
+    const attendance = useModal({
+        title: "Danh sách học sinh",
+        content: <StudentProfileForm studentData={parseStudentData(studentsApi.data)} />,
+        handleOk: () => {},
+        footer: attendanceFooter
+    })
 
     useEffect(() => {
         if (me?.id) {
@@ -77,115 +88,49 @@ const AdminClassPage: React.FC = () => {
         }
     }, [me?.id]);
 
-    const parseTeacherData  = (data: any) => ({
-        avatar: "https://i.pravatar.cc/150?img=4",
-        name: data?.name,
-        class: data?.class?.name,
-        studentCount: data?.class?._count.user,
-        code: data?.id,
-        birthDate: formatDate(data?.dob),
-        email: data?.email,
-    })
-
-    const parseData = (data: any) => data?.map((e: any) => ({
-        key: e.id,
-        id: e.id,
-        userId: e.userId,
-        classId: e?.user?.class.id,
-        metadataUrl: e.metadataUrl,
-        name: e?.user?.name,
-        birthDate: formatDate(e?.user?.birthDate),
-        parentName: e.parentName,
-        level: e.level,
-    }))
-
-    // Function to show the modal
-    const showModal = () => setIsModalVisible(true);
-
-    // Function to handle closing the modal
-    const handleCancel = () => setIsModalVisible(false);
-
-    // Function to handle form submission from modal
-    const handleAssign = (values: AssignmentDetails) => {
-        setIsModalVisible(false);
-    };
-
-    const showProfileModal = (student: AssignmentDetails) => {
-        setSelectedStudent(student);
-        setIsProfileModalVisible(true);
-    };
-
-    const handleCancelProfileModal = () => {
-        setIsProfileModalVisible(false);
-        setSelectedStudent(null); // Reset the selected student
-    };
-
-    const showAttendanceModal = () => setIsAttendanceModalVisible(true);
-    const handleCancelAttendanceModal = () =>
-        setIsAttendanceModalVisible(false);
-
-    const showAssignmentModal = () => setIsAssignmentModalVisible(true);
-    const handleCancelAssignmentModal = () =>
-        setIsAssignmentModalVisible(false);
-
     return (
         <div className="flex flex-col min-h-screen">
             {/* Profile Section */}
-            <ProfileSection teacher={parseTeacherData(me)} />
+            <ProfileSection teacher={parseTeacherData(me)}/>
             {/* Search Section */}
-            <SearchSection />
+            <SearchSection/>
 
             {/* Student Table Section */}
             <Card className="flex-grow mb-4 overflow-auto">
-                <PageTitle title="Danh sách học sinh" className="mb-3" />
+                <PageTitle title="Danh sách học sinh" className="mb-3"/>
                 <Table
                     columns={columns}
-                    dataSource={parseData(studentsApi.data)}
-                    pagination={{ pageSize: 10 }}
-                    onRow={(record) => ({
-                        onClick: () => showProfileModal(record),
+                    dataSource={parseStudentData(studentsApi.data)}
+                    pagination={{pageSize: 10}}
+                    onRow={(record: any) => ({
+                        onClick: () => {
+                            setSelectedStudent(record)
+                            studentProfile.openModal()
+                        },
                     })}
                 />
             </Card>
 
-            {/* Footer Buttons Section */}
-            <FooterButtons
-                onShowModal={showModal}
-                onShowAttendanceModal={showAttendanceModal}
-            />
+            <div className="mt-auto bg-white p-4 flex justify-end space-x-4">
+                <Button type="primary">Xem lịch báo giảng</Button>
+                <Button type="primary" onClick={assignment.openModal}>
+                    Giao bài tập
+                </Button>
+                <Button type="primary" onClick={attendance.openModal}>
+                    Điểm danh
+                </Button>
+            </div>
 
-            {/* Assignment Modal */}
-            <AdminAssignmentModal
-                visible={isModalVisible}
-                onCancel={handleCancel}
-                onAssign={handleAssign}
-                groups={STUDENT_GROUPS}
-            />
-
-            <StudentProfileModal
-                visible={isProfileModalVisible}
-                onCancel={handleCancelProfileModal}
-                studentData={selectedStudent}
-            />
-
-            <AttendanceModal
-                visible={isAttendanceModalVisible}
-                onCancel={handleCancelAttendanceModal}
-                studentData={parseData(studentsApi.data)} // Truyền dữ liệu học sinh vào modal
-            />
-
-            <AssignmentModal
-                visible={isAssignmentModalVisible}
-                onCancel={handleCancelAssignmentModal}
-                assignmentData={ASSIGNMENT_DATA}
-            />
+            {assignment.modal}
+            {studentProfile.modal}
+            {attendance.modal}
         </div>
     );
 };
 
 const SearchSection: React.FC = () => (
     <Card className="mb-4 shadow-md">
-        <PageTitle title="Lớp" className="mb-3" />
+        <PageTitle title="Lớp" className="mb-3"/>
 
         <div className="flex items-center space-x-4">
             <Input
@@ -210,21 +155,6 @@ const SearchSection: React.FC = () => (
             </Button>
         </div>
     </Card>
-);
-
-const FooterButtons: React.FC<{
-    onShowModal: () => void;
-    onShowAttendanceModal: () => void;
-}> = ({ onShowModal, onShowAttendanceModal }) => (
-    <div className="mt-auto bg-white p-4 flex justify-end space-x-4">
-        <Button type="primary">Xem lịch báo giảng</Button>
-        <Button type="primary" onClick={onShowModal}>
-            Giao bài tập
-        </Button>
-        <Button type="primary" onClick={onShowAttendanceModal}>
-            Điểm danh
-        </Button>
-    </div>
 );
 
 const { Title, Text } = Typography;

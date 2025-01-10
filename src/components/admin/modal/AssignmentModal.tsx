@@ -63,7 +63,7 @@ const AssignmentModal: React.FC<AssignmentModalProps> = ({
                     Hủy
                 </Button>,
             ]}
-            width={600} // Kích thước cố định của modal
+            width={600} // Kích thước cố định của form
             bodyStyle={{ maxHeight: "400px", overflowY: "auto" }} // Thiết lập chiều cao tối đa và cuộn
         >
             <Table

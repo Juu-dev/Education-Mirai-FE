@@ -4,15 +4,18 @@ import { Modal } from "antd";
 interface ModalProps {
     title: string;
     content: string | ReactNode;
-    footer?: ReactNode;
+    footer?: ReactNode | ReactNode[];
     handleOk?: () => void;
+    width?: number;
 }
 
 export default function useModal({
     title = 'Are you sure to delete?',
     content = 'Please be careful because you cannot undo this action.',
     footer = null,
-    handleOk = () => {}
+    handleOk = () => {},
+    width = 600,
+    ...otherProps
 }: ModalProps) {
     const [open, setOpen] = useState(false);
 
@@ -23,10 +26,12 @@ export default function useModal({
 
     const modal: React.ReactNode =
         <Modal
-            title={title}
+            title={<span className="text-2xl">{title}</span>}
             visible={open}
             onCancel={closeModal}
             onOk={handleOk}
+            width={width}
+            centered
             // footer={(_, { OkBtn, CancelBtn }) => (
             //     <>
             //         <CancelBtn />
@@ -34,6 +39,7 @@ export default function useModal({
             //     </>
             // )}
             footer={footer}
+            {...otherProps}
         >
             {content}
         </Modal>

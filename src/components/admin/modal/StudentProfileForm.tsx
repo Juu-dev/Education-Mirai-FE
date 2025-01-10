@@ -1,17 +1,11 @@
 import { useState } from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Form, Input, Button } from "antd";
 
 interface StudentProfileModalProps {
-    visible: boolean;
-    onCancel: () => void;
-    studentData: any | null; // Adjust this type based on your student data structure
+    studentData: any | null;
 }
 
-const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
-    visible,
-    onCancel,
-    studentData,
-}) => {
+const StudentProfileForm: React.FC<StudentProfileModalProps> = ({studentData}) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const handleEditClick = () => {
@@ -25,11 +19,7 @@ const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
     };
 
     return (
-        <Modal
-            title={studentData ? studentData.name : "Student Profile"}
-            visible={visible}
-            onCancel={onCancel}
-            footer={null}>
+        <>
             <Form
                 layout="horizontal"
                 labelWrap
@@ -72,8 +62,8 @@ const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                     </Button>
                 )}
             </div>
-        </Modal>
+        </>
     );
 };
 
-export default StudentProfileModal;
+export default StudentProfileForm;

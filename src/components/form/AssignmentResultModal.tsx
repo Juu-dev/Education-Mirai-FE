@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Modal, Progress } from "antd";
 
-// Dummy modal content
+// Dummy form content
 const AssignmentResultModal = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [elapsedTime, setElapsedTime] = useState("00:00:10"); // Simulated time
@@ -42,7 +42,7 @@ const AssignmentResultModal = () => {
 
     return (
         <>
-            {/* Button to trigger the modal */}
+            {/* Button to trigger the form */}
             <Button type="primary" onClick={showModal}>
                 Submit Answers
             </Button>
