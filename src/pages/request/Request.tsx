@@ -34,17 +34,26 @@ const Request = () => {
     const getNameAssignee = (data: any) => {
         const name = data?.roles[0].role.name;
         if (name === Role.Principal) return 'Hiệu trưởng';
-        return data.Teacher.name
+        return data.name
     }
 
     const assigneeApi = useFetchApi({
         url: "/users/except-student",
         auth: true,
-        presentData: (users) => users.map((user: any) => ({
-            id: user?.id,
-            name: getNameAssignee(user)
-        }))
+        presentData: (users) => {
+            const assignee = users.map((user: any) => ({
+                id: user?.id,
+                name: getNameAssignee(user)
+            }))
+
+            return [{
+                id: "all",
+                name: "Tất cả"
+            },...assignee]
+        }
     })
+
+    console.log("assigneeApi: ", assigneeApi.data)
 
     const onFinish = async (values: any) => {
         const payload = {
