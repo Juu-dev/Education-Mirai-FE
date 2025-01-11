@@ -4,9 +4,11 @@ import { Modal } from "antd";
 interface ModalProps {
     title: string;
     content: string | ReactNode;
-    footer?: ReactNode | ReactNode[];
+    footer?: ReactNode | ReactNode[] | any;
     handleOk?: () => void;
     width?: number;
+    okText?: string;
+    cancelText?: string;
 }
 
 export default function useModal({
@@ -15,6 +17,8 @@ export default function useModal({
     footer = null,
     handleOk = () => {},
     width = 600,
+    okText,
+    cancelText,
     ...otherProps
 }: ModalProps) {
     const [open, setOpen] = useState(false);
@@ -32,6 +36,8 @@ export default function useModal({
             onOk={handleOk}
             width={width}
             centered
+            okText={okText}
+            cancelText={cancelText}
             // footer={(_, { OkBtn, CancelBtn }) => (
             //     <>
             //         <CancelBtn />

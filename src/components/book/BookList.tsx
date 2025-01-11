@@ -2,9 +2,9 @@ import { Pagination } from "antd"; // Ant Design Pagination
 import { BookComponent } from "./BookComponent";
 import { BookInterface } from "./interface/book-interface";
 import useFetchApi from "../../hooks/useFetchApi";
-// import {useEffect} from "react";
+import {useEffect} from "react";
 
-export const BookList = () => {
+export const BookList = ({isRefresh}: {isRefresh: boolean}) => {
     const booksApi = useFetchApi<BookInterface[]>({
         url: `/books/pagination`,
         auth: true,
@@ -15,13 +15,9 @@ export const BookList = () => {
         booksApi?.fetchApi(`/books/pagination`, { params: { page, pageSize: booksApi.pagination?.pageSize || 10 } });
     };
 
-    // const handleRefresh = async () => {
-    //     await booksApi?.fetchApi();
-    // };
-
-    // useEffect(() => {
-    //     handleRefresh().then(() => {});
-    // }, [isRefresh]);
+    useEffect(() => {
+        booksApi.setFetched(false)
+    }, [isRefresh]);
 
     return (
         <div className="p-4">
