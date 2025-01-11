@@ -16,6 +16,7 @@ const PRIORITY_TYPE = [
 
 const REQUEST_TYPE = [
     {key: "teaching", value: "Giảng dạy"},
+    {key: "calendar", value: "Lịch họp"},
     {key: "admin", value: "Hành chính"},
     {key: "other", value: "Khác"},
 ]
