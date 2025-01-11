@@ -83,7 +83,7 @@ const Login: React.FC = () => {
 
                         <Form.Item
                             label="Chọn lớp"
-                            name="class"
+                            name="classId"
                             required>
                             <Select
                                 filterOption={false}
