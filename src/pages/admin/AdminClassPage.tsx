@@ -18,8 +18,19 @@ const AdminClassPage: React.FC = () => {
     const {me} = useAuth()
     const [selectedStudent, setSelectedStudent] = useState<AssignmentDetails | null>(null);
     const studentsApi = useFetchApi({url: `/students/class/${me?.class.id}`, auth: true})
+    const exerciseApi = useFetchApi({
+        url: `/quizzes/pagination`,
+        auth: true,
+        presentData: (data) => data.map(e => ({
+            id: e.id,
+            name: e.title,
+            amount: e._count.questions,
+            allDoneStudent: 0
+        }))
+    })
     const deleteStudentApi = useDeleteApi({url: `/users/${selectedStudent?.userId}`})
 
+    console.log("exerciseApi: ", exerciseApi.data)
 
     const assignment = useModal({
         title: "Tạo và giao bài tập",
@@ -86,7 +97,7 @@ const AdminClassPage: React.FC = () => {
         }
     }, [me?.id]);
 
-    const columns = [
+    const columnsStudent = [
         {
             title: "ID",
             dataIndex: "id",
@@ -124,6 +135,39 @@ const AdminClassPage: React.FC = () => {
         },
     ];
 
+    const columnsExercise = [
+        {
+            title: "ID",
+            dataIndex: "id",
+            key: "id",
+        },
+        {
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "Số câu hỏi",
+            dataIndex: "amount",
+            key: "amount",
+        },
+        {
+            title: "Số học sinh hoàn thành",
+            dataIndex: "allDoneStudent",
+            key: "allDoneStudent",
+        },
+        {
+            title: "Hành động",
+            key: "action",
+            render: () => (
+                <div className="flex space-x-2">
+                    <Button icon={<EditOutlined />} onClick={studentProfile.openModal}/>
+                    <Button icon={<DeleteOutlined />} onClick={confirmDelete.openModal}/>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <div className="flex flex-col min-h-screen">
             {/* Profile Section */}
@@ -135,7 +179,7 @@ const AdminClassPage: React.FC = () => {
             <Card className="flex-grow mb-4 overflow-auto">
                 <PageTitle title="Danh sách học sinh" className="mb-3"/>
                 <Table
-                    columns={columns}
+                    columns={columnsStudent}
                     dataSource={parseStudentData(studentsApi.data)}
                     pagination={{pageSize: 10}}
                     onRow={(record: any) => ({
@@ -154,8 +198,8 @@ const AdminClassPage: React.FC = () => {
                     </Button>
                 </div>
                 <Table
-                    columns={columns}
-                    dataSource={parseStudentData(studentsApi.data)}
+                    columns={columnsExercise}
+                    dataSource={exerciseApi.data}
                     pagination={{pageSize: 10}}
                     onRow={(record: any) => ({
                         onClick: () => {
