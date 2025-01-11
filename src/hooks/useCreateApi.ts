@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
+import {message} from "antd";
 
 interface UseCreateApiProps {
     url: string;
@@ -54,8 +55,11 @@ export default function useCreateApi({
                 setErrorData(resp.data);
             }
 
+            message.success(successMsg);
+
             return fullResp ? resp : resp.success;
         } catch (e) {
+            message.error(errorMsg);
             console.error(errorMsg, e);
             return fullResp
                 ? {

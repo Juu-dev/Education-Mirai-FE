@@ -12,6 +12,7 @@ import {parseStudentData, parseTeacherData} from "../../utils/parse-data.ts";
 import ProfileSection from "./ProfileSection.tsx";
 import SearchSection from "./SearchSection.tsx";
 import useDeleteApi from "../../hooks/useDeleteApi.ts";
+import QuizForm from "../../components/form/QuizForm.tsx";
 
 const AdminClassPage: React.FC = () => {
     const {me} = useAuth()
@@ -45,6 +46,13 @@ const AdminClassPage: React.FC = () => {
         content: <StudentProfileForm studentData={parseStudentData(studentsApi.data)} />,
         handleOk: () => {},
         footer: attendanceFooter
+    })
+
+    const quiz = useModal({
+        title: "Tạo Quiz",
+        content: <QuizForm />,
+        handleOk: () => {},
+        width: 900
     })
 
     const confirmDelete = useModal({
@@ -139,7 +147,12 @@ const AdminClassPage: React.FC = () => {
             </Card>
 
             <Card className="flex-grow mb-4 overflow-auto">
-                <PageTitle title="Danh sách bài tập" className="mb-3"/>
+                <div className="flex justify-between items-center mb-3">
+                    <PageTitle title="Danh sách bài tập"/>
+                    <Button type="primary" onClick={quiz.openModal}>
+                        Thêm bài tập
+                    </Button>
+                </div>
                 <Table
                     columns={columns}
                     dataSource={parseStudentData(studentsApi.data)}
@@ -167,6 +180,7 @@ const AdminClassPage: React.FC = () => {
             {studentProfile.modal}
             {attendance.modal}
             {confirmDelete.modal}
+            {quiz.modal}
         </div>
     );
 };

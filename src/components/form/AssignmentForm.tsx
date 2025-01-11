@@ -2,8 +2,6 @@ import { Form, Input, DatePicker, Button, Select } from 'antd';
 import { FC } from 'react';
 import { AssignmentDetails } from '../assignment/interface/assginment-interface';
 import {STUDENT_GROUPS} from "../../constants/mocks/class.ts";
-import useModal from "../../hooks/modal/useModal.tsx";
-import QuizForm from "./QuizForm.tsx";
 
 interface AdminAssignmentModalProps {
     visible: boolean;
@@ -21,12 +19,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
         form.resetFields();
     };
 
-    const quiz = useModal({
-        title: "Tạo Quiz",
-        content: <QuizForm />,
-        handleOk: () => {},
-        width: 900
-    })
+
 
     return (
         <Form form={form} layout="vertical" onFinish={handleFinish}>
@@ -75,9 +68,9 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
                 </Select>
             </Form.Item>
 
-            <Button type="primary" onClick={quiz.openModal}>
-                Tạo Quiz
-            </Button>
+            {/*<Button type="primary" onClick={quiz.openModal}>*/}
+            {/*    Tạo Quiz*/}
+            {/*</Button>*/}
 
             {/* Submit Button */}
             <div className="flex justify-end">
@@ -85,8 +78,6 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
                     Giao bài tập
                 </Button>
             </div>
-
-            {quiz.modal}
         </Form>
     );
 };
