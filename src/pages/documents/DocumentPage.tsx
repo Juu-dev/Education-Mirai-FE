@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import {Button, Input, Select, Table, Upload} from "antd";
-import {FolderAddOutlined, FileAddOutlined, ArrowLeftOutlined, UploadOutlined} from "@ant-design/icons";
+import {Button, Input, Select} from "antd";
+import {FolderAddOutlined, FileAddOutlined, ArrowLeftOutlined} from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
-import PageTitle from "../../components/common/SectionTitle";
-import UploadButton from "../../components/admin/UploadButton";
+import PageTitle from "../../components/common/SectionTitle.tsx";
+import UploadButton from "../../components/admin/UploadButton.tsx";
 import DocumentsTable from "../../components/admin/documents/DocumentsTable.tsx";
 import FolderTable from "../../components/admin/documents/FolderTable.tsx";
 import useAuth from "../../hooks/useAuth.ts";
 import {MENU_UPLOAD} from "../../constants/document-type.ts";
-import {OBJECT_DATA, SHARE_LIST_DATA, TEMPLATE_DATA} from "../../constants/mocks/document.ts";
 import useModal from "../../hooks/modal/useModal.tsx";
-import {SHARE_LIST_COLUMNS, TEMPLATE_COLUMNS} from "../../constants/document-modal.tsx";
 import useDebounce from "../../hooks/useDebounce.ts";
+import {addTemplateModalParams, shareDocumentModalParams, templateModalParams} from "./modal-params.tsx";
 
-const AdminDocumentPage: React.FC = () => {
+const DocumentPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [filterType, setFilterType] = useState<string[]>([]);
     const debouncedSearchTerm = useDebounce<string>(searchTerm, 500);
@@ -31,67 +30,9 @@ const AdminDocumentPage: React.FC = () => {
     const handleBackToFolder = () => navigate("/principal/document");
 
     // Modal Handlers
-    const addTemplateModal = useModal({
-        title: "Thêm mẫu mới",
-        content:
-            <>
-                <div className="mb-4">
-                    <div className="mb-2">Tên tài liệu</div>
-                    <Input placeholder="Enter document name"/>
-                </div>
-                <div className="mb-4">
-                    <div className="mb-2">Đối tượng sử dụng</div>
-                    <Select
-                        placeholder="Select user type"
-                        className="w-full"
-                        options={OBJECT_DATA}
-                    />
-                </div>
-                <div className="mb-4">
-                    <div className="mb-2">Đính kèm</div>
-                    <Upload>
-                        <Button icon={<UploadOutlined/>}>Click to Upload</Button>
-                    </Upload>
-                </div>
-                <div className="flex justify-end mt-4">
-                    <Button type="primary">Thêm mẫu</Button>
-                </div>
-            </>
-    })
-    const templateModal = useModal({
-        title: "Lựa chọn template",
-        content:
-            <>
-                <Table
-                    dataSource={TEMPLATE_DATA}
-                    columns={TEMPLATE_COLUMNS}
-                    pagination={false}
-                />
-                <div className="flex justify-end mt-4">
-                    <Button type="primary" onClick={addTemplateModal.openModal}>
-                        Thêm mẫu
-                    </Button>
-                </div>
-            </>
-    })
-    const shareDocumentModal = useModal({
-        title: "Share Document",
-        content:
-            <>
-                <Input.Search
-                    placeholder="Search by name or email"
-                    className="mb-4"
-                />
-                <Table
-                    dataSource={SHARE_LIST_DATA}
-                    columns={SHARE_LIST_COLUMNS}
-                    pagination={false}
-                />
-                <div className="flex justify-end mt-4">
-                    <Button type="primary">Chia sẻ</Button>
-                </div>
-            </>
-    })
+    const addTemplateModal = useModal(addTemplateModalParams)
+    const templateModal = useModal(templateModalParams(addTemplateModal.openModal))
+    const shareDocumentModal = useModal(shareDocumentModalParams)
 
     // Button Section for Principal
     const renderButtonSection = () => (
@@ -115,7 +56,8 @@ const AdminDocumentPage: React.FC = () => {
 
     // Table Section Rendering
     const renderTable = () => (
-        isPrincipal && !userId ? <FolderTable searchTerm={searchTerm} /> :
+        isPrincipal && !userId ?
+            <FolderTable searchTerm={searchTerm} /> :
             <DocumentsTable
                 handleShareClick={shareDocumentModal.openModal}
                 userId={isUploadableDocument ? me!.id : userId!}
@@ -200,4 +142,4 @@ const AdminDocumentPage: React.FC = () => {
     );
 };
 
-export default AdminDocumentPage;
+export default DocumentPage;

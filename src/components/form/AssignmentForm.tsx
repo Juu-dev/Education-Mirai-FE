@@ -1,25 +1,68 @@
-import { Form, Input, DatePicker, Button, Select } from 'antd';
+import {Form, Input, Button, Select, InputNumber} from 'antd';
 import { FC } from 'react';
-import { AssignmentDetails } from '../assignment/interface/assginment-interface';
-import {STUDENT_GROUPS} from "../../constants/mocks/class.ts";
+import useFetchApi from "../../hooks/useFetchApi.ts";
+import useCreateApi from "../../hooks/useCreateApi.ts";
+import useAuth from "../../hooks/useAuth.ts";
 
 interface AdminAssignmentModalProps {
     visible: boolean;
     onCancel: () => void;
     onAssign: (values: AssignmentDetails) => void;
-    groups: { id: string; name: string }[];  // Accept a list of groups as a prop
+    groups: { id: string; name: string }[];
+}
+
+interface IOption {
+    id: string;
+    name: string;
+}
+
+export interface AssignmentDetails {
+    title: string;
+    description: string;
+    timeOut: number;
+    classAssigneeId: string;
+    quizId: string;
 }
 
 const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
-    const [form] = Form.useForm();
+    const {me} = useAuth()
+    const quizzes = useFetchApi<IOption>({
+        url: "/quizzes",
+        auth: true,
+        presentData: (data) => (data.map((e) => ({
+            id: e.id,
+            name: e.title
+        })))
+    })
+    const classes = useFetchApi<IOption>({
+        url: "/classes",
+        auth: true,
+        presentData: (data) => (data.map((e) => ({
+            id: e.id,
+            name: e.name
+        })))
+    })
+    const exercise = useCreateApi({
+        url: "/exercises",
+        successMsg: "Giao bài tập thành công!",
+        errorMsg: "Giao bài tập thất bại, vui lòng thử lại.",
+        fullResp: true,
+    })
 
-    // Handle form submission
-    const handleFinish = (values: AssignmentDetails) => {
-        console.log("values: ", values)
+    const [form] = Form.useForm();
+    const handleFinish = async (values: AssignmentDetails) => {
+        const data = {
+            name: values.title,
+            description: values.description,
+            timeOut: values.timeOut,
+            assignerId: me?.id,
+            classAssigneeId: values.classAssigneeId,
+            quizId: values.quizId
+        }
+
+        await exercise.handleCreate(data)
         form.resetFields();
     };
-
-
 
     return (
         <Form form={form} layout="vertical" onFinish={handleFinish}>
@@ -43,24 +86,26 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
 
             {/* Due Date */}
             <Form.Item
-                label="Hạn nộp"
-                name="dueDate"
-                rules={[{ required: true, message: "Vui lòng chọn hạn nộp bài tập" }]}
+                label="Thời gian làm bài (phút)"
+                name="timeOut"
+                rules={[
+                    { required: true, message: 'Vui lòng nhập thời gian làm bài' },
+                    { type: 'number', min: 1, message: 'Thời gian làm bài phải lớn hơn 0 phút' },
+                ]}
             >
-                <DatePicker placeholder="Chọn ngày" style={{ width: '100%' }} />
+                <InputNumber placeholder="Nhập thời gian (phút)" style={{ width: '100%' }} />
             </Form.Item>
 
             {/* Student Group Selection */}
             <Form.Item
-                label="Chọn nhóm học sinh"
-                name="groups"  // Adjusted the form field name to plural for multiple selections
-                rules={[{ required: true, message: "Vui lòng chọn ít nhất một nhóm học sinh" }]}
+                label="Chọn lớp"
+                name="classAssigneeId"
+                rules={[{ required: true, message: "Vui lòng chọn ít nhất một lớp học" }]}
             >
                 <Select
-                    mode="multiple"  // Enable multiple selection
-                    placeholder="Chọn nhóm học sinh"
+                    placeholder="Chọn lớp"
                 >
-                    {STUDENT_GROUPS.map(group => (
+                    {classes?.data.map(group => (
                         <Select.Option key={group.id} value={group.id}>
                             {group.name}
                         </Select.Option>
@@ -68,9 +113,19 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
                 </Select>
             </Form.Item>
 
-            {/*<Button type="primary" onClick={quiz.openModal}>*/}
-            {/*    Tạo Quiz*/}
-            {/*</Button>*/}
+            <Form.Item
+                label="Chọn Quiz"
+                name="quizId"
+                rules={[{ required: true, message: 'Vui lòng chọn một Quiz' }]}
+            >
+                <Select placeholder="Chọn Quiz">
+                    {quizzes?.data.map((quiz) => (
+                        <Select.Option key={quiz.id} value={quiz.id}>
+                            {quiz.name}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
 
             {/* Submit Button */}
             <div className="flex justify-end">

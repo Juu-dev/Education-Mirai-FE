@@ -7,10 +7,3 @@ export interface AssignmentInterface {
     tags: string[];
     time: string;
 }
-
-export interface AssignmentDetails {
-    title: string;
-    description: string;
-    dueDate: string;
-    studentGroup: string[];
-}

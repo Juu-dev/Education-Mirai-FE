@@ -14,9 +14,9 @@ import { BookDetailPage } from './pages/user/BookDetailPage';
 import { AssignmentPage } from './pages/user/AssginmentPage';
 import AssignmentDetailPage from './pages/user/AssignmentDetailPage';
 import AdminLayout from './components/layout/AdminLayout';
-import AdminDashboard from './pages/admin/AdminDashboardPage';
-import AdminClassPage from './pages/admin/AdminClassPage';
-import AdminDocumentPage from './pages/admin/AdminDocumentPage';
+import AdminDashboard from './pages/admin/DashboardPage.tsx';
+import ClassPage from './pages/class/ClassPage.tsx';
+import DocumentPage from './pages/documents/DocumentPage.tsx';
 import LibraryStatisticalPage from './pages/librarian/LibraryStatisticalPage';
 // import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
 import { LibrarianAddBookPage } from './pages/librarian/LibrarianAddBookPage';
@@ -43,9 +43,9 @@ const App: React.FC = () => {
 							<Route path="/principal" element={<AdminPage />} />
 							<Route path="/principal/page-one" element={<PageOne />} />
 							<Route path="/principal/dashboard" element={<AdminDashboard />} />
-							<Route path="/principal/class" element={<AdminClassPage />} />
-							<Route path="/principal/document" element={<AdminDocumentPage />} />
-							<Route path="/principal/document/:teacherID" element={<AdminDocumentPage />} />
+							<Route path="/principal/class" element={<ClassPage />} />
+							<Route path="/principal/document" element={<DocumentPage />} />
+							<Route path="/principal/document/:teacherID" element={<DocumentPage />} />
 							<Route path="/principal/request" element={<Request />} />
 						</Route>
 					</Route>
@@ -55,8 +55,8 @@ const App: React.FC = () => {
 							<Route path="/teacher" element={<AdminPage />} />
 							<Route path="/teacher/page-one" element={<PageOne />} />
 							<Route path="/teacher/dashboard" element={<AdminDashboard />} />
-							<Route path="/teacher/class" element={<AdminClassPage />} />
-							<Route path="/teacher/document" element={<AdminDocumentPage />} />
+							<Route path="/teacher/class" element={<ClassPage />} />
+							<Route path="/teacher/document" element={<DocumentPage />} />
 							<Route path="/teacher/request" element={<Request />} />
 						</Route>
 					</Route>
@@ -78,7 +78,7 @@ const App: React.FC = () => {
 							<Route path="/librarian" element={<Navigate to="/librarian/dashboard" replace />} />
 							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
 							<Route path="/librarian/library" element={<LibraryStatisticalPage />} />
-							<Route path="/librarian/document" element={<AdminDocumentPage />} />
+							<Route path="/librarian/document" element={<DocumentPage />} />
 							<Route path="/librarian/books" element={<LibrarianAddBookPage />} />
 						</Route>
 					</Route>

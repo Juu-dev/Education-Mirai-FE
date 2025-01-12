@@ -9,7 +9,7 @@ export interface Task {
     deadline: string;
     content: string;
     status: string;
-    assignedTo?: string; // For task sent (task gửi)
+    assignedTo?: string;
 }
 
 export const columnsReceived: ColumnsType<Task> = [

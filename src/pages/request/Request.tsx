@@ -46,15 +46,12 @@ const Request = () => {
                 id: user?.id,
                 name: getNameAssignee(user)
             }))
-
             return [{
                 id: "all",
                 name: "Tất cả"
             },...assignee]
         }
     })
-
-    console.log("assigneeApi: ", assigneeApi.data)
 
     const onFinish = async (values: any) => {
         const payload = {

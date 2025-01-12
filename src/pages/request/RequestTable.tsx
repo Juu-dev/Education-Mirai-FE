@@ -64,8 +64,8 @@ export const RequestTable = () => {
                                 backgroundColor: '#f0f0f0',
                                 padding: '5px 10px',
                                 borderRadius: '8px',
-                                marginBottom: '20px', // Add margin for spacing
-                                fontWeight: 'bold', // Highlight text
+                                marginBottom: '20px',
+                                fontWeight: 'bold',
                             }}
                         />
                     </Space>
@@ -75,7 +75,7 @@ export const RequestTable = () => {
                         dataSource={dataSource}
                         pagination={false}
                         onRow={(record) => ({
-                            onClick: () => handleRowClick(record), // Nhấn vào hàng để chọn task
+                            onClick: () => handleRowClick(record),
                         })}
                     />
                 </Card>
@@ -93,8 +93,8 @@ export const RequestTable = () => {
                             Hoàn thành
                         </Button>,
                     ]}
-                    width={800}    // Increase form width
-                    centered       // Center the form
+                    width={800}
+                    centered
                 >
                     {selectedTask && (
                         <>

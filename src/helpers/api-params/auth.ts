@@ -5,11 +5,20 @@ const API_PATH = {
     registerStudent: "/auth/register/student",
 }
 
-export const loginPath = { url: API_PATH.login, fullResp: true, isWithCredentials: true }
+export const loginPath = {
+    url: API_PATH.login,
+    fullResp: true,
+    isWithCredentials: true
+}
 
-export const logoutPath = { url: API_PATH.logout }
+export const logoutPath = {
+    url: API_PATH.logout
+}
 
-export const refreshTokenPath = { url: API_PATH.refreshToken, isWithCredentials: true }
+export const refreshTokenPath = {
+    url: API_PATH.refreshToken,
+    isWithCredentials: true
+}
 
 export const registerPath = {
     url: API_PATH.registerStudent,
@@ -19,5 +28,3 @@ export const registerPath = {
 }
 
 export const classPath = {url: `/classes/pagination`, auth: false, initQueries: {pageSize: 100}}
-
-export const studentPath = (params?: string) => ({url: `/students/class/${params}`, auth: true})
