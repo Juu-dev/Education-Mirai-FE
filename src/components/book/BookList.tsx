@@ -1,4 +1,4 @@
-import { Pagination } from "antd"; // Ant Design Pagination
+import {Empty, Pagination} from "antd"; // Ant Design Pagination
 import { BookComponent } from "./BookComponent";
 import { BookInterface } from "./interface/book-interface";
 import useFetchApi from "../../hooks/useFetchApi";
@@ -21,23 +21,31 @@ export const BookList = ({isRefresh}: {isRefresh: boolean}) => {
 
     return (
         <div className="p-4">
-            <div className="grid grid-cols-5 gap-4">
-                {booksApi?.data?.map((book: any) => (
-                    <BookComponent key={book.id} book={book} />
-                ))}
-            </div>
+            {booksApi?.data?.length ? (
+                <>
+                    <div className="grid grid-cols-5 gap-4">
+                        {booksApi?.data?.map((book: any) => (
+                            <BookComponent key={book.id} book={book}/>
+                        ))}
+                    </div>
+                    <div className="flex justify-center mt-6">
+                        <Pagination
+                            current={booksApi?.pagination?.page}
+                            total={booksApi?.count}
+                            pageSize={booksApi?.pagination?.pageSize}
+                            onChange={handlePageChange}
+                            showSizeChanger={false}
+                            className="custom-pagination"
+                        />
+                    </div>
+                </>
+            ) : (
+                <div className="col-span-5 flex justify-center">
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+                </div>
+            )}
 
-            {/* Ant Design Pagination */}
-            <div className="flex justify-center mt-6">
-                <Pagination
-                    current={booksApi?.pagination?.page}
-                    total={booksApi?.count}
-                    pageSize={booksApi?.pagination?.pageSize}
-                    onChange={handlePageChange}
-                    showSizeChanger={false}
-                    className="custom-pagination"
-                />
-            </div>
+
         </div>
     );
 };

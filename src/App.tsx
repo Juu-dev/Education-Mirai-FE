@@ -17,9 +17,9 @@ import AdminLayout from './components/layout/AdminLayout';
 import AdminDashboard from './pages/admin/DashboardPage.tsx';
 import ClassPage from './pages/class/ClassPage.tsx';
 import DocumentPage from './pages/documents/DocumentPage.tsx';
-import LibraryStatisticalPage from './pages/librarian/LibraryStatisticalPage';
+import StatisticalPage from './pages/librarian/StatisticalPage.tsx';
 // import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
-import { LibrarianAddBookPage } from './pages/librarian/LibrarianAddBookPage';
+import { AddBookPage } from './pages/librarian/AddBookPage.tsx';
 import Request from './pages/request/Request.tsx';
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage'
@@ -77,9 +77,9 @@ const App: React.FC = () => {
 						<Route element={<AdminLayout />}>
 							<Route path="/librarian" element={<Navigate to="/librarian/dashboard" replace />} />
 							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
-							<Route path="/librarian/library" element={<LibraryStatisticalPage />} />
+							<Route path="/librarian/library" element={<StatisticalPage />} />
 							<Route path="/librarian/document" element={<DocumentPage />} />
-							<Route path="/librarian/books" element={<LibrarianAddBookPage />} />
+							<Route path="/librarian/books" element={<AddBookPage />} />
 						</Route>
 					</Route>
 				</Routes>

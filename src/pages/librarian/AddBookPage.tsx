@@ -7,7 +7,7 @@ import AddBookForm from "../../components/library/form/AddBookForm.tsx";
 import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
 import useModal from "../../hooks/modal/useModal.tsx";
 
-export const LibrarianAddBookPage: React.FC = () => {
+export const AddBookPage: React.FC = () => {
   const [isTableDataUpdated, setIsTableDataUpdated] = useState(false);
   const handleRefreshTableData = () => {
     setIsTableDataUpdated(prev => !prev);
@@ -79,4 +79,4 @@ export const LibrarianAddBookPage: React.FC = () => {
   );
 };
 
-export default LibrarianAddBookPage;
+export default AddBookPage;
