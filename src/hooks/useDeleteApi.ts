@@ -27,6 +27,7 @@ export default function useDeleteApi({ url, auth = true, messageSuccess = "Delet
             setDeleting(true);
 
             const options: RequestInit = {
+                body: data,
                 method: "DELETE",
                 // ...(Object.keys(data).length > 0 && { body: data }),
             };
@@ -44,6 +45,7 @@ export default function useDeleteApi({ url, auth = true, messageSuccess = "Delet
                 message.error(resp.error);
             }
         } catch (e) {
+            message.error(e.response.data.message);
             console.log("Failed to delete", e);
         } finally {
             setDeleting(false);

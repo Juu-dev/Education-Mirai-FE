@@ -1,6 +1,6 @@
-import { Button, Table, Card } from "antd";
+import {Button, Table, Card} from "antd";
 import React, {useEffect, useState} from "react";
-import AssignmentForm, {AssignmentDetails} from "../../components/form/AssignmentForm.tsx";
+import AssignmentForm from "../../components/form/AssignmentForm.tsx";
 import PageTitle from "../../components/common/SectionTitle.tsx";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
@@ -12,43 +12,66 @@ import SearchSection from "./SearchSection.tsx";
 import useDeleteApi from "../../hooks/useDeleteApi.ts";
 import QuizForm from "../../components/form/QuizForm.tsx";
 import {columnsExercise, columnsQuiz, columnsStudent} from "./column.tsx";
+import AssignmentEditForm from "../../components/form/AssignmentEditForm.tsx";
+import useConfirmModal from "../../hooks/modal/useConfirmModal.tsx";
+import {exerciseFetchPath, quizFetchPath} from "../../helpers/api-params/auth.ts";
+import QuizEditForm from "../../components/form/QuizEditForm";
 
 const ClassPage: React.FC = () => {
     const {me} = useAuth()
-    const [selectedStudent, setSelectedStudent] = useState<AssignmentDetails | null>(null);
-    const studentsApi = useFetchApi({url: `/students/class/${me?.class.id}`, auth: true})
-    const quizzesFetchApi = useFetchApi({
-        url: "/quizzes/pagination",
-        auth: true,
-        presentData: (data) => data.map(e => ({
-            id: e.id,
-            name: e.title,
-            amount: e._count.questions,
-            allDoneStudent: 0
-        }))
-    })
-    const exercisesFetchApi = useFetchApi({
-        url: "/exercises/pagination",
-        auth: true,
-        presentData: (data) => data.map(e => ({
-            id: e.id,
-            name: e.name,
-            timeOut: e.timeOut,
-            allDoneStudent: 0
-        }))
-    })
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [selectedAssignments, setSelectedAssignments] = useState(null);
+    const [selectedQuiz, setSelectedQuiz] = useState(null);
+
+    const studentsFetchApi = useFetchApi({url: `/students/class/${me?.class.id}`, auth: true})
+    const quizzesFetchApi = useFetchApi(quizFetchPath)
+    const exercisesFetchApi = useFetchApi(exerciseFetchPath)
+
     const deleteStudentApi = useDeleteApi({url: `/users/${selectedStudent?.userId}`})
+    const deleteExerciseApi = useDeleteApi({url: `/exercises/${selectedAssignments?.id}`})
+    const deleteQuizApi = useDeleteApi({url: `/quizzes/${selectedQuiz?.id}`})
 
     const assignment = useModal({
         title: "Tạo và giao bài tập",
         content: <AssignmentForm />,
+    })
+    const assignmentEdit = useModal({
+        title: "Sửa bài tập đã giao",
+        content: <AssignmentEditForm
+            assignment={selectedAssignments}
+            onSuccess={() => {
+                exercisesFetchApi.setFetched(false)
+                assignmentEdit.closeModal()
+            }}
+        />,
+    })
+
+    const quiz = useModal({
+        title: "Tạo Quiz",
+        content: <QuizForm onClose={() => {
+            quiz.closeModal();
+            quizzesFetchApi.setFetched(false);
+        }} />,
         handleOk: () => {},
+        width: 900
+    })
+
+    const quizEdit = useModal({
+        title: "Sửa Quiz",
+        content: <QuizEditForm
+            quiz={selectedQuiz?.origin}
+            onSuccess={() => {
+                quizzesFetchApi.setFetched(false);
+                quizEdit.closeModal()
+            }}
+        />,
+        handleOk: () => {},
+        width: 900
     })
 
     const studentProfile = useModal({
         title: selectedStudent ? selectedStudent.name : "Student Profile",
         content: <StudentProfileForm studentData={selectedStudent} />,
-        handleOk: () => {},
     })
 
     const attendanceFooter = [
@@ -59,22 +82,15 @@ const ClassPage: React.FC = () => {
             Điểm danh tất cả
         </Button>,
     ]
+
     const attendance = useModal({
         title: "Danh sách học sinh",
-        content: <StudentProfileForm studentData={parseStudentData(studentsApi.data)} />,
+        content: <StudentProfileForm studentData={parseStudentData(studentsFetchApi.data)} />,
         handleOk: () => {},
         footer: attendanceFooter
     })
 
-    const quiz = useModal({
-        title: "Tạo Quiz",
-        content: <QuizForm />,
-        handleOk: () => {},
-        width: 900
-    })
-
-    const confirmDelete = useModal({
-        title: "Xác nhận xóa",
+    const confirmDeleteStudent = useConfirmModal({
         content: (
             <p>
                 Bạn có chắc chắn muốn xóa học sinh{" "}
@@ -86,21 +102,51 @@ const ClassPage: React.FC = () => {
         handleOk: async () => {
             if (selectedStudent) {
                 await deleteStudentApi.handleDelete();
-                studentsApi.setFetched(false)
-                confirmDelete.closeModal()
+                studentsFetchApi.setFetched(false)
+                confirmDeleteStudent.closeModal()
+            }
+        }
+    });
+
+    const confirmDeleteExercise = useConfirmModal({
+        content: (
+            <p>
+                Bạn có chắc chắn muốn xóa bài tập{" "}
+                <strong>{selectedAssignments?.name}</strong>?
+                <br/>
+                Thao tác này không thể hoàn tác.
+            </p>
+        ),
+        handleOk: async () => {
+            if (selectedAssignments) {
+                await deleteExerciseApi.handleDelete();
+                exercisesFetchApi.setFetched(false)
+                confirmDeleteExercise.closeModal()
             }
         },
-        footer: (_, { OkBtn, CancelBtn }) => (
-            <>
-                <CancelBtn />
-                <OkBtn />
-            </>
-        )
+    });
+
+    const confirmDeleteQuiz = useConfirmModal({
+        content: (
+            <p>
+                Bạn có chắc chắn muốn xóa quiz{" "}
+                <strong>{selectedQuiz?.name}</strong>?
+                <br/>
+                Thao tác này không thể hoàn tác.
+            </p>
+        ),
+        handleOk: async () => {
+            if (selectedQuiz) {
+                await deleteQuizApi.handleDelete();
+                quizzesFetchApi.setFetched(false)
+                confirmDeleteQuiz.closeModal()
+            }
+        },
     });
 
     useEffect(() => {
         if (me?.id) {
-            studentsApi.fetchApi(`/students/class/${me?.class.id}`)
+            studentsFetchApi.fetchApi(`/students/class/${me?.class.id}`)
         }
     }, [me?.id]);
 
@@ -113,8 +159,8 @@ const ClassPage: React.FC = () => {
             <Card className="flex-grow mb-4 overflow-auto">
                 <PageTitle title="Danh sách học sinh" className="mb-3"/>
                 <Table
-                    columns={columnsStudent(studentProfile, confirmDelete)}
-                    dataSource={parseStudentData(studentsApi.data)}
+                    columns={columnsStudent(studentProfile, confirmDeleteStudent)}
+                    dataSource={parseStudentData(studentsFetchApi.data)}
                     pagination={{pageSize: 10}}
                     onRow={(record: any) => ({
                         onClick: () => {
@@ -133,13 +179,12 @@ const ClassPage: React.FC = () => {
                         </Button>
                     </div>
                     <Table
-                        columns={columnsQuiz(studentProfile, confirmDelete)}
+                        columns={columnsQuiz(quizEdit, confirmDeleteQuiz)}
                         dataSource={quizzesFetchApi.data}
                         pagination={{pageSize: 10}}
                         onRow={(record: any) => ({
                             onClick: () => {
-                                setSelectedStudent(record)
-                                studentProfile.openModal()
+                                setSelectedQuiz(record)
                             },
                         })}
                     />
@@ -149,13 +194,12 @@ const ClassPage: React.FC = () => {
                         <PageTitle title="Danh sách bài tập"/>
                     </div>
                     <Table
-                        columns={columnsExercise(studentProfile, confirmDelete)}
+                        columns={columnsExercise(assignmentEdit, confirmDeleteExercise)}
                         dataSource={exercisesFetchApi.data}
                         pagination={{pageSize: 10}}
                         onRow={(record: any) => ({
                             onClick: () => {
-                                setSelectedStudent(record)
-                                studentProfile.openModal()
+                                setSelectedAssignments(record)
                             },
                         })}
                     />
@@ -173,10 +217,17 @@ const ClassPage: React.FC = () => {
             </div>
 
             {assignment.modal}
+            {assignmentEdit.modal}
+            {quiz.modal}
+            {quizEdit.modal}
+
             {studentProfile.modal}
             {attendance.modal}
-            {confirmDelete.modal}
-            {quiz.modal}
+
+            {confirmDeleteStudent.modal}
+            {confirmDeleteQuiz.modal}
+            {confirmDeleteExercise.modal}
+
         </div>
     );
 };

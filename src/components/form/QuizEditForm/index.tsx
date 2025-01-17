@@ -1,50 +1,86 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Input, Form, Typography, Divider, Space, message, Switch} from "antd";
-import useCreateApi from "../../hooks/useCreateApi.ts";
-import ListAddedQuestions from "./QuizEditForm/ListAddedQuestions.tsx";
-import PreviewQuestion from "./QuizEditForm/PreviewQuestion.tsx";
+import ListAddedQuestions from "./ListAddedQuestions.tsx";
+import useEditApi from "../../../hooks/useEditApi.ts";
+import PreviewQuestion from "./PreviewQuestion.tsx";
 
-interface QuizFormProps {
-    onClose: () => void
+interface QuizEditFormProps {
+    quiz?: {
+        id: string,
+        title: string,
+        creatorId: string,
+        questions:
+            {
+                id: string,
+                quizId: string,
+                content: string,
+                options:
+                    {
+                        id: string,
+                        questionId: string,
+                        content: string,
+                        isCorrect: boolean,
+                    }[]
+            }[]
+    };
+    onSuccess: () => void
 }
 
 const QUESTION_DEFAULT = {
-    question: "",
-    answers: ["", "", "", ""],
-    isCorrect: [false, false, false, false]
+    id: "",
+    content: "",
+    options: [
+        { id: "", content: "", isCorrect: false },
+        { id: "", content: "", isCorrect: false },
+        { id: "", content: "", isCorrect: false },
+        { id: "", content: "", isCorrect: false },
+    ],
 }
 
-const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
-    const quiz = useCreateApi({
-        url: "/quizzes",
-        successMsg: "Tạo bài quiz thành công!",
-        errorMsg: "Tạo bài quiz thất bại, vui lòng thử lại.",
+const QuizEditForm: React.FC<QuizEditFormProps> = ({quiz, onSuccess}: QuizEditFormProps) => {
+    console.log("quiz: ", quiz)
+    const quizEdit = useEditApi({
+        url: `/quizzes/${quiz?.id}`,
+        successMsg: "Sửa bài quiz thành công!",
+        errorMsg: "Sửa bài quiz thất bại, vui lòng thử lại.",
         fullResp: true,
     })
 
     const [selectedQuestions, setSelectedQuestions] = useState<number[]>([]);
 
-    const [quizTitle, setQuizTitle] = useState<string>("");
-    const [questions, setQuestions] = useState<any[]>([]);
+    const [quizTitle, setQuizTitle] = useState<string>(quiz?.title || "");
+    const [questions, setQuestions] = useState<any[]>(quiz?.questions || []);
     const [currentQuestion, setCurrentQuestion] = useState(QUESTION_DEFAULT);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
-    const updateAnswer = (index: number, value: string) => {
-        const updatedAnswers = [...currentQuestion.answers];
-        updatedAnswers[index] = value;
-        setCurrentQuestion({ ...currentQuestion, answers: updatedAnswers });
+    useEffect(() => {
+        if (quiz) {
+            setQuizTitle(quiz.title);
+            setQuestions(quiz.questions);
+            setCurrentQuestion(questions[0])
+            setEditingIndex(0)
+        }
+    }, [quiz]);
+
+    const updateOption = (index: number, value: string) => {
+        const updatedOptions = [...currentQuestion.options];
+        updatedOptions[index].content = value;
+        setCurrentQuestion({ ...currentQuestion, options: updatedOptions });
     };
 
-    const toggleCorrectAnswer = (index: number) => {
-        const updatedIsCorrect = [...currentQuestion.isCorrect];
-        updatedIsCorrect[index] = !updatedIsCorrect[index];
-        setCurrentQuestion({ ...currentQuestion, isCorrect: updatedIsCorrect });
+    const toggleCorrectOption = (index: number) => {
+        const updatedOptions = [...currentQuestion.options];
+        updatedOptions[index].isCorrect = !updatedOptions[index].isCorrect;
+        setCurrentQuestion({ ...currentQuestion, options: updatedOptions });
     };
-
 
     const addOrUpdateQuestion = () => {
-        if (!currentQuestion.question.trim() || currentQuestion.answers.some((a) => !a.trim())) {
+        if (!currentQuestion.content.trim() || currentQuestion.options.some((opt) => !opt.content.trim())) {
             return alert("Vui lòng nhập đầy đủ thông tin câu hỏi và đáp án.");
+        }
+
+        if (!currentQuestion.options.some((opt) => opt.isCorrect)) {
+            return alert("Vui lòng chọn ít nhất một đáp án đúng.");
         }
 
         if (editingIndex !== null) {
@@ -53,12 +89,11 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
             setQuestions(updatedQuestions);
             setEditingIndex(null);
         } else {
-            setQuestions([...questions, currentQuestion]);
+            setQuestions([...questions, { ...currentQuestion}]);
         }
 
         setCurrentQuestion(QUESTION_DEFAULT);
     };
-
 
     const editQuestion = (index: number) => {
         setCurrentQuestion(questions[index]);
@@ -66,27 +101,29 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
     };
 
     const handleSubmitQuiz = async () => {
-        if (questions.length === 0) {
-            return message.warning("Không có câu hỏi");
+        if (!quizTitle.trim() || questions.length === 0) {
+            return message.warning("Vui lòng nhập tên bài quiz và ít nhất một câu hỏi.");
         }
 
         const data = {
             title: quizTitle,
             questions: questions.map((q) => ({
-                content: q.question,
-                answers: q.answers.map((answer, index) => ({
-                    content: answer,
-                    isCorrect: q.isCorrect[index],
+                id: q.id,
+                content: q.content,
+                answers: q.options.map((opt) => ({
+                    id: opt.id,
+                    content: opt.content,
+                    isCorrect: opt.isCorrect,
                 })),
             })),
         };
 
-        await quiz.handleCreate(data);
+        await quizEdit.handleEdit(data);
 
         setQuestions([]);
         setCurrentQuestion(QUESTION_DEFAULT);
         setEditingIndex(null);
-        onClose();
+        onSuccess();
     };
 
     const toggleQuestionSelection = (index: number) => {
@@ -110,7 +147,6 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
 
     return (
         <>
-            {/* Nhập tên bài quiz */}
             <Form layout="vertical">
                 <Form.Item label="Tên bài quiz">
                     <Input
@@ -123,7 +159,6 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
             <Divider />
 
             <div className="flex gap-4">
-                {/* Phần bên trái: Nhập câu hỏi */}
                 <div className="flex-1 border-r border-r-gray-200 pr-4">
                     <Typography.Title level={5}>
                         {editingIndex !== null ? "Chỉnh sửa câu hỏi" : "Nhập câu hỏi"}
@@ -131,25 +166,24 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
                     <Form layout="vertical">
                         <Form.Item label="Đề bài">
                             <Input.TextArea
-                                value={currentQuestion.question}
+                                value={currentQuestion.content}
                                 onChange={(e) =>
-                                    setCurrentQuestion({ ...currentQuestion, question: e.target.value })
+                                    setCurrentQuestion({ ...currentQuestion, content: e.target.value })
                                 }
                                 placeholder="Nhập đề bài"
                             />
                         </Form.Item>
                         <Divider />
-                        <Typography.Text>Nhập các đáp án:</Typography.Text>
-                        {currentQuestion.answers.map((answer, index) => (
+                        <Typography.Title level={5}>Nhập các đáp án:</Typography.Title>
+                        {currentQuestion.options.map((option, index) => (
                             <Form.Item
                                 key={index}
                                 label={
                                     <div className="flex gap-2">
                                         <span>{`Đáp án ${String.fromCharCode(65 + index)}`}</span>
                                         <Switch
-                                            checked={currentQuestion.isCorrect[index]}
-                                            onChange={() => toggleCorrectAnswer(index)}
-                                            className="ms-2"
+                                            checked={option.isCorrect}
+                                            onChange={() => toggleCorrectOption(index)}
                                             checkedChildren="Đúng"
                                             unCheckedChildren="Sai"
                                         />
@@ -157,8 +191,8 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
                                 }
                             >
                                 <Input
-                                    value={answer}
-                                    onChange={(e) => updateAnswer(index, e.target.value)}
+                                    value={option.content}
+                                    onChange={(e) => updateOption(index, e.target.value)}
                                     placeholder={`Nhập đáp án ${String.fromCharCode(65 + index)}`}
                                 />
                             </Form.Item>
@@ -198,10 +232,10 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
 
             <Divider />
             <Button type="primary" block onClick={handleSubmitQuiz}>
-                Tạo bài quiz
+                Lưu bài quiz
             </Button>
         </>
     );
 };
 
-export default QuizForm;
+export default QuizEditForm;

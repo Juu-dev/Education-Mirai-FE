@@ -34,11 +34,11 @@ export const columnsStudent = (studentProfile, confirmDelete) => ([
     }
 ])
 
-export const columnsQuiz = (studentProfile, confirmDelete) => ([
+export const columnsQuiz = (quizEdit, confirmDelete) => ([
     {
         title: "Tên",
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "title",
+        key: "title",
     },
     {
         title: "Số câu hỏi",
@@ -50,14 +50,14 @@ export const columnsQuiz = (studentProfile, confirmDelete) => ([
         key: "action",
         render: () => (
             <div className="flex space-x-2">
-                <Button icon={<EditOutlined />} onClick={studentProfile.openModal}/>
+                <Button icon={<EditOutlined />} onClick={quizEdit.openModal}/>
                 <Button icon={<DeleteOutlined />} onClick={confirmDelete.openModal}/>
             </div>
         ),
     },
 ])
 
-export const columnsExercise = (studentProfile, confirmDelete) => ([
+export const columnsExercise = (assignmentEdit, confirmDelete) => ([
     {
         title: "Tên",
         dataIndex: "name",
@@ -78,7 +78,7 @@ export const columnsExercise = (studentProfile, confirmDelete) => ([
         key: "action",
         render: () => (
             <div className="flex space-x-2">
-                <Button icon={<EditOutlined />} onClick={studentProfile.openModal}/>
+                <Button icon={<EditOutlined />} onClick={assignmentEdit.openModal}/>
                 <Button icon={<DeleteOutlined />} onClick={confirmDelete.openModal}/>
             </div>
         ),

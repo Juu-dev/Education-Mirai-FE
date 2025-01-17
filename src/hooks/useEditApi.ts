@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
+import {message} from "antd";
 
 interface UseEditApiProps {
     url: string;
@@ -48,10 +49,12 @@ export default function useEditApi({
 
             const resp: EditApiResponse = await api(url, {
                 body: data,
-                method: "PUT",
+                // method: "PUT",
+                method: "PATCH",
             });
 
             if (resp.success && useToast) {
+                message.success(successMsg)
                 console.log(successMsg);
             }
 
@@ -65,6 +68,7 @@ export default function useEditApi({
 
             return fullResp ? resp : resp.success;
         } catch (e) {
+            message.error(errorMsg)
             console.error(errorMsg, e);
             return fullResp
                 ? {

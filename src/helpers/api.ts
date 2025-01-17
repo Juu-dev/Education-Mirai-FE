@@ -11,7 +11,7 @@ function createApi() {
         options: {
             headers?: any;
             body?: any;
-            method?: "GET" | "POST" | "PUT" | "DELETE";
+            method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
         } = {},
         auth: boolean = true,
         withCredentials: boolean = false,

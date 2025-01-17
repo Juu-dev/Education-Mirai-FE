@@ -3,6 +3,15 @@ const API_PATH = {
     logout: '/auth/logout',
     refreshToken: '/auth/refresh-token',
     registerStudent: "/auth/register/student",
+    quiz: {
+        pagination: "/quizzes/pagination"
+    },
+    class: {
+        pagination: `/classes/pagination`
+    },
+    exercise: {
+        pagination: "/exercises/pagination"
+    }
 }
 
 export const loginPath = {
@@ -27,4 +36,33 @@ export const registerPath = {
     fullResp: true,
 }
 
-export const classPath = {url: `/classes/pagination`, auth: false, initQueries: {pageSize: 100}}
+export const classPath = {url: API_PATH.class.pagination, auth: false, initQueries: {pageSize: 100}}
+
+export const quizFetchPath = {
+    url: API_PATH.quiz.pagination,
+    auth: true,
+    presentData: (data) => data.map(e => ({
+        id: e.id,
+        key: e.id,
+        title: e.title,
+        amount: e._count.questions,
+        allDoneStudent: 0,
+        origin: e
+    }))
+}
+
+export const exerciseFetchPath = {
+    url: API_PATH.exercise.pagination,
+    auth: true,
+    presentData: (data) => data.map(e => ({
+        id: e.id,
+        key: e.id,
+        name: e.name,
+        timeOut: e.timeOut,
+        allDoneStudent: 0,
+        description: e.description,
+        assignerId: e.assignerId,
+        classAssigneeId: e.classAssigneeId,
+        quizId: e.quizId,
+    }))
+}

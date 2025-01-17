@@ -1,10 +1,13 @@
 import {Form, Input, Button, Select, InputNumber} from 'antd';
-import { FC } from 'react';
+import {FC, useEffect} from 'react';
 import useFetchApi from "../../hooks/useFetchApi.ts";
-import useCreateApi from "../../hooks/useCreateApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
+import useEditApi from "../../hooks/useEditApi.ts";
 
-interface AdminAssignmentModalProps {}
+interface AdminAssignmentModalProps {
+    assignment?: AssignmentDetails | null;
+    onSuccess: () => void;
+}
 
 interface IOption {
     id: string;
@@ -12,14 +15,14 @@ interface IOption {
 }
 
 export interface AssignmentDetails {
-    title: string;
+    name: string;
     description: string;
     timeOut: number;
     classAssigneeId: string;
     quizId: string;
 }
 
-const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
+const AssignmentEditForm: FC<AdminAssignmentModalProps> = ({assignment, onSuccess}) => {
     const {me} = useAuth()
     const quizzes = useFetchApi<IOption>({
         url: "/quizzes",
@@ -37,17 +40,32 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
             name: e.name
         })))
     })
-    const exercise = useCreateApi({
-        url: "/exercises",
-        successMsg: "Giao bài tập thành công!",
-        errorMsg: "Giao bài tập thất bại, vui lòng thử lại.",
+    const exercise = useEditApi({
+        url: `/exercises/${assignment?.id}`,
+        successMsg: "Sửa bài tập đã giao thành công!",
+        errorMsg: "Sửa bài tập đã giao thất bại, vui lòng thử lại.",
         fullResp: true,
     })
 
     const [form] = Form.useForm();
+    useEffect(() => {
+        if (assignment) {
+            form.setFieldsValue({
+                name: assignment.name,
+                description: assignment.description,
+                timeOut: assignment.timeOut,
+                assignerId: me?.id,
+                classAssigneeId: assignment.classAssigneeId,
+                quizId: assignment.quizId
+            });
+        } else {
+            form.resetFields();
+        }
+    }, [assignment]);
+
     const handleFinish = async (values: AssignmentDetails) => {
         const data = {
-            name: values.title,
+            name: values.name,
             description: values.description,
             timeOut: values.timeOut,
             assignerId: me?.id,
@@ -55,8 +73,8 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
             quizId: values.quizId
         }
 
-        await exercise.handleCreate(data)
-        form.resetFields();
+        await exercise.handleEdit(data)
+        onSuccess();
     };
 
     return (
@@ -64,7 +82,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
             {/* Title */}
             <Form.Item
                 label="Tiêu đề bài tập"
-                name="title"
+                name="name"
                 rules={[{ required: true, message: "Vui lòng nhập tiêu đề bài tập" }]}
             >
                 <Input placeholder="Nhập tiêu đề bài tập" />
@@ -97,9 +115,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
                 name="classAssigneeId"
                 rules={[{ required: true, message: "Vui lòng chọn ít nhất một lớp học" }]}
             >
-                <Select
-                    placeholder="Chọn lớp"
-                >
+                <Select placeholder="Chọn lớp">
                     {classes?.data.map(group => (
                         <Select.Option key={group.id} value={group.id}>
                             {group.name}
@@ -125,11 +141,11 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
             {/* Submit Button */}
             <div className="flex justify-end">
                 <Button type="primary" htmlType="submit">
-                    Giao bài tập
+                    Save
                 </Button>
             </div>
         </Form>
     );
 };
 
-export default AssignmentForm;
+export default AssignmentEditForm;
