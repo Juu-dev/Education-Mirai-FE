@@ -1,22 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export const useCountdown = (initialTime: number) => {
     const [time, setTime] = useState(initialTime);
 
     useEffect(() => {
-        if (time > 0) {
-            const timer = setInterval(() => {
-                setTime((prevTime) => prevTime - 1);
-            }, 1000);
+        if (time <= 0) return;
 
-            // Cleanup the interval when the component unmounts or when time reaches zero
-            return () => clearInterval(timer);
-        }
+        const interval = setInterval(() => {
+            setTime((prevTime) => prevTime - 1);
+        }, 1000);
+
+        return () => clearInterval(interval);
     }, [time]);
 
-    const resetCountdown = (newTime: number) => {
+    const resetCountdown = useCallback((newTime: number) => {
         setTime(newTime);
-    };
+    }, []);
 
     return [time, resetCountdown] as const;
 };
