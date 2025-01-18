@@ -4,7 +4,9 @@ import useFetchApi from "../../hooks/useFetchApi.ts";
 import useCreateApi from "../../hooks/useCreateApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
 
-interface AdminAssignmentModalProps {}
+interface AdminAssignmentModalProps {
+    onSuccess: () => void;
+}
 
 interface IOption {
     id: string;
@@ -19,7 +21,7 @@ export interface AssignmentDetails {
     quizId: string;
 }
 
-const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
+const AssignmentForm: FC<AdminAssignmentModalProps> = ({onSuccess}) => {
     const {me} = useAuth()
     const quizzes = useFetchApi<IOption>({
         url: "/quizzes",
@@ -27,7 +29,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
         presentData: (data) => (data.map((e) => ({
             id: e.id,
             name: e.title
-        })))
+        })).sort((a, b) => a.name.localeCompare(b.name)))
     })
     const classes = useFetchApi<IOption>({
         url: "/classes",
@@ -35,7 +37,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
         presentData: (data) => (data.map((e) => ({
             id: e.id,
             name: e.name
-        })))
+        })).sort((a, b) => a.name.localeCompare(b.name)))
     })
     const exercise = useCreateApi({
         url: "/exercises",
@@ -57,6 +59,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = () => {
 
         await exercise.handleCreate(data)
         form.resetFields();
+        onSuccess();
     };
 
     return (

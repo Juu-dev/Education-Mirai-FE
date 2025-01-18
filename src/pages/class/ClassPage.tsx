@@ -33,7 +33,10 @@ const ClassPage: React.FC = () => {
 
     const assignment = useModal({
         title: "Tạo và giao bài tập",
-        content: <AssignmentForm />,
+        content: <AssignmentForm onSuccess={() => {
+            assignment.closeModal();
+            exercisesFetchApi.setFetched(false)
+        }} />,
     })
     const assignmentEdit = useModal({
         title: "Sửa bài tập đã giao",
