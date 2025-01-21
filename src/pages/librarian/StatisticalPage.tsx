@@ -5,6 +5,7 @@ import ProgressSummary from '../../components/library/ProgressSummary';
 import * as XLSX from 'xlsx';
 import useCreateApi from "../../hooks/useCreateApi.ts";
 import useFetchApi from "../../hooks/useFetchApi.ts";
+import useAuth from "../../hooks/useAuth.ts";
 
 const borrowData = [
   { date: '01', count: 20 },
@@ -47,6 +48,7 @@ const bookPreviewColumns = [
 ];
 
 const StatisticalPage: React.FC = () => {
+  const {isPrincipal} = useAuth();
   const [previewData, setPreviewData] = useState([]); // State lưu dữ liệu preview
   const [isModalVisible, setIsModalVisible] = useState(false); // State quản lý modal
 
@@ -146,7 +148,7 @@ const StatisticalPage: React.FC = () => {
         </Card>
 
         {/* Footer Actions */}
-        <div className="flex justify-end gap-4 mt-6">
+        {!isPrincipal && <div className="flex justify-end gap-4 mt-6">
           <Button type="default">Cập nhật thông tin</Button>
           <Upload
               beforeUpload={handleUpload}
@@ -155,7 +157,7 @@ const StatisticalPage: React.FC = () => {
           >
             <Button type="primary">Duyệt tài liệu</Button>
           </Upload>
-        </div>
+        </div>}
 
         {/* Preview Modal */}
         <Modal

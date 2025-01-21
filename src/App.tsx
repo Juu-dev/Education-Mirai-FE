@@ -77,7 +77,7 @@ const App: React.FC = () => {
 						<Route element={<AdminLayout />}>
 							<Route path="/librarian" element={<Navigate to="/librarian/dashboard" replace />} />
 							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
-							<Route path="/librarian/library" element={<StatisticalPage />} />
+							<Route path="/library" element={<StatisticalPage />} />
 							<Route path="/librarian/document" element={<DocumentPage />} />
 							<Route path="/librarian/books" element={<AddBookPage />} />
 						</Route>

@@ -29,7 +29,7 @@ const AdminLayout = () => {
         role === Role.Librarian
             ? [
                 { key: "/librarian/dashboard", label: "Bảng điều khiển" },
-                { key: "/librarian/library", label: "Thư viện" },
+                { key: "/library", label: "Thư viện" },
                 { key: "/librarian/document", label: "Tài liệu" },
                 { key: "/librarian/books", label: "Thêm sách" },
                 // { key: "/librarian/reports", label: "Gửi yêu cầu" },
@@ -45,6 +45,7 @@ const AdminLayout = () => {
                 ]
             : [
                 { key: "/principal/dashboard", label: "Bảng điều khiển" },
+                { key: "/library", label: "Thư viện" },
                 { key: "/principal/class", label: "Trường" },
                 { key: "/principal/document", label: "Tài liệu" },
                 { key: "/principal/request", label: "Gửi yêu cầu" },
