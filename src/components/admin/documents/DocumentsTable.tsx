@@ -1,4 +1,4 @@
-import {Button, message, Space, Table} from "antd";
+import {Button, message, Pagination, Space, Table} from "antd";
 import {DeleteOutlined, DownloadOutlined, ShareAltOutlined, LinkOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import useFetchApi from "../../../hooks/useFetchApi.ts";
@@ -49,6 +49,10 @@ const DocumentTable: React.FC<Props> = ({
 
     const handleRefresh = async () => {
         await documentsApi.fetchApi();
+    };
+
+    const handlePageChange = (page: number) => {
+        documentsApi?.fetchApi(undefined, { params: { page, pageSize: documentsApi.pagination?.pageSize || 10 } });
     };
 
     useEffect(() => {
@@ -123,8 +127,19 @@ const DocumentTable: React.FC<Props> = ({
         <Table
             dataSource={parseData(documentsApi.data)}
             columns={columns}
-            pagination={{ pageSize: 30 }}
+            pagination={false}
         />
+
+        <Pagination
+            current={documentsApi?.pagination?.page}
+            total={documentsApi?.count}
+            pageSize={documentsApi?.pagination?.pageSize}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            align="end"
+            className="custom-pagination mt-3"
+        />
+
         {deleteDocumentModal.modal}
     </>
 };

@@ -1,3 +1,5 @@
+import {formatDate} from "../date.ts";
+
 const API_PATH = {
     login: '/auth/login',
     logout: '/auth/logout',
@@ -88,9 +90,41 @@ export const classesFetchPath = {
     })).sort((a, b) => a.name.localeCompare(b.name)))
 }
 
-export const exercuseCreatePath = {
+export const exerciseCreatePath = {
     url: API_PATH.exercise.list,
     successMsg: "Giao bài tập thành công!",
     errorMsg: "Giao bài tập thất bại, vui lòng thử lại.",
     fullResp: true,
+}
+
+export const sentTaskPath = {
+    url: "/tasks/sent-mode",
+    auth: true,
+    initQueries: {
+        pageSize: 5
+    },
+    presentData: (data) => data.map((item: any) => ({
+        key: item.id,
+        task: item.title,
+        assignedTo: item.assignee?.name || "Hiệu trưởng",
+        deadline: formatDate(item.endTime),
+        content: item.description,
+        status: item.status
+    }))
+}
+
+export const receivedTaskPath = {
+    url: "/tasks/received-mode",
+    auth: true,
+    initQueries: {
+        pageSize: 5
+    },
+    presentData: (data) => data.map((item: any) => ({
+        key: item.id,
+        task: item.title,
+        assignedBy: item.assignee?.name || "Hiệu trưởng",
+        deadline: formatDate(item.endTime),
+        content: item.description,
+        status: item.status
+    }))
 }

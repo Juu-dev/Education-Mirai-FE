@@ -1,8 +1,8 @@
-import {Button, Card, Modal, Segmented, Space, Table} from "antd";
+import {Button, Card, Modal, Pagination, Segmented, Space, Table} from "antd";
 import {useState} from "react";
 import {columnsReceived, columnsSent} from "./column.tsx";
 import useFetchApi from "../../hooks/useFetchApi.ts";
-import {formatDate} from "../../helpers/date.ts";
+import {receivedTaskPath, sentTaskPath} from "../../helpers/api-params/auth.ts";
 
 export const RequestTable = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -14,39 +14,25 @@ export const RequestTable = () => {
         setIsModalVisible(true);
     };
 
-    // Đóng form
     const handleClose = () => {
         setIsModalVisible(false);
         setSelectedTask(null);
     };
 
-    const sentTaskApi = useFetchApi({
-        url: "/tasks/sent-mode",
-        auth: true,
-        presentData: (data) => data.map((item: any) => ({
-            key: item.id,
-            task: item.title,
-            assignedTo: item.assignee?.name || "Hiệu trưởng",
-            deadline: formatDate(item.endTime),
-            content: item.description,
-            status: item.status
-        }))
-    })
-    const receivedTaskApi = useFetchApi({
-        url: "/tasks/received-mode",
-        auth: true,
-        presentData: (data) => data.map((item: any) => ({
-            key: item.id,
-            task: item.title,
-            assignedBy: item.assignee?.name || "Hiệu trưởng",
-            deadline: formatDate(item.endTime),
-            content: item.description,
-            status: item.status
-        }))
-    })
+    const sentTaskApi = useFetchApi(sentTaskPath)
+    const receivedTaskApi = useFetchApi(receivedTaskPath)
 
-    const dataSource = viewMode === "received" ? receivedTaskApi.data : sentTaskApi.data;
+    const sourceTaskApi = viewMode === "received" ? receivedTaskApi : sentTaskApi;
     const columns = viewMode === "received" ? columnsReceived : columnsSent;
+
+    const handlePageChange = (page: number) => {
+        sourceTaskApi?.fetchApi(undefined, {
+            params: {
+                page,
+                pageSize: sourceTaskApi.pagination?.pageSize || 10
+            }
+        });
+    };
 
     return (
         <>
@@ -72,11 +58,21 @@ export const RequestTable = () => {
 
                     <Table
                         columns={columns}
-                        dataSource={dataSource}
+                        dataSource={sourceTaskApi.data}
                         pagination={false}
                         onRow={(record) => ({
                             onClick: () => handleRowClick(record),
                         })}
+                    />
+
+                    <Pagination
+                        align="end"
+                        current={sourceTaskApi?.pagination?.page}
+                        total={sourceTaskApi?.count}
+                        pageSize={sourceTaskApi?.pagination?.pageSize}
+                        onChange={handlePageChange}
+                        showSizeChanger={false}
+                        className="custom-pagination mt-3"
                     />
                 </Card>
 

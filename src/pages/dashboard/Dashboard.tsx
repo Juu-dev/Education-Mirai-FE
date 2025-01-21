@@ -64,7 +64,7 @@ const roleName = {
     [Role.Librarian]: "Thủ thư",
 }
 
-const AdminDashboard = () => {
+const Dashboard = () => {
     const {me} = useAuth();
 
     return (
@@ -76,12 +76,12 @@ const AdminDashboard = () => {
                     <div className="flex items-center space-x-4">
                         <Avatar size={64} src="https://i.pravatar.cc/150?img=3" />
                         <div className="flex-grow">
-                            <h2 className="text-lg font-semibold">{me?.teacher?.name}</h2>
+                            <h2 className="text-lg font-semibold">{me?.name}</h2>
                             <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="text-gray-500">Vai trò</div>
                                 <div className="text-gray-900">{roleName[me?.role]}</div>
                                 <div className="text-gray-500">Lớp chủ nhiệm</div>
-                                <div className="text-gray-900">{me?.teacher?.class?.name}</div>
+                                <div className="text-gray-900">{me?.class?.name}</div>
                                 <div className="text-gray-500">Email</div>
                                 <div className="text-gray-900">{me?.email}</div>
                                 <div className="text-gray-500">Tài liệu đã duyệt</div>
@@ -174,4 +174,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default Dashboard;

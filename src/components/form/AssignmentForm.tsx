@@ -3,7 +3,7 @@ import { FC } from 'react';
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import useCreateApi from "../../hooks/useCreateApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
-import {classesFetchPath, exercuseCreatePath, quizzesFetchPath} from "../../helpers/api-params/auth.ts";
+import {classesFetchPath, exerciseCreatePath, quizzesFetchPath} from "../../helpers/api-params/auth.ts";
 
 interface AdminAssignmentModalProps {
     onSuccess: () => void;
@@ -26,7 +26,7 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = ({onSuccess}) => {
     const {me} = useAuth()
     const quizzes = useFetchApi<IOption>(quizzesFetchPath)
     const classes = useFetchApi<IOption>(classesFetchPath)
-    const exercise = useCreateApi(exercuseCreatePath)
+    const exercise = useCreateApi(exerciseCreatePath)
 
     const [form] = Form.useForm();
     const handleFinish = async (values: AssignmentDetails) => {

@@ -14,7 +14,7 @@ import { BookDetailPage } from './pages/user/BookDetailPage';
 import { AssignmentPage } from './pages/user/AssginmentPage';
 import AssignmentDetail from './pages/assignment/AssignmentDetail.tsx';
 import AdminLayout from './components/layout/AdminLayout';
-import AdminDashboard from './pages/admin/DashboardPage.tsx';
+import Dashboard from './pages/dashboard/Dashboard.tsx';
 import ClassPage from './pages/class/ClassPage.tsx';
 import DocumentPage from './pages/documents/DocumentPage.tsx';
 import StatisticalPage from './pages/librarian/StatisticalPage.tsx';
@@ -26,6 +26,7 @@ import SignUpPage from './pages/auth/SignUpPage'
 import AuthProvider from "./context/AuthContext";
 import useAuth from "./hooks/useAuth.ts";
 import AssignmentResult from "./pages/assignment/AssignmentResult.tsx";
+import ProfilePage from "./pages/profile/ProfilePage.tsx";
 
 const App: React.FC = () => {
 	const {isAuthenticated} = useAuth()
@@ -43,7 +44,7 @@ const App: React.FC = () => {
 						<Route element={<AdminLayout />}>
 							<Route path="/principal" element={<AdminPage />} />
 							<Route path="/principal/page-one" element={<PageOne />} />
-							<Route path="/principal/dashboard" element={<AdminDashboard />} />
+							<Route path="/principal/dashboard" element={<Dashboard />} />
 							<Route path="/principal/class" element={<ClassPage />} />
 							<Route path="/principal/document" element={<DocumentPage />} />
 							<Route path="/principal/document/:teacherID" element={<DocumentPage />} />
@@ -54,8 +55,9 @@ const App: React.FC = () => {
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/teacher" element={<AdminPage />} />
+							<Route path="/profile" element={<ProfilePage />} />
 							<Route path="/teacher/page-one" element={<PageOne />} />
-							<Route path="/teacher/dashboard" element={<AdminDashboard />} />
+							<Route path="/teacher/dashboard" element={<Dashboard />} />
 							<Route path="/teacher/class" element={<ClassPage />} />
 							<Route path="/teacher/document" element={<DocumentPage />} />
 							<Route path="/teacher/request" element={<Request />} />
@@ -78,7 +80,7 @@ const App: React.FC = () => {
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/librarian" element={<Navigate to="/librarian/dashboard" replace />} />
-							<Route path="/librarian/dashboard" element={<AdminDashboard />} />
+							<Route path="/librarian/dashboard" element={<Dashboard />} />
 							<Route path="/library" element={<StatisticalPage />} />
 							<Route path="/librarian/document" element={<DocumentPage />} />
 							<Route path="/librarian/books" element={<AddBookPage />} />

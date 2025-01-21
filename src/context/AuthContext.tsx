@@ -15,6 +15,8 @@ interface User {
   email: string;
   name: string;
   dob: string;
+  ethnicity: string;
+  gender: string;
   teacher?: {
     id: string;
     userId: string;
@@ -99,6 +101,8 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
       username: data.username,
       email: data.email,
       name: data.name,
+      gender: data.gender,
+      ethnicity: data.ethnicity,
       dob: data.birthDate,
       teacher: data.teacher,
       student: data.student,
@@ -114,6 +118,8 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
           const response = await loginApi.handleCreate(data);
           const { accessToken, user } = response?.result;
           message.success('Đăng nhập thành công!')
+
+          console.log("user: ", user)
 
           saveMe(user as User);
           token.setAccessToken(accessToken);
