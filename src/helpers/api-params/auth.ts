@@ -4,12 +4,15 @@ const API_PATH = {
     refreshToken: '/auth/refresh-token',
     registerStudent: "/auth/register/student",
     quiz: {
+        list: "/quizzes",
         pagination: "/quizzes/pagination"
     },
     class: {
+        list: "/classes",
         pagination: `/classes/pagination`
     },
     exercise: {
+        list: "/exercises",
         pagination: "/exercises/pagination"
     }
 }
@@ -65,4 +68,29 @@ export const exerciseFetchPath = {
         classAssigneeId: e.classAssigneeId,
         quizId: e.quizId,
     }))
+}
+
+export const quizzesFetchPath = {
+    url: API_PATH.quiz.list,
+    auth: true,
+    presentData: (data) => (data.map((e) => ({
+        id: e.id,
+        name: e.title
+    })).sort((a, b) => a.name.localeCompare(b.name)))
+}
+
+export const classesFetchPath = {
+    url: API_PATH.class.list,
+    auth: true,
+    presentData: (data) => (data.map((e) => ({
+        id: e.id,
+        name: e.name
+    })).sort((a, b) => a.name.localeCompare(b.name)))
+}
+
+export const exercuseCreatePath = {
+    url: API_PATH.exercise.list,
+    successMsg: "Giao bài tập thành công!",
+    errorMsg: "Giao bài tập thất bại, vui lòng thử lại.",
+    fullResp: true,
 }

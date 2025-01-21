@@ -3,6 +3,7 @@ import { FC } from 'react';
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import useCreateApi from "../../hooks/useCreateApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
+import {classesFetchPath, exercuseCreatePath, quizzesFetchPath} from "../../helpers/api-params/auth.ts";
 
 interface AdminAssignmentModalProps {
     onSuccess: () => void;
@@ -23,28 +24,9 @@ export interface AssignmentDetails {
 
 const AssignmentForm: FC<AdminAssignmentModalProps> = ({onSuccess}) => {
     const {me} = useAuth()
-    const quizzes = useFetchApi<IOption>({
-        url: "/quizzes",
-        auth: true,
-        presentData: (data) => (data.map((e) => ({
-            id: e.id,
-            name: e.title
-        })).sort((a, b) => a.name.localeCompare(b.name)))
-    })
-    const classes = useFetchApi<IOption>({
-        url: "/classes",
-        auth: true,
-        presentData: (data) => (data.map((e) => ({
-            id: e.id,
-            name: e.name
-        })).sort((a, b) => a.name.localeCompare(b.name)))
-    })
-    const exercise = useCreateApi({
-        url: "/exercises",
-        successMsg: "Giao bài tập thành công!",
-        errorMsg: "Giao bài tập thất bại, vui lòng thử lại.",
-        fullResp: true,
-    })
+    const quizzes = useFetchApi<IOption>(quizzesFetchPath)
+    const classes = useFetchApi<IOption>(classesFetchPath)
+    const exercise = useCreateApi(exercuseCreatePath)
 
     const [form] = Form.useForm();
     const handleFinish = async (values: AssignmentDetails) => {

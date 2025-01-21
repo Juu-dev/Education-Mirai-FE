@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import { Button, Card, Radio, Space, Typography } from "antd";
-import { useCountdown } from "../../hooks/useCountdown";
+import { useCountdown } from "../../hooks/useCountdown.tsx";
 import useAuth from "../../hooks/useAuth.ts";
+import useCreateApi from "../../hooks/useCreateApi.ts";
 
 const { Title, Text } = Typography;
 
-export const AssignmentDetailPage = () => {
-    const {me} = useAuth()
+export const AssignmentDetail = () => {
+    const {me} = useAuth();
+    const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
     const { data: exerciseData, loading } = useFetchApi({
         url: `/exercises/${id}`,
         auth: true
     });
+
+    const answersApi = useCreateApi({
+        url: "/answers",
+        successMsg: "Gửi đáp án thành công!",
+        errorMsg: "Gửi đáp án thất bại, vui lòng thử lại.",
+        fullResp: true,
+    })
 
     const [time, resetCountdown] = useCountdown(0);
     const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -36,14 +45,18 @@ export const AssignmentDetailPage = () => {
     const handleSubmit = async () => {
         const payload = {
             studentId: me?.id,
-            quizId: exerciseData?.quiz?.id,
+            exerciseId: id,
             answers: Object.entries(answers).map(([questionId, optionId]) => ({
                 questionId,
                 optionId
             }))
         };
 
-        console.log("Submitting Data: ", payload);
+        const response = await answersApi.handleCreate(payload);
+
+        if (response?.result) {
+            navigate("/student/result");
+        }
     };
 
     const formatTime = (time: number) => {
@@ -64,10 +77,10 @@ export const AssignmentDetailPage = () => {
                 </div>
             </div>
             <div style={{ marginTop: "20px" }}>
-                {exerciseData?.quiz?.questions.map((question: any) => (
+                {exerciseData?.quiz?.questions.map((question: any, index: number) => (
                     <Card
                         key={question.id}
-                        title={question.content}
+                        title={`Câu ${index+1}: ${question.content}`}
                         style={{ marginBottom: "20px" }}
                     >
                         <Radio.Group
@@ -101,4 +114,4 @@ export const AssignmentDetailPage = () => {
     );
 };
 
-export default AssignmentDetailPage;
+export default AssignmentDetail;

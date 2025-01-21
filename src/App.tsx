@@ -12,7 +12,7 @@ import { UserBookList } from './pages/user/UserBookList';
 import { UserBookReadingList } from './pages/user/UserBookReadingList';
 import { BookDetailPage } from './pages/user/BookDetailPage';
 import { AssignmentPage } from './pages/user/AssginmentPage';
-import AssignmentDetailPage from './pages/user/AssignmentDetailPage';
+import AssignmentDetail from './pages/assignment/AssignmentDetail.tsx';
 import AdminLayout from './components/layout/AdminLayout';
 import AdminDashboard from './pages/admin/DashboardPage.tsx';
 import ClassPage from './pages/class/ClassPage.tsx';
@@ -25,6 +25,7 @@ import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage'
 import AuthProvider from "./context/AuthContext";
 import useAuth from "./hooks/useAuth.ts";
+import AssignmentResult from "./pages/assignment/AssignmentResult.tsx";
 
 const App: React.FC = () => {
 	const {isAuthenticated} = useAuth()
@@ -69,7 +70,8 @@ const App: React.FC = () => {
 							<Route path='/student/reading-books' element={<UserBookReadingList />} />
 							<Route path="/student/reading-books/book/:id" element={<BookDetailPage />} />
 							<Route path="/student/assignments" element={<AssignmentPage />} />
-							<Route path="/student/assignments/:id" element={<AssignmentDetailPage />} />
+							<Route path="/student/assignments/:id" element={<AssignmentDetail />} />
+							<Route path="/student/result" element={<AssignmentResult />} />
 						</Route>
 					</Route>
 					{/* Librarian Routes */}

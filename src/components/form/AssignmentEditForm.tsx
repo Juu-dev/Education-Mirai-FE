@@ -3,6 +3,7 @@ import {FC, useEffect} from 'react';
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
 import useEditApi from "../../hooks/useEditApi.ts";
+import {classesFetchPath, quizzesFetchPath} from "../../helpers/api-params/auth.ts";
 
 interface AdminAssignmentModalProps {
     assignment?: AssignmentDetails | null;
@@ -24,22 +25,8 @@ export interface AssignmentDetails {
 
 const AssignmentEditForm: FC<AdminAssignmentModalProps> = ({assignment, onSuccess}) => {
     const {me} = useAuth()
-    const quizzes = useFetchApi<IOption>({
-        url: "/quizzes",
-        auth: true,
-        presentData: (data) => (data.map((e) => ({
-            id: e.id,
-            name: e.title
-        })))
-    })
-    const classes = useFetchApi<IOption>({
-        url: "/classes",
-        auth: true,
-        presentData: (data) => (data.map((e) => ({
-            id: e.id,
-            name: e.name
-        })))
-    })
+    const quizzes = useFetchApi<IOption>(quizzesFetchPath)
+    const classes = useFetchApi<IOption>(classesFetchPath)
     const exercise = useEditApi({
         url: `/exercises/${assignment?.id}`,
         successMsg: "Sửa bài tập đã giao thành công!",

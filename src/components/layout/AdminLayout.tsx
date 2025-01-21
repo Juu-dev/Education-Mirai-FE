@@ -41,7 +41,7 @@ const AdminLayout = () => {
                     { key: "/teacher/class", label: "Trường" },
                     { key: "/teacher/document", label: "Tài liệu" },
                     { key: "/teacher/request", label: "Gửi yêu cầu" },
-                    { key: "/teacher/settings", label: "Tài khoản" },
+                    // { key: "/teacher/settings", label: "Tài khoản" },
                 ]
             : [
                 { key: "/principal/dashboard", label: "Bảng điều khiển" },
@@ -49,7 +49,7 @@ const AdminLayout = () => {
                 { key: "/principal/class", label: "Trường" },
                 { key: "/principal/document", label: "Tài liệu" },
                 { key: "/principal/request", label: "Gửi yêu cầu" },
-                { key: "/principal/settings", label: "Tài khoản" },
+                // { key: "/principal/settings", label: "Tài khoản" },
             ];
 
     const isActive = (path: string) => location.pathname === path; // Kiểm tra xem đường dẫn hiện tại có khớp không
@@ -76,9 +76,9 @@ const AdminLayout = () => {
                     ))}
                 </Menu>
                 <div className="flex flex-col items-center py-6">
-                    <BellOutlined
-                        style={{ fontSize: "1.5rem", color: "#ffffff" }}
-                    />
+                    {/*<BellOutlined*/}
+                    {/*    style={{ fontSize: "1.5rem", color: "#ffffff" }}*/}
+                    {/*/>*/}
                     <Dropdown
                         overlay={<Menu items={menuItems} />}
                         trigger={['click']}
