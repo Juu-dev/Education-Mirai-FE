@@ -62,7 +62,7 @@ export const exerciseFetchPath = {
         key: e.id,
         name: e.name,
         timeOut: e.timeOut,
-        allDoneStudent: 0,
+        allDoneStudent: e._count.answers,
         description: e.description,
         assignerId: e.assignerId,
         classAssigneeId: e.classAssigneeId,

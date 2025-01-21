@@ -53,9 +53,16 @@ export const AssignmentDetail = () => {
         };
 
         const response = await answersApi.handleCreate(payload);
+        console.log("response: ", response);
 
         if (response?.result) {
-            navigate("/student/result");
+            navigate("/student/result", {
+                state: {
+                    mark: response?.result.mark,
+                    totalRightQuestion: response?.result.mark/10 * exerciseData?.quiz?.questions.length,
+                    totalQuestions: exerciseData?.quiz?.questions.length
+                }
+            });
         }
     };
 
