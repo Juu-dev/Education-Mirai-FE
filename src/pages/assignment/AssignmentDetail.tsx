@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import { Button, Card, Radio, Space, Typography } from "antd";
 import { useCountdown } from "../../hooks/useCountdown.tsx";
 import useAuth from "../../hooks/useAuth.ts";
 import useCreateApi from "../../hooks/useCreateApi.ts";
-import {formatTime} from "../../helpers/date.ts";
+import { formatTime } from "../../helpers/date.ts";
 
 const { Title, Text } = Typography;
 
 export const AssignmentDetail = () => {
-    const {me} = useAuth();
+    const { me } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
     const { data: exerciseData, loading } = useFetchApi({
         url: `/exercises/${id}`,
-        auth: true
+        auth: true,
     });
 
     const answersApi = useCreateApi({
@@ -24,9 +24,9 @@ export const AssignmentDetail = () => {
         successMsg: "Gửi đáp án thành công!",
         errorMsg: "Gửi đáp án thất bại, vui lòng thử lại.",
         fullResp: true,
-    })
+    });
 
-    const [time, resetCountdown] = useCountdown(0);
+    const [time, resetCountdown] = useCountdown();
     const [answers, setAnswers] = useState<Record<string, string>>({});
 
     useEffect(() => {
@@ -34,6 +34,12 @@ export const AssignmentDetail = () => {
             resetCountdown(exerciseData.timeOut * 60);
         }
     }, [exerciseData?.timeOut, resetCountdown]);
+
+    useEffect(() => {
+        if (time === 0 && exerciseData) {
+            handleSubmit();
+        }
+    }, [time]);
 
     const handleOptionChange = (questionId: string, optionId: string) => {
         setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
@@ -45,8 +51,8 @@ export const AssignmentDetail = () => {
             exerciseId: id,
             answers: Object.entries(answers).map(([questionId, optionId]) => ({
                 questionId,
-                optionId
-            }))
+                optionId,
+            })),
         };
 
         const response = await answersApi.handleCreate(payload);
@@ -55,9 +61,9 @@ export const AssignmentDetail = () => {
             navigate("/student/result", {
                 state: {
                     mark: response?.result.mark,
-                    totalRightQuestion: response?.result.mark/10 * exerciseData?.quiz?.questions.length,
-                    totalQuestions: exerciseData?.quiz?.questions.length
-                }
+                    totalRightQuestion: (response?.result.mark / 10) * exerciseData?.quiz?.questions.length,
+                    totalQuestions: exerciseData?.quiz?.questions.length,
+                },
             });
         }
     };
@@ -77,7 +83,7 @@ export const AssignmentDetail = () => {
                 {exerciseData?.quiz?.questions.map((question: any, index: number) => (
                     <Card
                         key={question.id}
-                        title={`Câu ${index+1}: ${question.content}`}
+                        title={`Câu ${index + 1}: ${question.content}`}
                         style={{ marginBottom: "20px" }}
                     >
                         <Radio.Group
@@ -103,7 +109,10 @@ export const AssignmentDetail = () => {
             <Button
                 type="primary"
                 onClick={handleSubmit}
-                disabled={Object.keys(answers).length !== exerciseData?.quiz?.questions.length}
+                loading={loading}
+                disabled={
+                    Object.keys(answers).length !== exerciseData?.quiz?.questions.length || loading
+                }
             >
                 Submit Quiz
             </Button>

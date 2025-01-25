@@ -1,5 +1,5 @@
 import PageTitle from "../../components/common/SectionTitle.tsx";
-import {Button, Card, Table} from "antd";
+import {Button, Card, Pagination, Table} from "antd";
 import {columnsQuiz} from "./column.tsx";
 import useModal from "../../hooks/modal/useModal.tsx";
 import QuizForm from "../../components/form/QuizForm.tsx";
@@ -56,6 +56,10 @@ export const QuizSection = ({classId}) => {
         },
     });
 
+    const handlePageChange = (page: number) => {
+        quizzesFetchApi?.fetchApi(`/quizzes/pagination`, { params: { page, pageSize: quizzesFetchApi.pagination?.pageSize || 5 } });
+    };
+
     return (
         <>
             <Card className="flex-1 flex-grow mb-4 overflow-auto">
@@ -68,12 +72,21 @@ export const QuizSection = ({classId}) => {
                 <Table
                     columns={columnsQuiz(quizEdit, confirmDeleteQuiz)}
                     dataSource={quizzesFetchApi.data}
-                    pagination={{pageSize: 10}}
+                    pagination={false}
                     onRow={(record: any) => ({
                         onClick: () => {
                             setSelectedQuiz(record)
                         },
                     })}
+                />
+                <Pagination
+                    align="end"
+                    current={quizzesFetchApi?.pagination?.page}
+                    total={quizzesFetchApi?.count}
+                    pageSize={quizzesFetchApi?.pagination?.pageSize}
+                    onChange={handlePageChange}
+                    showSizeChanger={false}
+                    className="custom-pagination mt-3"
                 />
             </Card>
             {quiz.modal}

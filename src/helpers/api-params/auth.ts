@@ -55,6 +55,7 @@ export const classPath = {
 export const quizFetchPath = {
     url: API_PATH.quiz.pagination,
     auth: true,
+    initQueries: {pageSize: 5},
     presentData: (data) => data.map(e => ({
         id: e.id,
         key: e.id,
@@ -68,12 +69,13 @@ export const quizFetchPath = {
 export const exerciseFetchPath = {
     url: API_PATH.exercise.pagination,
     auth: true,
+    initQueries: {pageSize: 5},
     presentData: (data) => data.map(e => ({
         id: e.id,
         key: e.id,
         name: e.name,
         timeOut: e.timeOut,
-        allDoneStudent: e._count.answers,
+        allDoneStudent: e.countDoneStudent,
         description: e.description,
         assignerId: e.assignerId,
         classAssigneeId: e.classAssigneeId,

@@ -1,4 +1,4 @@
-import {Button, Card, Table} from "antd";
+import {Button, Card, Pagination, Table} from "antd";
 import PageTitle from "../../components/common/SectionTitle.tsx";
 import {columnsStudent} from "./column.tsx";
 import {parseStudentData} from "../../utils/parse-data.ts";
@@ -11,9 +11,15 @@ import useConfirmModal from "../../hooks/modal/useConfirmModal.tsx";
 import useDeleteApi from "../../hooks/useDeleteApi.ts";
 
 export const StudentSection = ({classId}) => {
-    const {me} = useAuth()
-    const studentsFetchApi = useFetchApi({url: `/students/class/${classId || classId || me?.class.id}`, auth: true})
     const [selectedStudent, setSelectedStudent] = useState(null);
+    const {me} = useAuth()
+    const url = `/students/class/${classId || me?.class.id}`
+    const studentsFetchApi = useFetchApi({url: url, auth: true})
+    const deleteStudentApi = useDeleteApi({url: `/users/${selectedStudent?.userId}`})
+
+    const handlePageChange = (page: number) => {
+        studentsFetchApi?.fetchApi(url, { params: { page, pageSize: studentsFetchApi.pagination?.pageSize || 5 } });
+    };
 
     const studentProfile = useModal({
         title: selectedStudent ? selectedStudent.name : "Student Profile",
@@ -52,11 +58,9 @@ export const StudentSection = ({classId}) => {
         }
     });
 
-    const deleteStudentApi = useDeleteApi({url: `/users/${selectedStudent?.userId}`})
-
     useEffect(() => {
         if (me?.class.id || classId) {
-            studentsFetchApi.fetchApi(`/students/class/${classId || me?.class.id}`)
+            studentsFetchApi.fetchApi(url)
         }
     }, [me?.class.id, classId]);
 
@@ -67,12 +71,21 @@ export const StudentSection = ({classId}) => {
                 <Table
                     columns={columnsStudent(studentProfile, confirmDeleteStudent)}
                     dataSource={parseStudentData(studentsFetchApi.data)}
-                    pagination={{pageSize: 10}}
+                    pagination={false}
                     onRow={(record: any) => ({
                         onClick: () => {
                             setSelectedStudent(record)
                         },
                     })}
+                />
+                <Pagination
+                    align="end"
+                    current={studentsFetchApi?.pagination?.page}
+                    total={studentsFetchApi?.count}
+                    pageSize={studentsFetchApi?.pagination?.pageSize}
+                    onChange={handlePageChange}
+                    showSizeChanger={false}
+                    className="custom-pagination mt-3"
                 />
             </Card>
             {studentProfile.modal}

@@ -3,7 +3,6 @@ import {BrowserRouter as Router, Navigate} from "react-router-dom";
 import {Routes, Route} from 'react-router-dom';
 import Unauthorized from './pages/auth/Unauthorized';
 import ProtectedRoute from './components/route/ProtectedRoute';
-import { AdminPage, PageOne } from './pages';
 import UserPage from './pages/user';
 import HomePage from './pages/homepage';
 import UserLayout from './components/layout/UserLayout';
@@ -26,6 +25,7 @@ import useAuth from "./hooks/useAuth.ts";
 import AssignmentResult from "./pages/assignment/AssignmentResult.tsx";
 import ProfilePage from "./pages/profile/ProfilePage.tsx";
 import School from "./pages/class/School.tsx";
+import TeacherAssignment from "./pages/manage-teacher/TeacherAssignment.tsx";
 
 const App: React.FC = () => {
 	const {isAuthenticated} = useAuth()
@@ -48,6 +48,7 @@ const App: React.FC = () => {
 							<Route path="/principal/document" element={<DocumentPage />} />
 							<Route path="/principal/document/:userId" element={<DocumentPage />} />
 							<Route path="/principal/request" element={<Request />} />
+							<Route path="/principal/teacher-assignment" element={<TeacherAssignment />} />
 						</Route>
 					</Route>
 					{/*.Teacher Routes */}

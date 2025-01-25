@@ -1,5 +1,5 @@
 import PageTitle from "../../components/common/SectionTitle.tsx";
-import {Button, Card, Table} from "antd";
+import {Button, Card, Pagination, Table} from "antd";
 import {useState} from "react";
 import useConfirmModal from "../../hooks/modal/useConfirmModal.tsx";
 import useDeleteApi from "../../hooks/useDeleteApi.ts";
@@ -14,13 +14,14 @@ import {AssignmentDetail} from "./AssignmentDetail.tsx";
 
 export const ExerciseSection = ({classId}) => {
     const {isPrincipal} = useAuth()
+    const url =  isPrincipal ? `/exercises/pagination/${classId}` : "/exercises/pagination/class"
     const [selectedAssignments, setSelectedAssignments] = useState(null);
 
     const deleteExerciseApi = useDeleteApi({url: `/exercises/${selectedAssignments?.id}`})
 
     const exercisesFetchApi = useFetchApi({
         ...exerciseFetchPath,
-        url: isPrincipal ? `/exercises/pagination/${classId}` : "/exercises/pagination/class",
+        url: url,
     })
 
     const assignment = useModal({
@@ -68,6 +69,10 @@ export const ExerciseSection = ({classId}) => {
         },
     });
 
+    const handlePageChange = (page: number) => {
+        exercisesFetchApi?.fetchApi(url, { params: { page, pageSize: exercisesFetchApi.pagination?.pageSize || 10 } });
+    };
+
     return (
         <>
             <Card className="flex-1 flex-grow mb-4 overflow-auto">
@@ -80,12 +85,21 @@ export const ExerciseSection = ({classId}) => {
                 <Table
                     columns={columnsExercise(assignmentEdit, confirmDeleteExercise, assignmentDetail)}
                     dataSource={exercisesFetchApi.data}
-                    pagination={{pageSize: 10}}
+                    pagination={false}
                     onRow={(record: any) => ({
                         onClick: () => {
                             setSelectedAssignments(record)
                         },
                     })}
+                />
+                <Pagination
+                    align="end"
+                    current={exercisesFetchApi?.pagination?.page}
+                    total={exercisesFetchApi?.count}
+                    pageSize={exercisesFetchApi?.pagination?.pageSize}
+                    onChange={handlePageChange}
+                    showSizeChanger={false}
+                    className="custom-pagination mt-3"
                 />
             </Card>
             {assignment.modal}
