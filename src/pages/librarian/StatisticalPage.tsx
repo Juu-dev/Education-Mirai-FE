@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Card, Table, Upload, message, Modal } from 'antd';
+import { Button, Card, Table, Upload, message } from 'antd';
 import { Line } from '@ant-design/charts';
 import ProgressSummary from '../../components/library/ProgressSummary';
 import * as XLSX from 'xlsx';
 import useCreateApi from "../../hooks/useCreateApi.ts";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
+import useModal from "../../hooks/modal/useModal.tsx";
 
 const borrowData = [
   { date: '01', count: 20 },
@@ -38,6 +39,7 @@ const bookColumns = [
   { title: 'Tổng số sách', dataIndex: 'amount', key: 'amount' },
   { title: 'Đã cho mượn', dataIndex: 'borrowedAmount', key: 'borrowed' },
   { title: 'Năm xuất bản', dataIndex: 'yearOfPublication', key: 'yearOfPublication' },
+  { title: 'Nhà xuất bản', dataIndex: 'publishingHouse', key: 'publishingHouse' },
 ];
 
 const bookPreviewColumns = [
@@ -45,15 +47,22 @@ const bookPreviewColumns = [
   { title: 'Tổng số sách', dataIndex: 'amount', key: 'amount' },
   { title: 'Đã cho mượn', dataIndex: 'borrowed amount', key: 'borrowed' },
   { title: 'Năm xuất bản', dataIndex: 'year of publication', key: 'yearOfPublication' },
+  { title: 'Nhà xuất bản', dataIndex: 'publishing house', key: 'publishingHouse' },
 ];
 
 const StatisticalPage: React.FC = () => {
   const {isPrincipal} = useAuth();
   const [previewData, setPreviewData] = useState([]); // State lưu dữ liệu preview
-  const [isModalVisible, setIsModalVisible] = useState(false); // State quản lý modal
 
   const bookImportBulk = useCreateApi({
     url: "/books-imports/bulk",
+    successMsg: "Duyệt tài liệu thành công!",
+    errorMsg: "Duyệt tài liệu thất bại, vui lòng thử lại.",
+    fullResp: true,
+  });
+
+  const bookImportBulkOverride = useCreateApi({
+    url: "/books-imports/bulk-override",
     successMsg: "Duyệt tài liệu thành công!",
     errorMsg: "Duyệt tài liệu thất bại, vui lòng thử lại.",
     fullResp: true,
@@ -68,10 +77,10 @@ const StatisticalPage: React.FC = () => {
       const workbook = XLSX.read(data, { type: 'array' });
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      const json = XLSX.utils.sheet_to_json(sheet, { header: ['name', 'amount', 'borrowed amount', 'year of publication'] });
+      const json = XLSX.utils.sheet_to_json(sheet, { header: ['name', 'amount', 'borrowed amount', 'year of publication', 'publishing house'] });
 
-      setPreviewData(json.slice(1) as any[]); // Lưu dữ liệu vào state preview
-      setIsModalVisible(true); // Hiển thị modal preview
+      setPreviewData(json.slice(1) as any[]);
+      previewImport.openModal()
     };
 
     reader.onerror = () => {
@@ -88,19 +97,36 @@ const StatisticalPage: React.FC = () => {
       borrowedAmount: e["borrowed amount"],
       title: e.name,
       yearOfPublication: String(e["year of publication"]),
+      publishingHouse: String(e["publishing house"]),
     }))
 
     await bookImportBulk.handleCreate(data)
 
-    setPreviewData([]); // Xóa dữ liệu preview
-    setIsModalVisible(false); // Ẩn modal
+    bookImport.setFetched(false)
+
+    setPreviewData([]);
+    previewImport.closeModal();
     message.success('Dữ liệu đã được cập nhật!');
   };
 
-  const handleCancel = () => {
-    setPreviewData([]); // Xóa dữ liệu preview
-    setIsModalVisible(false); // Ẩn modal
-  };
+  const previewImport = useModal({
+    title: "Xem trước dữ liệu",
+    okText: "Xác nhận",
+    cancelText: "Hủy",
+    width: 800,
+    content: <Table
+        dataSource={previewData}
+        columns={bookPreviewColumns}
+        pagination={false}
+        size="small"
+    />,
+    footer: (_, { OkBtn, CancelBtn }) => (
+        <>
+          <CancelBtn />
+          <OkBtn />
+        </>
+    )
+  })
 
   return (
       <div className="p-6">
@@ -160,22 +186,7 @@ const StatisticalPage: React.FC = () => {
         </div>}
 
         {/* Preview Modal */}
-        <Modal
-            title="Xem trước dữ liệu"
-            visible={isModalVisible}
-            onOk={handleConfirm}
-            onCancel={handleCancel}
-            okText="Xác nhận"
-            cancelText="Hủy"
-            width={800}
-        >
-          <Table
-              dataSource={previewData}
-              columns={bookPreviewColumns}
-              pagination={false}
-              size="small"
-          />
-        </Modal>
+        {previewImport.modal}
       </div>
   );
 };

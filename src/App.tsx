@@ -41,7 +41,7 @@ const App: React.FC = () => {
 					{/* Principal Routes */}
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
-							<Route path="/principal" element={<AdminPage />} />
+							<Route path="/principal" element={<Navigate to="/principal/dashboard" replace />} />
 							<Route path="/principal/dashboard" element={<Dashboard />} />
 							<Route path="/principal/school" element={<School />} />
 							<Route path="/principal/class" element={<Class />} />
@@ -53,9 +53,8 @@ const App: React.FC = () => {
 					{/*.Teacher Routes */}
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
-							<Route path="/teacher" element={<AdminPage />} />
+							<Route path="/teacher" element={<Navigate to="/teacher/dashboard" replace />} />
 							<Route path="/profile" element={<ProfilePage />} />
-							<Route path="/teacher/page-one" element={<PageOne />} />
 							<Route path="/teacher/dashboard" element={<Dashboard />} />
 							<Route path="/teacher/class" element={<Class />} />
 							<Route path="/teacher/document" element={<DocumentPage />} />
