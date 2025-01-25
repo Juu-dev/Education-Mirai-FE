@@ -1,10 +1,16 @@
 import React from "react";
-import { Input, Button, Form, Upload, message } from "antd";
+import {Input, Button, Form, Upload, message, Select} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 interface Props {
     form: any
 }
+
+const bookType = [
+    {value: "textBooks", name: "Sách giáo khoa"},
+    {value: "referenceBooks", name: "Sách tham khảo"},
+    {value: "audioBooks", name: "Sách nói"},
+]
 
 const AddBookForm: React.FC<Props> = ({ form }: Props) => {
     const beforeUpload = (file: File, allowedTypes: string[]) => {
@@ -46,11 +52,17 @@ const AddBookForm: React.FC<Props> = ({ form }: Props) => {
             </Form.Item>
 
             <Form.Item
-                name="rating"
-                label="Đánh giá"
-                rules={[{ required: true, message: "Vui lòng nhập đánh giá (1-5)" }]}
+                name="type"
+                label="Loại sách"
+                rules={[{ required: true, message: "Vui lòng chọn kiểu sách" }]}
             >
-                <Input type="number" min={1} max={5} placeholder="Nhập đánh giá (1-5)" />
+                <Select placeholder="Chọn kiểu sách">
+                    {bookType.map(type => (
+                        <Select.Option key={type.value} value={type.value}>
+                            {type.name}
+                        </Select.Option>
+                    ))}
+                </Select>
             </Form.Item>
 
             <Form.Item

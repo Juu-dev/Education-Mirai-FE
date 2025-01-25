@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Card, Table, Upload, message } from 'antd';
+import {Button, Card, Table, Upload, message, Radio, Pagination} from 'antd';
 import { Line } from '@ant-design/charts';
-import ProgressSummary from '../../components/library/ProgressSummary';
 import * as XLSX from 'xlsx';
 import useCreateApi from "../../hooks/useCreateApi.ts";
 import useFetchApi from "../../hooks/useFetchApi.ts";
@@ -42,17 +41,10 @@ const bookColumns = [
   { title: 'Nhà xuất bản', dataIndex: 'publishingHouse', key: 'publishingHouse' },
 ];
 
-const bookPreviewColumns = [
-  { title: 'Sách', dataIndex: 'name', key: 'name' },
-  { title: 'Tổng số sách', dataIndex: 'amount', key: 'amount' },
-  { title: 'Đã cho mượn', dataIndex: 'borrowed amount', key: 'borrowed' },
-  { title: 'Năm xuất bản', dataIndex: 'year of publication', key: 'yearOfPublication' },
-  { title: 'Nhà xuất bản', dataIndex: 'publishing house', key: 'publishingHouse' },
-];
-
 const StatisticalPage: React.FC = () => {
-  const {isPrincipal} = useAuth();
-  const [previewData, setPreviewData] = useState([]); // State lưu dữ liệu preview
+  const { isPrincipal } = useAuth();
+  const [previewData, setPreviewData] = useState([]);
+    const [importMode, setImportMode] = useState<string | null>(null);
 
   const bookImportBulk = useCreateApi({
     url: "/books-imports/bulk",
@@ -68,7 +60,19 @@ const StatisticalPage: React.FC = () => {
     fullResp: true,
   });
 
-  const bookImport = useFetchApi({url: "/books-imports/pagination", auth: true})
+  const bookImport = useFetchApi({ url: "/books-imports/pagination", auth: true });
+  const overviewBook = useFetchApi({ url: "/books-imports/overview", auth: true });
+
+  console.log("overviewBook: ", overviewBook.data)
+
+  const handlePageChange = (page: number) => {
+    bookImport?.fetchApi(undefined, {
+      params: {
+        page,
+        pageSize: bookImport.pagination?.pageSize || 10
+      }
+    });
+  };
 
   const handleUpload = (file: File) => {
     const reader = new FileReader();
@@ -80,7 +84,7 @@ const StatisticalPage: React.FC = () => {
       const json = XLSX.utils.sheet_to_json(sheet, { header: ['name', 'amount', 'borrowed amount', 'year of publication', 'publishing house'] });
 
       setPreviewData(json.slice(1) as any[]);
-      previewImport.openModal()
+      previewImport.openModal();
     };
 
     reader.onerror = () => {
@@ -88,23 +92,32 @@ const StatisticalPage: React.FC = () => {
     };
 
     reader.readAsArrayBuffer(file);
-    return false; // Ngăn Ant Design tự tải file lên server
+    return false;
   };
 
   const handleConfirm = async () => {
-    const data = previewData.map((e: object) => ({
+    if (!importMode) {
+      message.warning('Vui lòng chọn chế độ nhập dữ liệu!');
+      return;
+    }
+
+    const data = previewData.map((e: any) => ({
       amount: e.amount,
       borrowedAmount: e["borrowed amount"],
       title: e.name,
       yearOfPublication: String(e["year of publication"]),
       publishingHouse: String(e["publishing house"]),
-    }))
+    }));
 
-    await bookImportBulk.handleCreate(data)
+    if (importMode === 'normal') {
+      await bookImportBulk.handleCreate(data);
+    } else if (importMode === 'override') {
+      await bookImportBulkOverride.handleCreate(data);
+    }
 
-    bookImport.setFetched(false)
-
+    bookImport.setFetched(false);
     setPreviewData([]);
+    setImportMode(null);
     previewImport.closeModal();
     message.success('Dữ liệu đã được cập nhật!');
   };
@@ -112,53 +125,67 @@ const StatisticalPage: React.FC = () => {
   const previewImport = useModal({
     title: "Xem trước dữ liệu",
     okText: "Xác nhận",
+    handleOk: handleConfirm,
     cancelText: "Hủy",
     width: 800,
-    content: <Table
-        dataSource={previewData}
-        columns={bookPreviewColumns}
-        pagination={false}
-        size="small"
-    />,
+    content: (
+        <Table
+          dataSource={previewData}
+          columns={[
+            { title: 'Sách', dataIndex: 'name', key: 'name' },
+            { title: 'Tổng số sách', dataIndex: 'amount', key: 'amount' },
+            { title: 'Đã cho mượn', dataIndex: 'borrowed amount', key: 'borrowed' },
+            { title: 'Năm xuất bản', dataIndex: 'year of publication', key: 'yearOfPublication' },
+            { title: 'Nhà xuất bản', dataIndex: 'publishing house', key: 'publishingHouse' },
+          ]}
+          pagination={false}
+          size="small"
+        />
+    ),
     footer: (_, { OkBtn, CancelBtn }) => (
-        <>
-          <CancelBtn />
-          <OkBtn />
-        </>
-    )
-  })
-
-  return (
-      <div className="p-6">
-        {/* Header Section */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <Card className="p-4 col-span-2">
-            <h3 className="text-center font-semibold mb-4">Thống kê mượn sách</h3>
-            <Line {...lineConfig} />
-          </Card>
-
-          {/* Progress Summary */}
-          <ProgressSummary />
+        <div className="flex flex-col justify-end gap-5 mt-2">
+            <Radio.Group
+                onChange={(e) => setImportMode(e.target.value)}
+                value={importMode}
+            >
+                <Radio value="normal">Không xoá dữ liệu cũ</Radio>
+                <Radio value="override">Xoá dữ liệu cũ</Radio>
+            </Radio.Group>
+            <div className="flex items-end justify-end gap-2">
+                <CancelBtn/>
+                <OkBtn />
+            </div>
         </div>
+    ),
+  });
 
-        {/* Statistics Cards */}
+    return (
+        <div className="p-6">
+            <div className="grid gap-4 mb-6">
+                <Card className="p-4">
+                    <h3 className="text-center font-semibold mb-4">Thống kê mượn sách</h3>
+                    <Line {...lineConfig} />
+                </Card>
+            </div>
+
+            {/* Statistics Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           <Card>
             <div className="text-center">
-              <div className="text-2xl font-bold">120</div>
+              <div className="text-2xl font-bold">{overviewBook?.data.totalBookTitles}</div>
               <div>Số đầu sách</div>
             </div>
           </Card>
           <Card>
             <div className="text-center">
-              <div className="text-2xl font-bold">250</div>
-              <div>Sách đã xem</div>
+              <div className="text-2xl font-bold">{overviewBook?.data.totalBorrowedBooks}</div>
+              <div>Số sách đang cho mượn</div>
             </div>
           </Card>
           <Card>
             <div className="text-center">
-              <div className="text-2xl font-bold">45%</div>
-              <div>Khối lớp 5</div>
+              <div className="text-2xl font-bold">{overviewBook?.data.totalBooks - overviewBook?.data.totalBorrowedBooks}</div>
+              <div>Số sách còn lại</div>
             </div>
           </Card>
         </div>
@@ -171,21 +198,28 @@ const StatisticalPage: React.FC = () => {
               pagination={false}
               size="small"
           />
+          <Pagination
+              align="end"
+              current={bookImport?.pagination?.page}
+              total={bookImport?.count}
+              pageSize={bookImport?.pagination?.pageSize}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+              className="custom-pagination mt-3"
+          />
         </Card>
 
-        {/* Footer Actions */}
-        {!isPrincipal && <div className="flex justify-end gap-4 mt-6">
-          <Button type="default">Cập nhật thông tin</Button>
-          <Upload
-              beforeUpload={handleUpload}
-              accept=".xlsx, .xls"
-              showUploadList={false}
-          >
-            <Button type="primary">Duyệt tài liệu</Button>
-          </Upload>
-        </div>}
-
-        {/* Preview Modal */}
+        {!isPrincipal && (
+            <div className="flex justify-end gap-4 mt-6">
+              <Upload
+                  beforeUpload={handleUpload}
+                  accept=".xlsx, .xls"
+                  showUploadList={false}
+              >
+                <Button type="primary">Duyệt tài liệu</Button>
+              </Upload>
+            </div>
+        )}
         {previewImport.modal}
       </div>
   );

@@ -46,7 +46,7 @@ const App: React.FC = () => {
 							<Route path="/principal/school" element={<School />} />
 							<Route path="/principal/class" element={<Class />} />
 							<Route path="/principal/document" element={<DocumentPage />} />
-							<Route path="/principal/document/:teacherID" element={<DocumentPage />} />
+							<Route path="/principal/document/:userId" element={<DocumentPage />} />
 							<Route path="/principal/request" element={<Request />} />
 						</Route>
 					</Route>

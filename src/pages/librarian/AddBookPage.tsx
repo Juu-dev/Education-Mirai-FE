@@ -30,7 +30,7 @@ export const AddBookPage: React.FC = () => {
         formData.append("author", rest.author);
         formData.append("description", rest.description || "");
         formData.append("publishingHouse", rest.nxb);
-        formData.append("evaluate", rest.rating);
+        formData.append("type", rest.type);
 
         if (cover?.[0]?.originFileObj) {
             formData.append("files", cover[0].originFileObj);
@@ -62,7 +62,7 @@ export const AddBookPage: React.FC = () => {
     })
 
   return (
-    <div className="container mx-auto px-4 overflow-hidden">
+    <div className="mx-auto px-4 overflow-hidden">
       {/* Thêm sách Button */}
       <div className="flex justify-end mb-4">
         <Button type="primary" onClick={addBook.openModal}>
@@ -74,6 +74,9 @@ export const AddBookPage: React.FC = () => {
       <div className="book-list-wrapper">
         <BookList isRefresh={isTableDataUpdated} />
       </div>
+
+
+
         {addBook.modal}
     </div>
   );
