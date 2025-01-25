@@ -8,6 +8,12 @@ export function formatDate(isoDate: string): string {
   return `${day}/${month}/${year}`;
 }
 
+export const formatTime = (time: number) => {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+};
+
 export function formatDateTime(isoDate: string): string {
   const date = new Date(isoDate);
 

@@ -1,9 +1,9 @@
 import { Button } from "antd"
 
-import { BookList } from "../../components/book/BookList"
 import { useNavigate } from "react-router-dom"
+import {BookSection} from "./BookSection.tsx";
 
-export const UserBookList = () => {
+export const UserBookSection = () => {
     const navigate  = useNavigate();
 
     return (
@@ -17,7 +17,7 @@ export const UserBookList = () => {
                         Xem thêm
                     </Button>
                 </div>
-                <BookList />
+                <BookSection type="textBooks" />
             </div>
             <div className="book-list-wrapper mb-4">
                 <div className="flex justify-between mb-4">
@@ -28,7 +28,7 @@ export const UserBookList = () => {
                         Xem thêm
                     </Button>
                 </div>
-                <BookList />
+                <BookSection type="referenceBooks" />
             </div>
             <div className="book-list-wrapper mb-4">
                 <div className="flex justify-between mb-4">
@@ -39,7 +39,7 @@ export const UserBookList = () => {
                         Xem thêm
                     </Button>
                 </div>
-                <BookList />
+                <BookSection type="audioBooks" />
             </div>
         </div>
     )

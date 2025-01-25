@@ -7,7 +7,7 @@ import { AdminPage, PageOne } from './pages';
 import UserPage from './pages/user';
 import HomePage from './pages/homepage';
 import UserLayout from './components/layout/UserLayout';
-import { UserBookList } from './pages/user/UserBookList';
+import { UserBookSection } from './pages/user/UserBookSection.tsx';
 import { UserBookReadingList } from './pages/user/UserBookReadingList';
 import { BookDetailPage } from './pages/user/BookDetailPage';
 import { AssignmentPage } from './pages/user/AssginmentPage';
@@ -66,7 +66,7 @@ const App: React.FC = () => {
 						<Route element={<UserLayout />}>
 							<Route path="/student" element={<UserPage />} />
 							{/* <Route path="/student/page-one" element={<PageOne />} /> */}
-							<Route path="/student/books" element={<UserBookList />} />
+							<Route path="/student/books" element={<UserBookSection />} />
 							<Route path='/student/reading-books' element={<UserBookReadingList />} />
 							<Route path="/student/reading-books/book/:id" element={<BookDetailPage />} />
 							<Route path="/student/assignments" element={<AssignmentPage />} />

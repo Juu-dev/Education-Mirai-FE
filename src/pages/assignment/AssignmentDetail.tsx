@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import { Button, Card, Radio, Space, Typography } from "antd";
 import { useCountdown } from "../../hooks/useCountdown.tsx";
 import useAuth from "../../hooks/useAuth.ts";
 import useCreateApi from "../../hooks/useCreateApi.ts";
+import {formatTime} from "../../helpers/date.ts";
 
 const { Title, Text } = Typography;
 
@@ -34,10 +35,6 @@ export const AssignmentDetail = () => {
         }
     }, [exerciseData?.timeOut, resetCountdown]);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
     const handleOptionChange = (questionId: string, optionId: string) => {
         setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
     };
@@ -53,7 +50,6 @@ export const AssignmentDetail = () => {
         };
 
         const response = await answersApi.handleCreate(payload);
-        console.log("response: ", response);
 
         if (response?.result) {
             navigate("/student/result", {
@@ -64,12 +60,6 @@ export const AssignmentDetail = () => {
                 }
             });
         }
-    };
-
-    const formatTime = (time: number) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
     return (
