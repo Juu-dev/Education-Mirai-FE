@@ -1,67 +1,90 @@
-import { useState } from "react";
-import { Form, Input, Button } from "antd";
+import {Form, Input, Button, Select} from "antd";
+import useEditApi from "../../../hooks/useEditApi.ts";
+import React, {useEffect} from "react";
+import useFetchApi from "../../../hooks/useFetchApi.ts";
+import {classPath} from "../../../helpers/api-params/auth.ts";
 
 interface StudentProfileModalProps {
     studentData: any | null;
 }
 
 const StudentProfileForm: React.FC<StudentProfileModalProps> = ({studentData}) => {
-    const [isEditing, setIsEditing] = useState(false);
+    console.log("studentData: ", studentData)
+    const [form] = Form.useForm();
+    const classesApi = useFetchApi(classPath)
+    const studentEdit = useEditApi({
+        url: `/users/student/${studentData.userId}`,
+        successMsg: "Sửa thông tin học sinh thành công!",
+        errorMsg: "Sửa thông tin học sinh thất bại, vui lòng thử lại.",
+        fullResp: true,
+    })
 
-    const handleEditClick = () => {
-        setIsEditing(true);
+    const handleFinish = async (values) => {
+        const data = {
+            name: values.name,
+            birthDate: values.birthDate,
+            parentName: values.parentName,
+            phone: values.phone,
+            classId: values.classId,
+        }
+        await studentEdit.handleEdit(data)
     };
 
-    const handleSaveClick = () => {
-        // Here, you would typically handle saving the data
-        // For now, we will just disable editing
-        setIsEditing(false);
-    };
+    useEffect(() => {
+        if (studentData) {
+            form.setFieldsValue({
+                name: studentData.name,
+                birthDate: studentData.birthDate,
+                parentName: studentData.parentName,
+                phone: studentData.phone,
+                classId: studentData.classId
+            });
+        } else {
+            form.resetFields();
+        }
+    }, [studentData]);
 
     return (
         <>
             <Form
+                form={form}
                 layout="horizontal"
                 labelWrap
                 labelCol={{ flex: "110px" }}
                 labelAlign="left"
-                wrapperCol={{ flex: 1 }}>
-                <Form.Item label="Họ và tên">
-                    <Input value={studentData?.name} readOnly={!isEditing} />
+                wrapperCol={{ flex: 1 }}
+                onFinish={handleFinish}>
+                <Form.Item name="name" label="Họ và tên">
+                    <Input className="h-10" value={studentData?.name} />
                 </Form.Item>
-                <Form.Item label="ID">
-                    <Input value={studentData?.id} readOnly={!isEditing} />
+                <Form.Item name="birthDate" label="Ngày sinh">
+                    <Input className="h-10" value={studentData?.birthDate}/>
                 </Form.Item>
-                <Form.Item label="Ngày sinh">
-                    <Input
-                        value={studentData?.birthDate}
-                        readOnly={!isEditing}
-                    />
+                <Form.Item name="parentName" label="Tên phụ huynh">
+                    <Input className="h-10" value={studentData?.parentName} />
                 </Form.Item>
-                <Form.Item label="Tên phụ huynh">
-                    <Input
-                        value={studentData?.parentName}
-                        readOnly={!isEditing}
-                    />
+                <Form.Item name="phone" label="SĐT">
+                    <Input className="h-10" value={studentData?.phone}/>
                 </Form.Item>
-                <Form.Item label="SĐT">
-                    <Input value={studentData?.phone} readOnly={!isEditing} />
+                <Form.Item name="classId" label="Lớp">
+                    <Select
+                        filterOption={false}
+                        placeholder="Chọn lớp"
+                        className="h-10"
+                    >
+                        {classesApi?.data.map((classOption, index) => (
+                            <Select.Option key={index} value={classOption?.id}>
+                                {classOption?.name}
+                            </Select.Option>
+                        ))}
+                    </Select>
                 </Form.Item>
-                <Form.Item label="Lớp">
-                    <Input value={studentData?.class} readOnly={!isEditing} />
-                </Form.Item>
-            </Form>
-            <div className="flex justify-end mt-4">
-                {!isEditing ? (
-                    <Button type="primary" onClick={handleEditClick}>
-                        Chỉnh sửa
-                    </Button>
-                ) : (
-                    <Button type="primary" onClick={handleSaveClick}>
+                <div className="flex justify-end mt-4">
+                    <Button type="primary" htmlType="submit">
                         Lưu
                     </Button>
-                )}
-            </div>
+                </div>
+            </Form>
         </>
     );
 };

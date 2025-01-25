@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from 'react';
 import {BrowserRouter as Router, Navigate} from "react-router-dom";
 import {Routes, Route} from 'react-router-dom';
@@ -15,10 +14,9 @@ import { AssignmentPage } from './pages/user/AssginmentPage';
 import AssignmentDetail from './pages/assignment/AssignmentDetail.tsx';
 import AdminLayout from './components/layout/AdminLayout';
 import Dashboard from './pages/dashboard/Dashboard.tsx';
-import ClassPage from './pages/class/ClassPage.tsx';
+import Class from './pages/class/Class.tsx';
 import DocumentPage from './pages/documents/DocumentPage.tsx';
 import StatisticalPage from './pages/librarian/StatisticalPage.tsx';
-// import LibrarianDocumentPage from './pages/librarian/LibrarianDocumentPage';
 import { AddBookPage } from './pages/librarian/AddBookPage.tsx';
 import Request from './pages/request/Request.tsx';
 import LoginPage from './pages/auth/LoginPage';
@@ -27,6 +25,7 @@ import AuthProvider from "./context/AuthContext";
 import useAuth from "./hooks/useAuth.ts";
 import AssignmentResult from "./pages/assignment/AssignmentResult.tsx";
 import ProfilePage from "./pages/profile/ProfilePage.tsx";
+import School from "./pages/class/School.tsx";
 
 const App: React.FC = () => {
 	const {isAuthenticated} = useAuth()
@@ -43,9 +42,9 @@ const App: React.FC = () => {
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/principal" element={<AdminPage />} />
-							{/*<Route path="/principal/page-one" element={<PageOne />} />*/}
 							<Route path="/principal/dashboard" element={<Dashboard />} />
-							<Route path="/principal/class" element={<ClassPage />} />
+							<Route path="/principal/school" element={<School />} />
+							<Route path="/principal/class" element={<Class />} />
 							<Route path="/principal/document" element={<DocumentPage />} />
 							<Route path="/principal/document/:teacherID" element={<DocumentPage />} />
 							<Route path="/principal/request" element={<Request />} />
@@ -58,7 +57,7 @@ const App: React.FC = () => {
 							<Route path="/profile" element={<ProfilePage />} />
 							<Route path="/teacher/page-one" element={<PageOne />} />
 							<Route path="/teacher/dashboard" element={<Dashboard />} />
-							<Route path="/teacher/class" element={<ClassPage />} />
+							<Route path="/teacher/class" element={<Class />} />
 							<Route path="/teacher/document" element={<DocumentPage />} />
 							<Route path="/teacher/request" element={<Request />} />
 						</Route>

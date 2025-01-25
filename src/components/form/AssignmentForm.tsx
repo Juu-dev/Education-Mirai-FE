@@ -25,7 +25,6 @@ export interface AssignmentDetails {
 const AssignmentForm: FC<AdminAssignmentModalProps> = ({onSuccess}) => {
     const {me} = useAuth()
     const quizzes = useFetchApi<IOption>(quizzesFetchPath)
-    const classes = useFetchApi<IOption>(classesFetchPath)
     const exercise = useCreateApi(exerciseCreatePath)
 
     const [form] = Form.useForm();
@@ -82,10 +81,9 @@ const AssignmentForm: FC<AdminAssignmentModalProps> = ({onSuccess}) => {
                 name="classAssigneeId"
                 rules={[{ required: true, message: "Vui lòng chọn ít nhất một lớp học" }]}
             >
-                <Select
-                    placeholder="Chọn lớp"
-                >
-                    {classes?.data.map(group => (
+                {/*<Input placeholder={me?.class?.name} value={me?.class?.id}  disabled />*/}
+                <Select placeholder="Chọn lớp" disabled defaultValue={me?.class?.id}>
+                    {[me?.class].map(group => (
                         <Select.Option key={group.id} value={group.id}>
                             {group.name}
                         </Select.Option>

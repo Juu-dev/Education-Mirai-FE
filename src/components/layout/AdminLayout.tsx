@@ -46,7 +46,7 @@ const AdminLayout = () => {
             : [
                 { key: "/principal/dashboard", label: "Bảng điều khiển" },
                 { key: "/library", label: "Thư viện" },
-                { key: "/principal/class", label: "Trường" },
+                { key: "/principal/school", label: "Trường" },
                 { key: "/principal/document", label: "Tài liệu" },
                 { key: "/principal/request", label: "Gửi yêu cầu" },
                 // { key: "/principal/settings", label: "Tài khoản" },

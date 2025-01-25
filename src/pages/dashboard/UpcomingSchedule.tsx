@@ -1,4 +1,4 @@
-import {Card} from "antd";
+import {Card, Empty} from "antd";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import {splitDateTime} from "../../helpers/date.ts";
 
@@ -41,7 +41,7 @@ export const UpcomingSchedule = () => {
     }
 
     return (<Card title="Lịch sắp tới" className="p-4">
-        {upcomingTask?.data.map((schedule, index) => (
+        {upcomingTask?.data.length> 0 ? upcomingTask?.data.map((schedule, index) => (
             <div key={index} className="mb-4">
                 {/* Render the date */}
                 <h3 className="font-bold text-lg mb-2">{schedule.date}</h3>
@@ -56,6 +56,9 @@ export const UpcomingSchedule = () => {
                     ))}
                 </ul>
             </div>
-        ))}
+        )) :
+        <div className="col-span-5 flex justify-center">
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+        </div>}
     </Card>)
 }

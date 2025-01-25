@@ -16,7 +16,7 @@ const API_PATH = {
     },
     exercise: {
         list: "/exercises",
-        pagination: "/exercises/pagination"
+        pagination: "/exercises/pagination/class"
     }
 }
 

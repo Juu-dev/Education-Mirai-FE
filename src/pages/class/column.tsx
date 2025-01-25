@@ -1,5 +1,5 @@
 import {Button} from "antd";
-import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EyeOutlined} from "@ant-design/icons";
 
 export const columnsStudent = (studentProfile, confirmDelete) => ([
     {
@@ -57,7 +57,7 @@ export const columnsQuiz = (quizEdit, confirmDelete) => ([
     },
 ])
 
-export const columnsExercise = (assignmentEdit, confirmDelete) => ([
+export const columnsExercise = (assignmentEdit, confirmDelete, viewDetails) => ([
     {
         title: "Tên",
         dataIndex: "name",
@@ -80,6 +80,7 @@ export const columnsExercise = (assignmentEdit, confirmDelete) => ([
             <div className="flex space-x-2">
                 <Button icon={<EditOutlined />} onClick={assignmentEdit.openModal}/>
                 <Button icon={<DeleteOutlined />} onClick={confirmDelete.openModal}/>
+                <Button icon={<EyeOutlined />} onClick={viewDetails.openModal}/>
             </div>
         ),
     },

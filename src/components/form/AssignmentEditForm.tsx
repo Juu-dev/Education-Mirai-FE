@@ -3,7 +3,7 @@ import {FC, useEffect} from 'react';
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import useAuth from "../../hooks/useAuth.ts";
 import useEditApi from "../../hooks/useEditApi.ts";
-import {classesFetchPath, quizzesFetchPath} from "../../helpers/api-params/auth.ts";
+import {quizzesFetchPath} from "../../helpers/api-params/auth.ts";
 
 interface AdminAssignmentModalProps {
     assignment?: AssignmentDetails | null;
@@ -26,7 +26,10 @@ export interface AssignmentDetails {
 const AssignmentEditForm: FC<AdminAssignmentModalProps> = ({assignment, onSuccess}) => {
     const {me} = useAuth()
     const quizzes = useFetchApi<IOption>(quizzesFetchPath)
-    const classes = useFetchApi<IOption>(classesFetchPath)
+    const classAssignee = useFetchApi({
+        url: `/classes/${assignment?.classAssigneeId}`,
+        auth: true
+    })
     const exercise = useEditApi({
         url: `/exercises/${assignment?.id}`,
         successMsg: "Sửa bài tập đã giao thành công!",
@@ -102,8 +105,9 @@ const AssignmentEditForm: FC<AdminAssignmentModalProps> = ({assignment, onSucces
                 name="classAssigneeId"
                 rules={[{ required: true, message: "Vui lòng chọn ít nhất một lớp học" }]}
             >
-                <Select placeholder="Chọn lớp">
-                    {classes?.data.map(group => (
+                {/*<Input placeholder={classAssignee?.data?.name}  value={classAssignee?.data?.id} disabled />*/}
+                <Select placeholder="Chọn lớp" disabled>
+                    {[classAssignee?.data].map(group => (
                         <Select.Option key={group.id} value={group.id}>
                             {group.name}
                         </Select.Option>
