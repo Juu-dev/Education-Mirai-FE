@@ -1,6 +1,6 @@
+import {Dropdown, MenuProps, Select} from "antd";
 import type {ColumnsType} from "antd/es/table";
-import {Button} from "antd";
-import {CheckOutlined, SendOutlined} from "@ant-design/icons";
+import { requestStatus } from "../../constants/status/requestStatus";
 
 export interface Task {
     key: number;
@@ -12,7 +12,7 @@ export interface Task {
     assignedTo?: string;
 }
 
-export const columnsReceived: ColumnsType<Task> = [
+export const columnsReceived: (handleStatusChange: any) => ColumnsType<Task> = (handleStatusChange) => ([
     {
         title: "Tên công việc",
         dataIndex: "task",
@@ -37,20 +37,40 @@ export const columnsReceived: ColumnsType<Task> = [
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
-    },
-    {
-        title: "Hành động",
-        key: "action",
-        render: () => (
-            <div className="flex space-x-2">
-                <Button icon={<CheckOutlined />} type="primary" />
-                <Button icon={<SendOutlined />} type="default" />
-            </div>
-        ),
-    },
-];
+        render: (status: string, record: Task) => {
+            const statuses = [
+                { label: requestStatus.pending, value: 'pending', color: 'bg-orange-200 text-orange-600' },
+                { label: requestStatus.inProgress, value: 'inProgress', color: 'bg-blue-200 text-blue-600' },
+                { label: requestStatus.completed, value: 'completed', color: 'bg-green-200 text-green-600' },
+                { label: requestStatus.delivered, value: 'delivered', color: 'bg-purple-200 text-purple-600' },
+            ];
 
-export const columnsSent: ColumnsType<Task> = [
+            const menuItems: MenuProps['items'] = statuses.map((status) => ({
+                key: status.value,
+                label: (
+                    <span className={`px-2 py-1 whitespace-nowrap rounded ${status.color}`}>
+                    {status.label}
+                  </span>
+                ),
+            }));
+
+            console.log("status: ", statuses.find((e) => e.label === status)?.color)
+
+            return (
+                <Dropdown
+                    menu={{ items: menuItems, onClick: (e) => handleStatusChange(e.key) }}
+                    trigger={['click']}
+                >
+                    <button className={`rounded whitespace-nowrap shadow-sm hover:shadow focus:outline-none ${statuses.find((e) => e.label === status)?.color}`}>
+                        <span>{status}</span>
+                    </button>
+                </Dropdown>
+            )
+        },
+    },
+]);
+
+export const columnsSent: (handleStatusChange: any) => ColumnsType<Task> = (handleStatusChange) => ([
     {
         title: "Tên công việc",
         dataIndex: "task",
@@ -75,5 +95,35 @@ export const columnsSent: ColumnsType<Task> = [
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
+        render: (status: string, record: Task) => {
+            const statuses = [
+                { label: requestStatus.pending, value: 'pending', color: 'bg-orange-200 text-orange-600' },
+                { label: requestStatus.inProgress, value: 'inProgress', color: 'bg-blue-200 text-blue-600' },
+                { label: requestStatus.completed, value: 'completed', color: 'bg-green-200 text-green-600' },
+                { label: requestStatus.delivered, value: 'delivered', color: 'bg-purple-200 text-purple-600' },
+            ];
+
+            const menuItems: MenuProps['items'] = statuses.map((status) => ({
+                key: status.value,
+                label: (
+                    <span className={`px-2 py-1 whitespace-nowrap rounded ${status.color}`}>
+                    {status.label}
+                  </span>
+                ),
+            }));
+
+            console.log("status: ", statuses.find((e) => e.label === status)?.color)
+
+            return (
+                <Dropdown
+                    menu={{ items: menuItems, onClick: (e) => handleStatusChange(e.key) }}
+                    trigger={['click']}
+                >
+                    <button className={`rounded whitespace-nowrap shadow-sm hover:shadow focus:outline-none ${statuses.find((e) => e.label === status)?.color}`}>
+                        <span>{status}</span>
+                    </button>
+                </Dropdown>
+            )
+        },
     },
-];
+]);

@@ -1,4 +1,5 @@
 import {formatDate} from "../date.ts";
+import {requestStatus} from "../../constants/status/requestStatus.ts";
 
 const API_PATH = {
     login: '/auth/login',
@@ -41,7 +42,15 @@ export const registerPath = {
     fullResp: true,
 }
 
-export const classPath = {url: API_PATH.class.pagination, auth: false, initQueries: {pageSize: 100}}
+export const classPath = {
+    url: API_PATH.class.pagination,
+    auth: false,
+    initQueries: {pageSize: 100},
+    presentData: (data) => (data.map((e) => ({
+        id: e.id,
+        name: e.name
+    })).sort((a, b) => a.name.localeCompare(b.name)))
+}
 
 export const quizFetchPath = {
     url: API_PATH.quiz.pagination,
@@ -105,11 +114,12 @@ export const sentTaskPath = {
     },
     presentData: (data) => data.map((item: any) => ({
         key: item.id,
+        id: item.id,
         task: item.title,
         assignedTo: item.assignee?.name || "Hiệu trưởng",
         deadline: formatDate(item.endTime),
         content: item.description,
-        status: item.status
+        status: requestStatus[item.status]
     }))
 }
 
@@ -121,10 +131,11 @@ export const receivedTaskPath = {
     },
     presentData: (data) => data.map((item: any) => ({
         key: item.id,
+        id: item.id,
         task: item.title,
-        assignedBy: item.assignee?.name || "Hiệu trưởng",
+        assignedBy: item.assigner?.name || "Hiệu trưởng",
         deadline: formatDate(item.endTime),
         content: item.description,
-        status: item.status
+        status: requestStatus[item.status]
     }))
 }

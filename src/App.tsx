@@ -43,7 +43,7 @@ const App: React.FC = () => {
 					<Route element={<ProtectedRoute isAllowed={!isAuthenticated} />}>
 						<Route element={<AdminLayout />}>
 							<Route path="/principal" element={<AdminPage />} />
-							<Route path="/principal/page-one" element={<PageOne />} />
+							{/*<Route path="/principal/page-one" element={<PageOne />} />*/}
 							<Route path="/principal/dashboard" element={<Dashboard />} />
 							<Route path="/principal/class" element={<ClassPage />} />
 							<Route path="/principal/document" element={<DocumentPage />} />

@@ -3,15 +3,25 @@ import {useState} from "react";
 import {columnsReceived, columnsSent} from "./column.tsx";
 import useFetchApi from "../../hooks/useFetchApi.ts";
 import {receivedTaskPath, sentTaskPath} from "../../helpers/api-params/auth.ts";
+import useEditApi from "../../hooks/useEditApi.ts";
 
 export const RequestTable = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [viewMode, setViewMode] = useState<'received' | 'sent'>('received');
     const [selectedTask, setSelectedTask] = useState<any | null>(null);
 
+    const sentTaskApi = useFetchApi(sentTaskPath)
+    const receivedTaskApi = useFetchApi(receivedTaskPath)
+
+    const taskEdit = useEditApi({
+        url: `/tasks/${selectedTask?.id}`,
+        successMsg: "Sửa trạng thái yêu cầu thành công!",
+        errorMsg: "Sửa trạng thái yêu cầu thất bại, vui lòng thử lại.",
+        fullResp: true,
+    })
+
     const handleRowClick = (task: any) => {
         setSelectedTask(task);
-        setIsModalVisible(true);
     };
 
     const handleClose = () => {
@@ -19,11 +29,14 @@ export const RequestTable = () => {
         setSelectedTask(null);
     };
 
-    const sentTaskApi = useFetchApi(sentTaskPath)
-    const receivedTaskApi = useFetchApi(receivedTaskPath)
-
     const sourceTaskApi = viewMode === "received" ? receivedTaskApi : sentTaskApi;
-    const columns = viewMode === "received" ? columnsReceived : columnsSent;
+
+    const handleStatusChange = async (status: any) => {
+        await taskEdit.handleEdit({status});
+        sourceTaskApi.setFetched(false)
+    }
+
+    const columns = viewMode === "received" ? columnsReceived(handleStatusChange) : columnsSent(handleStatusChange);
 
     const handlePageChange = (page: number) => {
         sourceTaskApi?.fetchApi(undefined, {
@@ -39,21 +52,16 @@ export const RequestTable = () => {
             <Space direction="vertical" style={{ width: '100%' }}>
                 <Card title="Phân công công việc" className="mt-6">
                     <Space>
-                        <Segmented
-                            value={viewMode}
-                            onChange={setViewMode}
-                            options={[
-                                { label: 'Yêu Cầu Được Giao', value: "received" },
-                                { label: 'Yêu Cầu Gửi Đi', value: "sent" },
-                            ]}
-                            style={{
-                                backgroundColor: '#f0f0f0',
-                                padding: '5px 10px',
-                                borderRadius: '8px',
-                                marginBottom: '20px',
-                                fontWeight: 'bold',
-                            }}
-                        />
+                        <div className="bg-gray-100 p-2.5 rounded-lg mb-5 font-bold">
+                            <Segmented
+                                value={viewMode}
+                                onChange={setViewMode}
+                                options={[
+                                    {label: 'Yêu Cầu Được Giao', value: "received"},
+                                    {label: 'Yêu Cầu Gửi Đi', value: "sent"},
+                                ]}
+                            />
+                        </div>
                     </Space>
 
                     <Table

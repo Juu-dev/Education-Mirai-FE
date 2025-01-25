@@ -57,7 +57,7 @@ const Request = () => {
         const payload = {
             ...values,
             assignerId: me?.id,
-            status: "Đã giao"
+            status: "delivered"
         }
 
         await tasksApi.handleCreate(payload)
