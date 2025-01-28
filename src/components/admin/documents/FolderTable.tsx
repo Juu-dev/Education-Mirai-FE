@@ -1,6 +1,6 @@
 import {Button, Table} from "antd";
 import {FolderOpenOutlined} from "@ant-design/icons";
-import useFetchApi from "../../../hooks/useFetchApi.ts";
+import useFetchApi from "../../../hooks/useFetchApi";
 import {useNavigate} from "react-router-dom";
 
 interface Props {

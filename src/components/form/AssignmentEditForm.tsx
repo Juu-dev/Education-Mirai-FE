@@ -1,9 +1,9 @@
 import {Form, Input, Button, Select, InputNumber} from 'antd';
 import {FC, useEffect} from 'react';
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import useAuth from "../../hooks/useAuth.ts";
-import useEditApi from "../../hooks/useEditApi.ts";
-import {quizzesFetchPath} from "../../helpers/api-params/auth.ts";
+import useFetchApi from "../../hooks/useFetchApi";
+import useAuth from "../../hooks/useAuth";
+import useEditApi from "../../hooks/useEditApi";
+import {quizzesFetchPath} from "../../helpers/api-params/auth";
 
 interface AdminAssignmentModalProps {
     assignment?: AssignmentDetails | null;

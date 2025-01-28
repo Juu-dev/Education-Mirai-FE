@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, Input} from "antd";
-import PageTitle from "../../components/common/SectionTitle.tsx";
+import PageTitle from "../../components/common/SectionTitle";
 
 const SearchSection: React.FC = () => (
     <Card className="mb-4 shadow-md">

@@ -1,5 +1,5 @@
-import {formatDate} from "../date.ts";
-import {requestStatus} from "../../constants/status/requestStatus.ts";
+import {formatDate} from "../date";
+import {requestStatus} from "../../constants/status/requestStatus";
 
 const API_PATH = {
     login: '/auth/login',

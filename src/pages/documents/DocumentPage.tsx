@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import {Button, Input, Select} from "antd";
 import {FolderAddOutlined, FileAddOutlined, ArrowLeftOutlined} from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
-import PageTitle from "../../components/common/SectionTitle.tsx";
-import UploadButton from "../../components/admin/UploadButton.tsx";
-import DocumentsTable from "../../components/admin/documents/DocumentsTable.tsx";
-import FolderTable from "../../components/admin/documents/FolderTable.tsx";
-import useAuth from "../../hooks/useAuth.ts";
-import {MENU_UPLOAD} from "../../constants/document-type.ts";
-import useModal from "../../hooks/modal/useModal.tsx";
-import useDebounce from "../../hooks/useDebounce.ts";
-import {addTemplateModalParams, shareDocumentModalParams, templateModalParams} from "./modal-params.tsx";
+import PageTitle from "../../components/common/SectionTitle";
+import UploadButton from "../../components/admin/UploadButton";
+import DocumentsTable from "../../components/admin/documents/DocumentsTable";
+import FolderTable from "../../components/admin/documents/FolderTable";
+import useAuth from "../../hooks/useAuth";
+import {MENU_UPLOAD} from "../../constants/document-type";
+import useModal from "../../hooks/modal/useModal";
+import useDebounce from "../../hooks/useDebounce";
+import {addTemplateModalParams, shareDocumentModalParams, templateModalParams} from "./modal-params";
 
 const DocumentPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");

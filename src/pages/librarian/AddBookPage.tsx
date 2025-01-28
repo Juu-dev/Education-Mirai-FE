@@ -3,9 +3,9 @@ import {Button, Form} from 'antd';
 import { BookList } from "../../components/book/BookList";
 
 
-import AddBookForm from "../../components/library/form/AddBookForm.tsx";
-import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
-import useModal from "../../hooks/modal/useModal.tsx";
+import AddBookForm from "../../components/library/form/AddBookForm";
+import useCreateApiFormData from "../../hooks/useCreateApiFormData";
+import useModal from "../../hooks/modal/useModal";
 
 export const AddBookPage: React.FC = () => {
   const [isTableDataUpdated, setIsTableDataUpdated] = useState(false);

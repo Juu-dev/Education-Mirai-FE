@@ -6,26 +6,26 @@ import ProtectedRoute from './components/route/ProtectedRoute';
 import UserPage from './pages/user';
 import HomePage from './pages/homepage';
 import UserLayout from './components/layout/UserLayout';
-import { UserBookSection } from './pages/user/UserBookSection.tsx';
+import { UserBookSection } from './pages/user/UserBookSection';
 import { UserBookReadingList } from './pages/user/UserBookReadingList';
 import { BookDetailPage } from './pages/user/BookDetailPage';
 import { AssignmentPage } from './pages/user/AssginmentPage';
-import AssignmentDetail from './pages/assignment/AssignmentDetail.tsx';
+import AssignmentDetail from './pages/assignment/AssignmentDetail';
 import AdminLayout from './components/layout/AdminLayout';
-import Dashboard from './pages/dashboard/Dashboard.tsx';
-import Class from './pages/class/Class.tsx';
-import DocumentPage from './pages/documents/DocumentPage.tsx';
-import StatisticalPage from './pages/librarian/StatisticalPage.tsx';
-import { AddBookPage } from './pages/librarian/AddBookPage.tsx';
-import Request from './pages/request/Request.tsx';
+import Dashboard from './pages/dashboard/Dashboard';
+import Class from './pages/class/Class';
+import DocumentPage from './pages/documents/DocumentPage';
+import StatisticalPage from './pages/librarian/StatisticalPage';
+import { AddBookPage } from './pages/librarian/AddBookPage';
+import Request from './pages/request/Request';
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage'
 import AuthProvider from "./context/AuthContext";
-import useAuth from "./hooks/useAuth.ts";
-import AssignmentResult from "./pages/assignment/AssignmentResult.tsx";
-import ProfilePage from "./pages/profile/ProfilePage.tsx";
-import School from "./pages/class/School.tsx";
-import TeacherAssignment from "./pages/manage-teacher/TeacherAssignment.tsx";
+import useAuth from "./hooks/useAuth";
+import AssignmentResult from "./pages/assignment/AssignmentResult";
+import ProfilePage from "./pages/profile/ProfilePage";
+import School from "./pages/class/School";
+import TeacherAssignment from "./pages/manage-teacher/TeacherAssignment";
 
 const App: React.FC = () => {
 	const {isAuthenticated} = useAuth()

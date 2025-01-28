@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Input, Button, Form, Avatar, notification, DatePicker, Select } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import useAuth from "../../hooks/useAuth.ts";
-import useEditApi from "../../hooks/useEditApi.ts";
+import useAuth from "../../hooks/useAuth";
+import useEditApi from "../../hooks/useEditApi";
 
 const { Option } = Select;
 

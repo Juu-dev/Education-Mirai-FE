@@ -1,6 +1,6 @@
 import {Card, Empty} from "antd";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import {splitDateTime} from "../../helpers/date.ts";
+import useFetchApi from "../../hooks/useFetchApi";
+import {splitDateTime} from "../../helpers/date";
 
 export const UpcomingSchedule = () => {
     const upcomingTask = useFetchApi({

@@ -1,9 +1,9 @@
 import { Button, Card, Progress } from "antd";
 import { CheckOutlined, SendOutlined } from "@ant-design/icons";
-import {RequestTable} from "../request/RequestTable.tsx";
-import {ProfileCard} from "./ProfileCard.tsx";
-import {SummaryStatistics} from "./SummaryStatistics.tsx";
-import {UpcomingSchedule} from "./UpcomingSchedule.tsx";
+import {RequestTable} from "../request/RequestTable";
+import {ProfileCard} from "./ProfileCard";
+import {SummaryStatistics} from "./SummaryStatistics";
+import {UpcomingSchedule} from "./UpcomingSchedule";
 
 const goals = {
     current: 10,

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Button, Input, Form, Typography, Divider, Space, message, Switch} from "antd";
-import ListAddedQuestions from "./ListAddedQuestions.tsx";
-import useEditApi from "../../../hooks/useEditApi.ts";
-import PreviewQuestion from "./PreviewQuestion.tsx";
+import ListAddedQuestions from "./ListAddedQuestions";
+import useEditApi from "../../../hooks/useEditApi";
+import PreviewQuestion from "./PreviewQuestion";
 
 interface QuizEditFormProps {
     quiz?: {

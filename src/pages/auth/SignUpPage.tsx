@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useCreateApi from "../../hooks/useCreateApi";
 import {Form, Checkbox, Input, Select, Alert, message, Button, Typography} from "antd";
 import useFetchApi from "../../hooks/useFetchApi";
-import {classPath, registerPath} from "../../helpers/api-params/auth.ts";
+import {classPath, registerPath} from "../../helpers/api-params/auth";
 
 const { Title, Text, Link } = Typography;
 

@@ -1,9 +1,9 @@
 import { Form, Input, Select, DatePicker, Button, message } from 'antd';
-import PageTitle from "../../components/common/SectionTitle.tsx";
-import useCreateApi from "../../hooks/useCreateApi.ts";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import {Role} from "../../constants/roles/role.ts";
-import useAuth from "../../hooks/useAuth.ts";
+import PageTitle from "../../components/common/SectionTitle";
+import useCreateApi from "../../hooks/useCreateApi";
+import useFetchApi from "../../hooks/useFetchApi";
+import {Role} from "../../constants/roles/role";
+import useAuth from "../../hooks/useAuth";
 
 const { TextArea } = Input;
 const { Option } = Select;

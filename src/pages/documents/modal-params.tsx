@@ -1,6 +1,6 @@
 import {Button, Input, Select, Table, Upload} from "antd";
-import {OBJECT_DATA, SHARE_LIST_DATA, TEMPLATE_DATA} from "../../constants/mocks/document.ts";
-import {SHARE_LIST_COLUMNS, TEMPLATE_COLUMNS} from "../../constants/document-modal.tsx";
+import {OBJECT_DATA, SHARE_LIST_DATA, TEMPLATE_DATA} from "../../constants/mocks/document";
+import {SHARE_LIST_COLUMNS, TEMPLATE_COLUMNS} from "../../constants/document-modal";
 import {UploadOutlined} from "@ant-design/icons";
 
 export const templateModalParams = (openModal: () => void) => ({

@@ -1,7 +1,7 @@
 import { Button } from "antd"
 
 import { useNavigate } from "react-router-dom"
-import {BookSection} from "./BookSection.tsx";
+import {BookSection} from "./BookSection";
 
 export const UserBookSection = () => {
     const navigate  = useNavigate();

@@ -1,10 +1,10 @@
 import {Button, message, Pagination, Space, Table} from "antd";
 import {DeleteOutlined, DownloadOutlined, ShareAltOutlined, LinkOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
-import useFetchApi from "../../../hooks/useFetchApi.ts";
-import {getValueFromMenuUploadByKey} from "../../../constants/document-type.ts";
-import useModal from "../../../hooks/modal/useModal.tsx";
-import useDeleteApi from "../../../hooks/useDeleteApi.ts";
+import useFetchApi from "../../../hooks/useFetchApi";
+import {getValueFromMenuUploadByKey} from "../../../constants/document-type";
+import useModal from "../../../hooks/modal/useModal";
+import useDeleteApi from "../../../hooks/useDeleteApi";
 
 interface Props {
     handleShareClick: () => void;

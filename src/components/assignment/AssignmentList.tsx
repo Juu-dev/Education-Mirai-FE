@@ -1,5 +1,5 @@
-import {AssignmentCard} from "./AssignmentCard.tsx";
-import useFetchApi from "../../hooks/useFetchApi.ts";
+import {AssignmentCard} from "./AssignmentCard";
+import useFetchApi from "../../hooks/useFetchApi";
 import {useNavigate} from "react-router-dom";
 import {Col, Pagination, Row} from "antd";
 

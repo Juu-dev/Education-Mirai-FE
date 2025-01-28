@@ -1,14 +1,14 @@
-import PageTitle from "../../components/common/SectionTitle.tsx";
+import PageTitle from "../../components/common/SectionTitle";
 import {Button, Card, Pagination, Table} from "antd";
-import {columnsQuiz} from "./column.tsx";
-import useModal from "../../hooks/modal/useModal.tsx";
-import QuizForm from "../../components/form/QuizForm.tsx";
+import {columnsQuiz} from "./column";
+import useModal from "../../hooks/modal/useModal";
+import QuizForm from "../../components/form/QuizForm";
 import QuizEditForm from "../../components/form/QuizEditForm";
-import useConfirmModal from "../../hooks/modal/useConfirmModal.tsx";
+import useConfirmModal from "../../hooks/modal/useConfirmModal";
 import {useState} from "react";
-import useDeleteApi from "../../hooks/useDeleteApi.ts";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import {quizFetchPath} from "../../helpers/api-params/auth.ts";
+import useDeleteApi from "../../hooks/useDeleteApi";
+import useFetchApi from "../../hooks/useFetchApi";
+import {quizFetchPath} from "../../helpers/api-params/auth";
 
 export const QuizSection = ({classId}) => {
     const [selectedQuiz, setSelectedQuiz] = useState(null);

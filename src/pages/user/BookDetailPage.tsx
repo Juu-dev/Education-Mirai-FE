@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { CommentSection } from "../../components/book/comment/CommentSection";
 import { BookInterface } from "../../components/book/interface/book-interface";
 import { Button } from "antd";
-import useFetchApi from "../../hooks/useFetchApi.ts";
+import useFetchApi from "../../hooks/useFetchApi";
 
 export const BookDetailPage = () => {
     const { id } = useParams<{ id: string }>();

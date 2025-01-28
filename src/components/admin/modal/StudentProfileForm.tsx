@@ -1,8 +1,8 @@
 import {Form, Input, Button, Select} from "antd";
-import useEditApi from "../../../hooks/useEditApi.ts";
+import useEditApi from "../../../hooks/useEditApi";
 import React, {useEffect} from "react";
-import useFetchApi from "../../../hooks/useFetchApi.ts";
-import {classPath} from "../../../helpers/api-params/auth.ts";
+import useFetchApi from "../../../hooks/useFetchApi";
+import {classPath} from "../../../helpers/api-params/auth";
 
 interface StudentProfileModalProps {
     studentData: any | null;

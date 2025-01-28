@@ -1,6 +1,6 @@
 import {Avatar, Card} from "antd";
-import useAuth from "../../hooks/useAuth.ts";
-import {Role} from "../../constants/roles/role.ts";
+import useAuth from "../../hooks/useAuth";
+import {Role} from "../../constants/roles/role";
 
 const roleName = {
     [Role.Teacher]: "Giáo Viên",

@@ -1,6 +1,6 @@
 import React from "react";
 import {Modal, Button, message} from "antd";
-import useDeleteApi from "../../../hooks/useDeleteApi.ts";
+import useDeleteApi from "../../../hooks/useDeleteApi";
 
 interface DeleteDocumentModalProps {
     visible: boolean;

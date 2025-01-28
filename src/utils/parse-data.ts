@@ -1,4 +1,4 @@
-import {formatDate} from "../helpers/date.ts";
+import {formatDate} from "../helpers/date";
 
 export const parseTeacherData = (data: any) => ({
     avatar: "https://i.pravatar.cc/150?img=4",

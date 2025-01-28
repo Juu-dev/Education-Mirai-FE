@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import {Button, Card, Table, Upload, message, Radio, Pagination} from 'antd';
 import { Line } from '@ant-design/charts';
 import * as XLSX from 'xlsx';
-import useCreateApi from "../../hooks/useCreateApi.ts";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import useAuth from "../../hooks/useAuth.ts";
-import useModal from "../../hooks/modal/useModal.tsx";
+import useCreateApi from "../../hooks/useCreateApi";
+import useFetchApi from "../../hooks/useFetchApi";
+import useAuth from "../../hooks/useAuth";
+import useModal from "../../hooks/modal/useModal";
 
 const borrowData = [
   { date: '01', count: 20 },

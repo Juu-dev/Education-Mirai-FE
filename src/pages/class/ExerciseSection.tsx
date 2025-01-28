@@ -1,16 +1,16 @@
-import PageTitle from "../../components/common/SectionTitle.tsx";
+import PageTitle from "../../components/common/SectionTitle";
 import {Button, Card, Pagination, Table} from "antd";
 import {useState} from "react";
-import useConfirmModal from "../../hooks/modal/useConfirmModal.tsx";
-import useDeleteApi from "../../hooks/useDeleteApi.ts";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import {exerciseFetchPath} from "../../helpers/api-params/auth.ts";
-import AssignmentForm from "../../components/form/AssignmentForm.tsx";
-import AssignmentEditForm from "../../components/form/AssignmentEditForm.tsx";
-import useModal from "../../hooks/modal/useModal.tsx";
-import useAuth from "../../hooks/useAuth.ts";
-import {columnsExercise} from "./column.tsx";
-import {AssignmentDetail} from "./AssignmentDetail.tsx";
+import useConfirmModal from "../../hooks/modal/useConfirmModal";
+import useDeleteApi from "../../hooks/useDeleteApi";
+import useFetchApi from "../../hooks/useFetchApi";
+import {exerciseFetchPath} from "../../helpers/api-params/auth";
+import AssignmentForm from "../../components/form/AssignmentForm";
+import AssignmentEditForm from "../../components/form/AssignmentEditForm";
+import useModal from "../../hooks/modal/useModal";
+import useAuth from "../../hooks/useAuth";
+import {columnsExercise} from "./column";
+import {AssignmentDetail} from "./AssignmentDetail";
 
 export const ExerciseSection = ({classId}) => {
     const {isPrincipal} = useAuth()

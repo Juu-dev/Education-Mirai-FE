@@ -1,10 +1,10 @@
 import React from "react";
-import {StudentSection} from "./StudentSection.tsx";
-import {QuizSection} from "./QuizSection.tsx";
-import {ExerciseSection} from "./ExerciseSection.tsx";
+import {StudentSection} from "./StudentSection";
+import {QuizSection} from "./QuizSection";
+import {ExerciseSection} from "./ExerciseSection";
 import {useLocation} from "react-router-dom";
-import PageTitle from "../../components/common/SectionTitle.tsx";
-import useAuth from "../../hooks/useAuth.ts";
+import PageTitle from "../../components/common/SectionTitle";
+import useAuth from "../../hooks/useAuth";
 
 const Class: React.FC = () => {
     const location = useLocation();

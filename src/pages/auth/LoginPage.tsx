@@ -8,7 +8,7 @@ import {
   Typography,
   message,
 } from 'antd';
-import useAuth from "../../hooks/useAuth.ts";
+import useAuth from "../../hooks/useAuth";
 
 const { Title, Text, Link } = Typography;
 

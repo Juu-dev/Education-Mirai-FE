@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {Button, Input, Form, Typography, Divider, Space, message, Switch} from "antd";
-import useCreateApi from "../../hooks/useCreateApi.ts";
-import ListAddedQuestions from "./QuizEditForm/ListAddedQuestions.tsx";
-import PreviewQuestion from "./QuizEditForm/PreviewQuestion.tsx";
+import useCreateApi from "../../hooks/useCreateApi";
+import ListAddedQuestions from "./QuizEditForm/ListAddedQuestions";
+import PreviewQuestion from "./QuizEditForm/PreviewQuestion";
 
 interface QuizFormProps {
     onClose: () => void

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Image } from "antd";
 import { BookInterface } from "./interface/book-interface";
-import useAuth from "../../hooks/useAuth.ts";
+import useAuth from "../../hooks/useAuth";
 
 interface BookProps {
     book: BookInterface;

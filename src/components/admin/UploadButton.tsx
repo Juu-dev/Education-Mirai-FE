@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Upload, message, Dropdown, Menu } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import useCreateApiFormData from "../../hooks/useCreateApiFormData.ts";
-import useAuth from "../../hooks/useAuth.ts";
-import {IMenuItem, MENU_UPLOAD} from "../../constants/document-type.ts";
+import useCreateApiFormData from "../../hooks/useCreateApiFormData";
+import useAuth from "../../hooks/useAuth";
+import {IMenuItem, MENU_UPLOAD} from "../../constants/document-type";
 
 interface UploadButtonProps {
     onUploadSuccess: () => void;

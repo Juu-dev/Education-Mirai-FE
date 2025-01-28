@@ -1,9 +1,9 @@
 import {Button, Card, Modal, Pagination, Segmented, Space, Table} from "antd";
 import {useState} from "react";
-import {columnsReceived, columnsSent} from "./column.tsx";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import {receivedTaskPath, sentTaskPath} from "../../helpers/api-params/auth.ts";
-import useEditApi from "../../hooks/useEditApi.ts";
+import {columnsReceived, columnsSent} from "./column";
+import useFetchApi from "../../hooks/useFetchApi";
+import {receivedTaskPath, sentTaskPath} from "../../helpers/api-params/auth";
+import useEditApi from "../../hooks/useEditApi";
 
 export const RequestTable = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);

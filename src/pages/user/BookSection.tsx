@@ -2,8 +2,8 @@ import {Empty, Pagination} from "antd"; // Ant Design Pagination
 
 import useFetchApi from "../../hooks/useFetchApi";
 import {useEffect} from "react";
-import {BookInterface} from "../../components/book/interface/book-interface.ts";
-import {BookComponent} from "../../components/book/BookComponent.tsx";
+import {BookInterface} from "../../components/book/interface/book-interface";
+import {BookComponent} from "../../components/book/BookComponent";
 
 export const BookSection = ({isRefresh, type}: {isRefresh: boolean, type: string}) => {
     const booksApi = useFetchApi<BookInterface[]>({

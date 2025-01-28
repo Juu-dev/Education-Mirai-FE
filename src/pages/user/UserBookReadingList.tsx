@@ -3,8 +3,8 @@ import { FilterSection } from "../../components/book/filter/FilterSection"
 import { filters } from "../../constants/mocks/filters";
 // import { books } from "../../constants/mocks/book";
 // import { debounce } from "../../utils/debounce";
-// import useFetchApi from "../../hooks/useFetchApi.ts";
-// import {BookInterface} from "../../components/book/interface/book-interface.ts";
+// import useFetchApi from "../../hooks/useFetchApi";
+// import {BookInterface} from "../../components/book/interface/book-interface";
 // import { useEffect, useState, useCallback } from "react";
 
 export const UserBookReadingList = () => {

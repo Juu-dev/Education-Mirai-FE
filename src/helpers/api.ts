@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import tokenFactory from "./token";
-import {API_URL} from "./env.ts";
+import {API_URL} from "./env";
 
 const client = axios.create({ timeout: 60000 });
 

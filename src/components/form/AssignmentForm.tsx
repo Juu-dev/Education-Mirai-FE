@@ -1,9 +1,9 @@
 import {Form, Input, Button, Select, InputNumber} from 'antd';
 import { FC } from 'react';
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import useCreateApi from "../../hooks/useCreateApi.ts";
-import useAuth from "../../hooks/useAuth.ts";
-import {classesFetchPath, exerciseCreatePath, quizzesFetchPath} from "../../helpers/api-params/auth.ts";
+import useFetchApi from "../../hooks/useFetchApi";
+import useCreateApi from "../../hooks/useCreateApi";
+import useAuth from "../../hooks/useAuth";
+import {classesFetchPath, exerciseCreatePath, quizzesFetchPath} from "../../helpers/api-params/auth";
 
 interface AdminAssignmentModalProps {
     onSuccess: () => void;

@@ -7,7 +7,7 @@ import useCreateApi from '../hooks/useCreateApi';
 import { Role } from '../constants/roles/role.ts';
 import useFetchApi from '../hooks/useFetchApi';
 import {message} from "antd";
-import {loginPath, logoutPath, refreshTokenPath} from "../helpers/api-params/auth.ts";
+import {loginPath, logoutPath, refreshTokenPath} from "../helpers/api-params/auth";
 
 interface User {
   id: string;

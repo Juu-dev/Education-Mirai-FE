@@ -1,6 +1,6 @@
 import { Table } from "antd";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import {formatDateTime} from "../../helpers/date.ts";
+import useFetchApi from "../../hooks/useFetchApi";
+import {formatDateTime} from "../../helpers/date";
 
 export const AssignmentDetail = ({ assignment }) => {
     // Cột bảng cho học sinh

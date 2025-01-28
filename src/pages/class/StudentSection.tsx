@@ -1,14 +1,14 @@
 import {Button, Card, Pagination, Table} from "antd";
-import PageTitle from "../../components/common/SectionTitle.tsx";
-import {columnsStudent} from "./column.tsx";
-import {parseStudentData} from "../../utils/parse-data.ts";
+import PageTitle from "../../components/common/SectionTitle";
+import {columnsStudent} from "./column";
+import {parseStudentData} from "../../utils/parse-data";
 import {useEffect, useState} from "react";
-import useModal from "../../hooks/modal/useModal.tsx";
-import StudentProfileForm from "../../components/admin/modal/StudentProfileForm.tsx";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import useAuth from "../../hooks/useAuth.ts";
-import useConfirmModal from "../../hooks/modal/useConfirmModal.tsx";
-import useDeleteApi from "../../hooks/useDeleteApi.ts";
+import useModal from "../../hooks/modal/useModal";
+import StudentProfileForm from "../../components/admin/modal/StudentProfileForm";
+import useFetchApi from "../../hooks/useFetchApi";
+import useAuth from "../../hooks/useAuth";
+import useConfirmModal from "../../hooks/modal/useConfirmModal";
+import useDeleteApi from "../../hooks/useDeleteApi";
 
 export const StudentSection = ({classId}) => {
     const [selectedStudent, setSelectedStudent] = useState(null);

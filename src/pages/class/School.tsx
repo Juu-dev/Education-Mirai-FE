@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Table, Input, Button, Pagination} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import PageTitle from "../../components/common/SectionTitle.tsx";
-import useFetchApi from "../../hooks/useFetchApi.ts";
-import useDebounce from "../../hooks/useDebounce.ts";
+import PageTitle from "../../components/common/SectionTitle";
+import useFetchApi from "../../hooks/useFetchApi";
+import useDebounce from "../../hooks/useDebounce";
 import {useNavigate} from "react-router-dom";
 
 const School = () => {

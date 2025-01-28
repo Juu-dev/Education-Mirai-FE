@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useFetchApi from "../../hooks/useFetchApi.ts";
+import useFetchApi from "../../hooks/useFetchApi";
 import { Button, Card, Radio, Space, Typography } from "antd";
-import { useCountdown } from "../../hooks/useCountdown.tsx";
-import useAuth from "../../hooks/useAuth.ts";
-import useCreateApi from "../../hooks/useCreateApi.ts";
-import { formatTime } from "../../helpers/date.ts";
+import { useCountdown } from "../../hooks/useCountdown";
+import useAuth from "../../hooks/useAuth";
+import useCreateApi from "../../hooks/useCreateApi";
+import { formatTime } from "../../helpers/date";
 
 const { Title, Text } = Typography;
 
