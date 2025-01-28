@@ -1,16 +1,15 @@
 import { Outlet, useLocation, Link } from "react-router-dom";
 import logo from "../../assets/logo/san-sang.png";
-import { BellOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, Menu } from "antd";
 import useAuth from "../../hooks/useAuth";
 import { Role } from "../../constants/roles/role.ts";
 
 const AdminLayout = () => {
-    const { me } = useAuth(); // Lấy vai trò từ context
+    const { me } = useAuth();
     const role = me?.role
-    const location = useLocation(); // Lấy đường dẫn hiện tại
+    const location = useLocation();
 
-    // Menu thả xuống cho hồ sơ
     const menuItems = [
         { key: "profile", label: <Link to="/profile">Hồ sơ</Link> },
         { key: "settings", label: <Link to="/settings">Cài đặt</Link> },
@@ -24,7 +23,6 @@ const AdminLayout = () => {
         },
     ];
 
-    // Các mục sidebar động dựa trên vai trò
     const sidebarItems =
         role === Role.Librarian
             ? [
@@ -32,8 +30,6 @@ const AdminLayout = () => {
                 { key: "/library", label: "Thư viện" },
                 { key: "/librarian/document", label: "Tài liệu" },
                 { key: "/librarian/books", label: "Thêm sách" },
-                // { key: "/librarian/reports", label: "Gửi yêu cầu" },
-                // { key: "/librarian/settings", label: "Tài khoản" },
             ]
             : role === Role.Teacher
             ? [
@@ -49,7 +45,7 @@ const AdminLayout = () => {
                 { key: "/principal/school", label: "Trường" },
                 { key: "/principal/document", label: "Tài liệu" },
                 { key: "/principal/request", label: "Gửi yêu cầu" },
-                // { key: "/principal/settings", label: "Tài khoản" },
+                { key: "/principal/teacher-assignment", label: "Phân bổ giáo viên" },
             ];
 
     const isActive = (path: string) => location.pathname === path; // Kiểm tra xem đường dẫn hiện tại có khớp không
