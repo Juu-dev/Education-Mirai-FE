@@ -8,8 +8,8 @@ const TeacherAssignment = () => {
         auth: false,
         initQueries: {pageSize: 10},
         presentData: (data) => data.map((e) => ({
-            classId: e.id,
-            className: e.name,
+            id: e.id,
+            name: `Lớp ${e.name}`,
             teacher: {
                 id: e.user[0]?.id,
                 name: e?.user[0]?.name,
@@ -31,13 +31,17 @@ const TeacherAssignment = () => {
             <Row gutter={16}>
                 <Col span={8}>
                     <Card title="Giáo viên" className="bg-white shadow-md h-[90vh]">
-                        {teachers.data.map((teacher: any) => (
-                            <div
-                                key={teacher.id}
-                            >
-                                {teacher.name}
-                            </div>
-                        ))}
+                        <div
+                            className="max-h-[calc(100vh-200px)] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 scrollbar-rounded-lg">
+                            {teachers.data.map((teacher: any) => (
+                                <div
+                                    key={teacher.id}
+                                    className="p-2 border-b last:border-b-0 hover:bg-gray-100 transition duration-200 ease-in-out"
+                                >
+                                    {teacher.name}
+                                </div>
+                            ))}
+                        </div>
                     </Card>
                 </Col>
 
