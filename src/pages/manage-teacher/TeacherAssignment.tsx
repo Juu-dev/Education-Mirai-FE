@@ -46,7 +46,7 @@ const TeacherAssignment = () => {
 
     useEffect(() => {
         if (classes.data.length) {
-            const initialAssignments = classes.data.reduce((acc: { [key: string]: string }, classItem: any) => {
+            const initialAssignments: any = classes.data.reduce((acc: { [key: string]: string }, classItem: any) => {
                 if (classItem.teacher?.id) {
                     acc[classItem.classId] = classItem.teacher.id;
                 }
@@ -57,7 +57,7 @@ const TeacherAssignment = () => {
     }, [classes.data]);
 
     useEffect(() => {
-        const count = classes.data.reduce((acc: { [key: string]: number }, classItem: any) => {
+        const count: any = classes.data.reduce((acc: { [key: string]: number }, classItem: any) => {
             const teacherId = assignedTeachers[classItem.classId];
             if (teacherId) {
                 acc[teacherId] = (acc[teacherId] || 0) + 1;

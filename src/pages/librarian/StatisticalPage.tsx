@@ -60,8 +60,8 @@ const StatisticalPage: React.FC = () => {
     fullResp: true,
   });
 
-  const bookImport = useFetchApi({ url: "/books-imports/pagination", auth: true });
-  const overviewBook = useFetchApi({ url: "/books-imports/overview", auth: true });
+  const bookImport: any = useFetchApi({ url: "/books-imports/pagination", auth: true });
+  const overviewBook: any = useFetchApi({ url: "/books-imports/overview", auth: true });
 
   console.log("overviewBook: ", overviewBook.data)
 

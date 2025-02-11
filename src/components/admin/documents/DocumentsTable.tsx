@@ -1,10 +1,19 @@
-import {Button, message, Pagination, Space, Table} from "antd";
-import {DeleteOutlined, DownloadOutlined, ShareAltOutlined, LinkOutlined} from "@ant-design/icons";
-import React, {useEffect, useState} from "react";
+import { Button, message, Pagination, Space, Table } from "antd";
+import { DeleteOutlined, DownloadOutlined, ShareAltOutlined, LinkOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 import useFetchApi from "../../../hooks/useFetchApi";
-import {getValueFromMenuUploadByKey} from "../../../constants/document-type";
+import { getValueFromMenuUploadByKey } from "../../../constants/document-type";
 import useModal from "../../../hooks/modal/useModal";
 import useDeleteApi from "../../../hooks/useDeleteApi";
+
+interface Document {
+    id: string;
+    description: string;
+    type: string;
+    createdAt: string;
+    user: { name: string };
+    url: string;
+}
 
 interface Props {
     handleShareClick: () => void;
@@ -21,34 +30,34 @@ const DocumentTable: React.FC<Props> = ({
     searchTerm,
     filterType,
 }: Props) => {
-    const [selectedDocument, setSelectedDocument] = useState(null);
+    const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
 
-    const {deleting, handleDelete} = useDeleteApi({url: `/documents/${selectedDocument?.id}`, auth: true})
-    const documentsApi = useFetchApi({url: `/documents/pagination/${userId}`, auth: true})
+    const { deleting, handleDelete } = useDeleteApi({ url: `/documents/${selectedDocument?.id}`, auth: true });
+    const documentsApi: any = useFetchApi({ url: `/documents/pagination/${userId}`, auth: true });
 
     const handleOkClick = async () => {
         const success = await handleDelete();
         if (success) {
             message.success("Xóa tài liệu thành công!");
             await handleRefresh();
-            deleteDocumentModal.closeModal()
+            deleteDocumentModal.closeModal();
         } else {
             message.error("Xóa tài liệu thất bại. Vui lòng thử lại!");
-            deleteDocumentModal.closeModal()
+            deleteDocumentModal.closeModal();
         }
-    }
+    };
 
     useEffect(() => {
-        const params = {};
+        const params: Record<string, any> = {};
 
         if (searchTerm) params.search = searchTerm;
-        if (filterType) params.type = filterType;
+        if (filterType.length > 0) params.type = filterType;
 
-        documentsApi.fetchApi(`/documents/pagination/${userId}`, {params});
-    }, [userId, searchTerm, filterType?.length]);
+        documentsApi.fetchApi(`/documents/pagination/${userId}`, { params });
+    }, [userId, searchTerm, filterType]);
 
     const handleRefresh = async () => {
-        await documentsApi.fetchApi();
+        await documentsApi.fetchApi(`/documents/pagination/${userId}`);
     };
 
     const handlePageChange = (page: number) => {
@@ -61,27 +70,21 @@ const DocumentTable: React.FC<Props> = ({
 
     const deleteDocumentModal = useModal({
         title: "Xác nhận xoá tài liệu",
-        content: <p>Bạn có chắc chắn muốn xoá tài liệu <b>{selectedDocument?.name}</b> ?</p>,
+        content: <p>Bạn có chắc chắn muốn xoá tài liệu <b>{selectedDocument?.description}</b> ?</p>,
         handleOk: handleOkClick,
-        footer:
+        footer: (
             <>
-                <Button key="cancel">
-                    No
-                </Button>
-                <Button
-                    key="ok"
-                    type="primary"
-                    onClick={handleOkClick}
-                    loading={deleting}
-                >
+                <Button key="cancel">No</Button>
+                <Button key="ok" type="primary" onClick={handleOkClick} loading={deleting}>
                     Yes
                 </Button>
             </>
-    })
+        ),
+    });
 
-    const handleDeleteDocument = (row) => {
+    const handleDeleteDocument = (row: Document) => {
         setSelectedDocument(row);
-        deleteDocumentModal.openModal()
+        deleteDocumentModal.openModal();
     };
 
     const columns = [
@@ -92,56 +95,45 @@ const DocumentTable: React.FC<Props> = ({
         {
             title: "Hành động",
             key: "action",
-            render: (row: any) => (
+            render: (row: Document) => (
                 <Space size="middle">
-                    <Button
-                        type="link"
-                        onClick={() => window.open(row.url, "_blank")}
-                        icon={<LinkOutlined />}
-                    />
+                    <Button type="link" onClick={() => window.open(row.url, "_blank")} icon={<LinkOutlined />} />
                     <Button icon={<DownloadOutlined />} />
-                    <Button
-                        icon={<ShareAltOutlined />}
-                        onClick={handleShareClick}
-                    />
-                    <Button icon={<DeleteOutlined />} onClick={() =>
-                        handleDeleteDocument(row)
-                    } />
+                    <Button icon={<ShareAltOutlined />} onClick={handleShareClick} />
+                    <Button icon={<DeleteOutlined />} onClick={() => handleDeleteDocument(row)} />
                 </Space>
             ),
         },
     ];
 
-    const parseData = (data: any) =>
-        data.map((e: any) => ({
+    const parseData = (data: Document[]) =>
+        data.map((e) => ({
             key: e.id,
             id: e.id,
             name: e.description,
             type: getValueFromMenuUploadByKey(e.type),
             createdAt: new Date(e.createdAt).toLocaleDateString(),
             owner: e?.user?.name,
-            url: e.url
+            url: e.url,
         }));
 
-    return <>
-        <Table
-            dataSource={parseData(documentsApi.data)}
-            columns={columns}
-            pagination={false}
-        />
+    return (
+        <>
+            <Table dataSource={parseData(documentsApi.data)} columns={columns} pagination={false} />
 
-        <Pagination
-            current={documentsApi?.pagination?.page}
-            total={documentsApi?.count}
-            pageSize={documentsApi?.pagination?.pageSize}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            align="end"
-            className="custom-pagination mt-3"
-        />
+            <Pagination
+                current={documentsApi?.pagination?.page}
+                total={documentsApi?.count}
+                pageSize={documentsApi?.pagination?.pageSize}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+                align="end"
+                className="custom-pagination mt-3"
+            />
 
-        {deleteDocumentModal.modal}
-    </>
+            {deleteDocumentModal.modal}
+        </>
+    );
 };
 
 export default DocumentTable;

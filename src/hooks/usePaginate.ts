@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useFetchApi from "./useFetchApi";
+import * as constants from "node:constants";
 
 interface UsePaginateProps {
     url: string;
@@ -52,7 +53,7 @@ export default function usePaginate({
         params: Partial<PaginateQueries> = {},
         keepData = false
     ) => {
-        await fetchApi(url, { ...queries, ...params }, keepData);
+        await fetchApi(url, { ...queries, ...params } as any, keepData as any);
     };
 
     const onQueryChange = (key: string, value: any, isFetch = false) => {

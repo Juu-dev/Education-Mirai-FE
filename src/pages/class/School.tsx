@@ -65,7 +65,7 @@ const School = () => {
     };
 
     useEffect(() => {
-        const params = {};
+        const params: any = {};
         if (searchTerm) params.search = searchTerm;
         classesPagination.fetchApi(`/classes/pagination`, {params});
     }, [debouncedSearchTerm]);

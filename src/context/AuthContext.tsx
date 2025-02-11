@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import token from '../helpers/token';
 import useCreateApi from '../hooks/useCreateApi';
-import { Role } from '../constants/roles/role.ts';
+import { Role } from '../constants/roles/role';
 import useFetchApi from '../hooks/useFetchApi';
 import {message} from "antd";
 import {loginPath, logoutPath, refreshTokenPath} from "../helpers/api-params/auth";
@@ -90,7 +90,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
   const loginApi = useCreateApi(loginPath);
   const logoutApi = useCreateApi(logoutPath);
-  const refreshTokenApi = useFetchApi(refreshTokenPath);
+  const refreshTokenApi: any = useFetchApi(refreshTokenPath);
 
   const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
   const [me, setMe] = useState<User | null>(null);
@@ -115,7 +115,7 @@ const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const login: IAuthContext['login'] = useCallback(
       async (data: LoginData, onSuccess, onError) => {
         try {
-          const response = await loginApi.handleCreate(data);
+          const response: any = await loginApi.handleCreate(data);
           const { accessToken, user } = response?.result;
           message.success('Đăng nhập thành công!')
 

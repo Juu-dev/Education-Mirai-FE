@@ -72,7 +72,7 @@ const StudentProfileForm: React.FC<StudentProfileModalProps> = ({studentData}) =
                         placeholder="Chọn lớp"
                         className="h-10"
                     >
-                        {classesApi?.data.map((classOption, index) => (
+                        {classesApi?.data.map((classOption: any, index) => (
                             <Select.Option key={index} value={classOption?.id}>
                                 {classOption?.name}
                             </Select.Option>

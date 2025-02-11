@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { CookieAttributes } from 'node_modules/@types/js-cookie';
+import { CookieAttributes } from '../../node_modules/@types/js-cookie';
 
 /**
  * Get access token from local storage

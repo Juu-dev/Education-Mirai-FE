@@ -44,7 +44,7 @@ export default function useEditApi({
             setEditing((prev) =>
                 typeof newEditing === "boolean"
                     ? newEditing
-                    : { ...prev, [newEditing]: true }
+                    : { ...prev as any, [newEditing]: true }
             );
 
             const resp: EditApiResponse = await api(url, {
@@ -80,7 +80,7 @@ export default function useEditApi({
             setEditing((prev) =>
                 typeof newEditing === "boolean"
                     ? !newEditing
-                    : { ...prev, [newEditing]: false }
+                    : { ...prev as any, [newEditing]: false }
             );
         }
     };

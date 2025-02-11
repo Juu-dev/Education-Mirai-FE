@@ -14,7 +14,7 @@ export const AssignmentDetail = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
-    const { data: exerciseData, loading } = useFetchApi({
+    const { data: exerciseData, loading }: {data: any, loading: any} = useFetchApi({
         url: `/exercises/${id}`,
         auth: true,
     });
@@ -26,7 +26,7 @@ export const AssignmentDetail = () => {
         fullResp: true,
     });
 
-    const [time, resetCountdown] = useCountdown();
+    const [time, resetCountdown] = useCountdown(30);
     const [answers, setAnswers] = useState<Record<string, string>>({});
 
     useEffect(() => {
@@ -55,7 +55,7 @@ export const AssignmentDetail = () => {
             })),
         };
 
-        const response = await answersApi.handleCreate(payload);
+        const response: any = await answersApi.handleCreate(payload);
 
         if (response?.result) {
             navigate("/student/result", {

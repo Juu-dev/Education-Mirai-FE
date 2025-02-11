@@ -17,7 +17,7 @@ export const UserBookSection = () => {
                         Xem thêm
                     </Button>
                 </div>
-                <BookSection type="textBooks" />
+                <BookSection isRefresh={false} type="textBooks" />
             </div>
             <div className="book-list-wrapper mb-4">
                 <div className="flex justify-between mb-4">
@@ -28,7 +28,7 @@ export const UserBookSection = () => {
                         Xem thêm
                     </Button>
                 </div>
-                <BookSection type="referenceBooks" />
+                <BookSection isRefresh={false} type="referenceBooks" />
             </div>
             <div className="book-list-wrapper mb-4">
                 <div className="flex justify-between mb-4">
@@ -39,7 +39,7 @@ export const UserBookSection = () => {
                         Xem thêm
                     </Button>
                 </div>
-                <BookSection type="audioBooks" />
+                <BookSection isRefresh={false} type="audioBooks" />
             </div>
         </div>
     )

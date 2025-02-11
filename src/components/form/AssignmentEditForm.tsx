@@ -21,6 +21,7 @@ export interface AssignmentDetails {
     timeOut: number;
     classAssigneeId: string;
     quizId: string;
+    id: string;
 }
 
 const AssignmentEditForm: FC<AdminAssignmentModalProps> = ({assignment, onSuccess}) => {
@@ -107,7 +108,7 @@ const AssignmentEditForm: FC<AdminAssignmentModalProps> = ({assignment, onSucces
             >
                 {/*<Input placeholder={classAssignee?.data?.name}  value={classAssignee?.data?.id} disabled />*/}
                 <Select placeholder="Chọn lớp" disabled>
-                    {[classAssignee?.data].map(group => (
+                    {[classAssignee?.data].map((group: any) => (
                         <Select.Option key={group.id} value={group.id}>
                             {group.name}
                         </Select.Option>

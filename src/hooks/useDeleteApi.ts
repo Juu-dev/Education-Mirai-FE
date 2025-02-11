@@ -27,12 +27,12 @@ export default function useDeleteApi({ url, auth = true, messageSuccess = "Delet
             setDeleting(true);
 
             const options: RequestInit = {
-                body: data,
+                body: data as any,
                 method: "DELETE",
                 // ...(Object.keys(data).length > 0 && { body: data }),
             };
 
-            const resp: ApiResponse = await api(url, options, auth);
+            const resp: ApiResponse = await api(url, options as any, auth);
 
             if (resp.success) {
                 console.log("Deleted successfully");

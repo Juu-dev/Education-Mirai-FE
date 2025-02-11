@@ -23,11 +23,11 @@ const FolderTable = ({searchTerm}: Props) => {
         navigate(`/principal/document/${userId}`);
     };
 
-    const filteredTeachers = users.filter(user =>
+    const filteredTeachers = users.filter((user: any) =>
         user!.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const columns = [
+    const columns: any = [
         { title: "Tên giáo viên", dataIndex: "name", key: "name" },
         {
             title: "Lớp",

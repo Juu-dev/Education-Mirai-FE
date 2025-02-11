@@ -10,7 +10,7 @@ const Class: React.FC = () => {
     const location = useLocation();
     const { classId, className, teacherName, studentCount } = location.state || {};
 
-    const {me} = useAuth()
+    const {me}: {me: any} = useAuth()
 
     return (
         <div className="flex flex-col min-h-screen">

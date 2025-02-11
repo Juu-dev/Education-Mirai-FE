@@ -32,7 +32,7 @@ export default function useCreateApiFormData({
      */
     const handleCreate = async (
         data: FormData
-    ): Promise<boolean | CreateApiResponse> => {
+    ): Promise<{ success: boolean; error: any } | boolean> => {
         try {
             setCreating(true);
             const response: CreateApiResponse = await api(url, {
@@ -42,7 +42,7 @@ export default function useCreateApiFormData({
                 },
             });
 
-            const resp = response?.result || {}
+            const resp: any = response?.result || {}
 
             if (resp?.success) {
                 console.log(successMsg);

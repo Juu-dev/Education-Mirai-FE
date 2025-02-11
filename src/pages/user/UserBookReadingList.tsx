@@ -63,7 +63,7 @@ export const UserBookReadingList = () => {
 
             {/* Book List */}
             <div className="book-list-wrapper mb-4 overflow-auto">
-                <BookList/>
+                <BookList isRefresh={false}/>
             </div>
         </div>
     )

@@ -36,7 +36,7 @@ export const RequestTable = () => {
         sourceTaskApi.setFetched(false)
     }
 
-    const columns = viewMode === "received" ? columnsReceived(handleStatusChange) : columnsSent(handleStatusChange);
+    const columns: any = viewMode === "received" ? columnsReceived(handleStatusChange) : columnsSent(handleStatusChange);
 
     const handlePageChange = (page: number) => {
         sourceTaskApi?.fetchApi(undefined, {
@@ -55,7 +55,7 @@ export const RequestTable = () => {
                         <div className="bg-gray-100 p-2.5 rounded-lg mb-5 font-bold">
                             <Segmented
                                 value={viewMode}
-                                onChange={setViewMode}
+                                onChange={setViewMode as any}
                                 options={[
                                     {label: 'Yêu Cầu Được Giao', value: "received"},
                                     {label: 'Yêu Cầu Gửi Đi', value: "sent"},

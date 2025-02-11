@@ -12,7 +12,7 @@ export const BookDetailPage = () => {
         auth: true,
     });
 
-    const book = booksApi?.data
+    const book: any = booksApi?.data
 
     const handleReadClick = () => {
         if (book?.contentPdfUrl) {
