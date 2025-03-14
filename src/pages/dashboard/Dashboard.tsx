@@ -49,7 +49,7 @@ const Dashboard = () => {
             </div>
 
             {/* Summary Statistics */}
-            <SummaryStatistics/>
+            {/*<SummaryStatistics/>*/}
 
             {/* Upcoming Lessons and Tasks */}
             <div className="grid grid-cols-2 gap-4">
