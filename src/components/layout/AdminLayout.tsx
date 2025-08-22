@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 import { Role } from "../../constants/roles/role";
 
 const AdminLayout = () => {
-    const { me } = useAuth();
+    const { me, logout_CallFromUI } = useAuth();
     const role = me?.role
     const location = useLocation();
 
@@ -16,9 +16,9 @@ const AdminLayout = () => {
         {
             key: "logout",
             label: (
-                <Link to="/login" className="text-red-500">
+                <span onClick={logout_CallFromUI} className="text-red-500">
                     Đăng xuất
-                </Link>
+                </span>
             ),
         },
     ];

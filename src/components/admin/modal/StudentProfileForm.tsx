@@ -1,4 +1,4 @@
-import {Form, Input, Button, Select} from "antd";
+import {Form, Input, Button, Select, message} from "antd";
 import useEditApi from "../../../hooks/useEditApi";
 import React, {useEffect} from "react";
 import useFetchApi from "../../../hooks/useFetchApi";
@@ -9,13 +9,12 @@ interface StudentProfileModalProps {
 }
 
 const StudentProfileForm: React.FC<StudentProfileModalProps> = ({studentData}) => {
-    console.log("studentData: ", studentData)
     const [form] = Form.useForm();
     const classesApi = useFetchApi(classPath)
     const studentEdit = useEditApi({
         url: `/users/student/${studentData.userId}`,
-        successMsg: "Sửa thông tin học sinh thành công!",
-        errorMsg: "Sửa thông tin học sinh thất bại, vui lòng thử lại.",
+        handleSuccess: () => message.success("Sửa thông tin học sinh thành công!"),
+        handleError: () => message.error("Sửa thông tin học sinh thất bại, vui lòng thử lại."),
         fullResp: true,
     })
 

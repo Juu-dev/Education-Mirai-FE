@@ -51,13 +51,19 @@ const removeRefreshToken = () => {
     Cookies.remove('refreshToken');
 };
 
+const clear = () => {
+    removeRefreshToken();
+    removeAccessToken();
+}
+
 const token = {
     getAccessToken,
     setAccessToken,
     removeAccessToken,
-    getRefreshToken,
-    setRefreshToken,
-    removeRefreshToken,
+    // getRefreshToken,
+    // setRefreshToken,
+    // removeRefreshToken,
+    // clear
 };
 
 export default token;

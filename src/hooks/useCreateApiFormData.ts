@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
+import {message} from "antd";
 
 interface UseCreateApiProps {
     url: string;
@@ -45,10 +46,11 @@ export default function useCreateApiFormData({
             const resp: any = response?.result || {}
 
             if (resp?.success) {
-                console.log(successMsg);
+                message.success(successMsg)
             }
 
             if (resp?.error) {
+                message.error(errorMsg)
                 console.error(resp.error);
             }
 

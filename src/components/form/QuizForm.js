@@ -12,8 +12,6 @@ const QUESTION_DEFAULT = {
 const QuizForm = ({ onClose }) => {
     const quiz = useCreateApi({
         url: "/quizzes",
-        successMsg: "Tạo bài quiz thành công!",
-        errorMsg: "Tạo bài quiz thất bại, vui lòng thử lại.",
         fullResp: true,
     });
     const [selectedQuestions, setSelectedQuestions] = useState([]);
@@ -64,7 +62,7 @@ const QuizForm = ({ onClose }) => {
                 })),
             })),
         };
-        await quiz.handleCreate(data);
+        await quiz.handleCreate(data, () => message.success("Tạo bài quiz thành công!"), () => message.error("Tạo bài quiz thất bại, vui lòng thử lại."));
         setQuestions([]);
         setCurrentQuestion(QUESTION_DEFAULT);
         setEditingIndex(null);

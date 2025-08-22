@@ -48,10 +48,9 @@ const UserLayout: React.FC = () => {
         return false;
     };
 
-    const onSearch = (value: string) => console.log("Search:", value);
+    const onSearch = (value: string) => {};
 
     const handleFilterChange = (value: string) => {
-        console.log("Selected Filter:", value);
     };
 
     return (

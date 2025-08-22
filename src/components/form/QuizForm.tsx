@@ -17,8 +17,6 @@ const QUESTION_DEFAULT = {
 const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
     const quiz = useCreateApi({
         url: "/quizzes",
-        successMsg: "Tạo bài quiz thành công!",
-        errorMsg: "Tạo bài quiz thất bại, vui lòng thử lại.",
         fullResp: true,
     })
 
@@ -81,7 +79,9 @@ const QuizForm: React.FC<QuizFormProps> = ({onClose}: QuizFormProps) => {
             })),
         };
 
-        await quiz.handleCreate(data);
+        await quiz.handleCreate(data,
+            () => message.success("Tạo bài quiz thành công!"),
+            () => message.error("Tạo bài quiz thất bại, vui lòng thử lại."));
 
         setQuestions([]);
         setCurrentQuestion(QUESTION_DEFAULT);

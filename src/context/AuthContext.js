@@ -4,15 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import token from '../helpers/token';
 import useCreateApi from '../hooks/useCreateApi';
 import { Role } from '../constants/roles/role';
-import useFetchApi from '../hooks/useFetchApi';
+import { loginPath, logoutPath } from "../helpers/api-params/auth";
 import { message } from "antd";
-import { loginPath, logoutPath, refreshTokenPath } from "../helpers/api-params/auth";
+import useFetchApi from "../hooks/useFetchApi";
 export const AuthContext = createContext({
     isAuthenticated: null,
-    login: () => Promise.resolve(),
-    logout: () => Promise.resolve(),
+    login_CallFromUI: () => Promise.resolve(),
+    logout_CallFromUI: () => Promise.resolve(),
     me: null,
-    saveMe: () => { },
+    setMe: () => {
+    },
     isTeacher: false,
     isStudent: false,
     isPrincipal: false,
@@ -21,12 +22,58 @@ export const AuthContext = createContext({
 });
 const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
-    const loginApi = useCreateApi(loginPath);
-    const logoutApi = useCreateApi(logoutPath);
-    const refreshTokenApi = useFetchApi(refreshTokenPath);
     const [isAuthenticated, setIsAuthenticated] = useState(null);
     const [me, setMe] = useState(null);
-    const saveMe = useCallback((data) => {
+    // const navigateRoleBasedPath = (role: Role) => {
+    //     const rolePaths = {
+    //         [Role.Teacher]: '/teacher/dashboard',
+    //         [Role.Principal]: '/principal/dashboard',
+    //         [Role.Student]: '/student/books',
+    //         [Role.Librarian]: '/librarian/dashboard',
+    //     };
+    //     navigate(rolePaths[role] || '/');
+    // };
+    // =======================
+    // LOGIN
+    // =======================
+    const loginApi = useCreateApi(loginPath);
+    const login_CallFromUI = useCallback(async (data) => {
+        const handleSuccess = (response) => {
+            const { accessToken, user } = response?.result;
+            // save token and user
+            setMe({
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                name: user.name,
+                gender: user.gender,
+                ethnicity: user.ethnicity,
+                dob: user.birthDate,
+                teacher: user.teacher,
+                student: user.student,
+                librarian: user.librarian,
+                class: user.class,
+                role: user.roles[0].role.name
+            });
+            token.setAccessToken(accessToken);
+            setIsAuthenticated(true);
+            // redirect
+            const role = user.roles[0].role.name;
+            // navigateRoleBasedPath(role);
+            navigate("/teacher/dashboard");
+            message.success("Đăng nhập thành công!");
+        };
+        const handleError = (response) => {
+            message.error("Đăng nhập thất bại!");
+        };
+        await loginApi.handleCreate(data, handleSuccess, handleError);
+    }, [navigate]);
+    // =======================
+    // GET ME
+    // =======================
+    const getMeApi = useFetchApi({ url: "/auth/get-me", auth: true, initLoad: false });
+    useEffect(() => {
+        const data = getMeApi.data;
         setMe({
             id: data.id,
             username: data.username,
@@ -39,81 +86,49 @@ const AuthProvider = ({ children }) => {
             student: data.student,
             librarian: data.librarian,
             class: data.class,
-            role: data.roles[0].role.name,
+            role: data.roles?.[0]?.role?.name,
         });
-    }, [refreshTokenApi.data]);
-    const login = useCallback(async (data, onSuccess, onError) => {
-        try {
-            const response = await loginApi.handleCreate(data);
-            const { accessToken, user } = response?.result;
-            message.success('Đăng nhập thành công!');
-            console.log("user: ", user);
-            saveMe(user);
-            token.setAccessToken(accessToken);
-            setIsAuthenticated(true);
-            const role = user.roles[0].role.name;
-            navigateRoleBasedPath(role);
-            onSuccess?.();
-        }
-        catch (error) {
-            onError?.(error);
-            message.error(`Login error:', ${error.message}`);
-        }
-    }, [saveMe, navigate]);
-    const navigateRoleBasedPath = (role) => {
-        const rolePaths = {
-            [Role.Teacher]: '/teacher/dashboard',
-            [Role.Principal]: '/principal/dashboard',
-            [Role.Student]: '/student/books',
-            [Role.Librarian]: '/librarian/dashboard',
+    }, [getMeApi.data]);
+    useEffect(() => {
+        const fetchMe = async () => {
+            if (!me && !!token.getAccessToken()) {
+                await getMeApi.fetchApi();
+            }
         };
-        navigate(rolePaths[role] || '/');
-    };
-    const logout = useCallback(async () => {
-        try {
-            token.removeRefreshToken();
-            await logoutApi.handleCreate({});
-            console.log('Logout successful');
-        }
-        catch (error) {
-            console.error('Logout failed:', error);
-        }
-        finally {
+        fetchMe();
+    }, []);
+    // =======================
+    // LOGOUT
+    // =======================
+    const logoutApi = useCreateApi(logoutPath);
+    const logout_CallFromUI = useCallback(async () => {
+        const handleSuccess = (response) => {
             token.removeAccessToken();
             setIsAuthenticated(false);
             setMe(null);
             navigate('/', { replace: true });
-        }
+            message.success("Đăng xuất thành công!");
+        };
+        const handleError = (response) => {
+            message.error("Đăng xuất thất bại!");
+        };
+        await logoutApi.handleCreate({}, handleSuccess, handleError);
     }, [navigate]);
-    const loginWithToken = useCallback(async () => {
-        try {
-            await refreshTokenApi.fetchApi();
-            saveMe(refreshTokenApi.data?.user);
-            token.setAccessToken(refreshTokenApi.data?.accessToken);
-            setIsAuthenticated(true);
-        }
-        catch (error) {
-            token.removeAccessToken();
-            setIsAuthenticated(false);
-        }
-    }, [saveMe]);
-    useEffect(() => {
-        if (!me) {
-            loginWithToken().then(() => { }, () => { });
-        }
-    }, [loginWithToken, me]);
+    // =======================
+    // CONTEXT
+    // =======================
     const contextValue = useMemo(() => ({
         isAuthenticated,
-        login,
-        logout,
+        login_CallFromUI,
+        logout_CallFromUI,
         me,
-        saveMe,
+        setMe,
         isTeacher: me?.role === Role.Teacher,
         isStudent: me?.role === Role.Student,
         isPrincipal: me?.role === Role.Principal,
         isLibrarian: me?.role === Role.Librarian,
         isUploadableDocument: me?.role === Role.Teacher || me?.role === Role.Librarian
-    }), [isAuthenticated, login, logout, me, saveMe]);
+    }), [isAuthenticated, login_CallFromUI, logout_CallFromUI, me, setMe]);
     return _jsx(AuthContext.Provider, { value: contextValue, children: children });
 };
 export default AuthProvider;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
-import { message } from "antd";
-export default function useDeleteApi({ url, auth = true, messageSuccess = "Delete Successfully!" }) {
+export default function useDeleteApi({ url, auth = true, handleSuccess = () => { }, handleError = () => { } }) {
     const [deleting, setDeleting] = useState(false);
     /**
      * @param {any} data
@@ -17,18 +16,14 @@ export default function useDeleteApi({ url, auth = true, messageSuccess = "Delet
             };
             const resp = await api(url, options, auth);
             if (resp.success) {
-                console.log("Deleted successfully");
-                message.success(messageSuccess);
-                return true;
+                handleSuccess();
             }
             if (resp.error) {
-                console.error(resp.error);
-                message.error(resp.error);
+                handleError();
             }
         }
         catch (e) {
-            message.error(e.response.data.message);
-            console.log("Failed to delete", e);
+            console.error(e.response.data.message);
         }
         finally {
             setDeleting(false);

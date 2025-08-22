@@ -27,8 +27,6 @@ const Request = () => {
 
     const tasksApi = useCreateApi({
         url: "/tasks",
-        successMsg: "Gửi yêu cầu thành công!",
-        errorMsg: "Gủi yêu cầu thất bại, vui lòng thử lại.",
         fullResp: true,
     });
 
@@ -60,7 +58,9 @@ const Request = () => {
             status: "delivered"
         }
 
-        await tasksApi.handleCreate(payload)
+        await tasksApi.handleCreate(payload,
+            () => message.success("Gửi yêu cầu thành công!"),
+            () => message.error("Gủi yêu cầu thất bại, vui lòng thử lại."),)
 
         message.success('Nhiệm vụ đã được gửi thành công!');
         form.resetFields();

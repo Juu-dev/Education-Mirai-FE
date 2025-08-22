@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
-import {message} from "antd";
 
 interface UseEditApiProps {
     url: string;
     defaultState?: boolean | Record<string, boolean>;
     fullResp?: boolean;
     useToast?: boolean;
-    successMsg?: string;
-    errorMsg?: string;
+    handleSuccess?: () => any;
+    handleError?: () => any;
 }
 
 interface EditApiResponse {
@@ -23,8 +22,8 @@ export default function useEditApi({
     defaultState = false,
     fullResp = false,
     useToast = true,
-    successMsg = "Saved successfully",
-    errorMsg = "Failed to save",
+    handleSuccess = () => {},
+    handleError = () => {}
 }: UseEditApiProps) {
     const [editing, setEditing] = useState<boolean | Record<string, boolean>>(
         defaultState
@@ -54,12 +53,11 @@ export default function useEditApi({
             });
 
             if (resp.success && useToast) {
-                message.success(successMsg)
-                console.log(successMsg);
+                handleSuccess()
             }
 
             if (resp.error) {
-                console.error(resp.error);
+                handleError()
             }
 
             if (!resp.success) {
@@ -68,8 +66,7 @@ export default function useEditApi({
 
             return fullResp ? resp : resp.success;
         } catch (e) {
-            message.error(errorMsg)
-            console.error(errorMsg, e);
+            console.error( e);
             return fullResp
                 ? {
                       success: false,

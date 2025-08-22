@@ -13,7 +13,7 @@ import useDeleteApi from "../../hooks/useDeleteApi";
 export const StudentSection = ({ classId }) => {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const { me } = useAuth();
-    const url = `/students/class/${classId || me?.class.id}`;
+    const url = `/students/class/${classId || me?.class?.id}`;
     const studentsFetchApi = useFetchApi({ url: url, auth: true });
     const deleteStudentApi = useDeleteApi({ url: `/users/${selectedStudent?.userId}` });
     const handlePageChange = (page) => {
@@ -44,10 +44,10 @@ export const StudentSection = ({ classId }) => {
         }
     });
     useEffect(() => {
-        if (me?.class.id || classId) {
+        if (me?.class?.id || classId) {
             studentsFetchApi.fetchApi(url);
         }
-    }, [me?.class.id, classId]);
+    }, [me?.class?.id, classId]);
     return (_jsxs(_Fragment, { children: [_jsxs(Card, { className: "flex-grow mb-4 overflow-auto", children: [_jsx(PageTitle, { title: "Danh s\u00E1ch h\u1ECDc sinh", className: "mb-3" }), _jsx(Table, { columns: columnsStudent(studentProfile, confirmDeleteStudent), dataSource: parseStudentData(studentsFetchApi.data), pagination: false, onRow: (record) => ({
                             onClick: () => {
                                 setSelectedStudent(record);

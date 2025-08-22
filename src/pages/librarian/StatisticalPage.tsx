@@ -48,22 +48,16 @@ const StatisticalPage: React.FC = () => {
 
   const bookImportBulk = useCreateApi({
     url: "/books-imports/bulk",
-    successMsg: "Duyệt tài liệu thành công!",
-    errorMsg: "Duyệt tài liệu thất bại, vui lòng thử lại.",
     fullResp: true,
   });
 
   const bookImportBulkOverride = useCreateApi({
     url: "/books-imports/bulk-override",
-    successMsg: "Duyệt tài liệu thành công!",
-    errorMsg: "Duyệt tài liệu thất bại, vui lòng thử lại.",
     fullResp: true,
   });
 
   const bookImport: any = useFetchApi({ url: "/books-imports/pagination", auth: true });
   const overviewBook: any = useFetchApi({ url: "/books-imports/overview", auth: true });
-
-  console.log("overviewBook: ", overviewBook.data)
 
   const handlePageChange = (page: number) => {
     bookImport?.fetchApi(undefined, {
@@ -110,9 +104,13 @@ const StatisticalPage: React.FC = () => {
     }));
 
     if (importMode === 'normal') {
-      await bookImportBulk.handleCreate(data);
+      await bookImportBulk.handleCreate(data,
+          () => message.success("Duyệt tài liệu thành công!"),
+          () => message.error("Duyệt tài liệu thất bại, vui lòng thử lại."),);
     } else if (importMode === 'override') {
-      await bookImportBulkOverride.handleCreate(data);
+      await bookImportBulkOverride.handleCreate(data,
+          () => message.success("Duyệt tài liệu thành công!"),
+          () => message.error("Duyệt tài liệu thất bại, vui lòng thử lại."),);
     }
 
     bookImport.setFetched(false);

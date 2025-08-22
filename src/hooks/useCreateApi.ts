@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
-import {message} from "antd";
 
 interface UseCreateApiProps {
     url: string;
     fullResp?: boolean;
-    successMsg?: string;
-    errorMsg?: string;
     isAuth?: boolean;
     isWithCredentials?: boolean;
 }
@@ -21,8 +18,6 @@ interface CreateApiResponse {
 export default function useCreateApi({
     url,
     fullResp = false,
-    successMsg = "Saved successfully",
-    errorMsg = "Failed to save",
     isAuth = true,
     isWithCredentials = false
 }: UseCreateApiProps) {
@@ -31,10 +26,14 @@ export default function useCreateApi({
 
     /**
      * @param {any} data
+     * @param handleSuccess
+     * @param handleError
      * @returns {Promise<boolean | CreateApiResponse>}
      */
     const handleCreate = async (
-        data: any
+        data: any = {},
+        handleSuccess = (resp: CreateApiResponse) => {},
+        handleError = (resp: CreateApiResponse) => {},
     ): Promise<boolean | CreateApiResponse> => {
         try {
             setCreating(true);
@@ -44,29 +43,20 @@ export default function useCreateApi({
             }, isAuth, isWithCredentials);
 
             if (resp.success) {
-                console.log(successMsg);
+                handleSuccess(resp)
             }
 
             if (resp.error) {
-                console.error(resp.error);
+                handleError(resp)
             }
 
             if (!resp.success) {
-                setErrorData(resp.data);
+                setErrorData(resp?.data);
             }
-
-            message.success(successMsg);
 
             return fullResp ? resp : resp.success;
         } catch (e) {
-            message.error(errorMsg);
-            console.error(errorMsg, e);
-            return fullResp
-                ? {
-                      success: false,
-                      error: e instanceof Error ? e.message : String(e),
-                  }
-                : false;
+            handleError(e);
         } finally {
             setCreating(false);
         }

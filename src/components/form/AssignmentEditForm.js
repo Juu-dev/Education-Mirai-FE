@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Form, Input, Button, Select, InputNumber } from 'antd';
+import { Form, Input, Button, Select, InputNumber, message } from 'antd';
 import { useEffect } from 'react';
 import useFetchApi from "../../hooks/useFetchApi";
 import useAuth from "../../hooks/useAuth";
@@ -14,8 +14,8 @@ const AssignmentEditForm = ({ assignment, onSuccess }) => {
     });
     const exercise = useEditApi({
         url: `/exercises/${assignment?.id}`,
-        successMsg: "Sửa bài tập đã giao thành công!",
-        errorMsg: "Sửa bài tập đã giao thất bại, vui lòng thử lại.",
+        handleSuccess: () => message.success("Sửa bài tập đã giao thành công!"),
+        handleError: () => message.error("Sửa bài tập đã giao thất bại, vui lòng thử lại."),
         fullResp: true,
     });
     const [form] = Form.useForm();

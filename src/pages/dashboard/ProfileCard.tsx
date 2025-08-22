@@ -11,6 +11,7 @@ const roleName = {
 
 export const ProfileCard = () => {
     const {me} = useAuth();
+    console.log("me: ", me)
     return (<Card className="col-span-2 p-4">
         <div className="flex items-center space-x-4">
             <Avatar size={64} src="https://i.pravatar.cc/150?img=3" />

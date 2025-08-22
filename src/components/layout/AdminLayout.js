@@ -6,7 +6,7 @@ import { Avatar, Dropdown, Menu } from "antd";
 import useAuth from "../../hooks/useAuth";
 import { Role } from "../../constants/roles/role";
 const AdminLayout = () => {
-    const { me } = useAuth();
+    const { me, logout_CallFromUI } = useAuth();
     const role = me?.role;
     const location = useLocation();
     const menuItems = [
@@ -14,7 +14,7 @@ const AdminLayout = () => {
         { key: "settings", label: _jsx(Link, { to: "/settings", children: "C\u00E0i \u0111\u1EB7t" }) },
         {
             key: "logout",
-            label: (_jsx(Link, { to: "/login", className: "text-red-500", children: "\u0110\u0103ng xu\u1EA5t" })),
+            label: (_jsx("span", { onClick: logout_CallFromUI, className: "text-red-500", children: "\u0110\u0103ng xu\u1EA5t" })),
         },
     ];
     const sidebarItems = role === Role.Librarian

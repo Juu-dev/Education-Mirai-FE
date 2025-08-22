@@ -35,10 +35,10 @@ const UploadButton: React.FC<UploadButtonProps> = ({ onUploadSuccess }) => {
 
             const success = await updateDocument(formData);
             if (success) {
-                message.success("Document uploaded successfully.");
+                message.success("Tài liệu được tải thành công");
                 onUploadSuccess();
             } else {
-                message.error("Document upload failed.");
+                message.error("Tài liệu tải thất bại");
             }
 
             setFile(null);

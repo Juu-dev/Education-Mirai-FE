@@ -37,7 +37,6 @@ export const columnsReceived = (handleStatusChange) => ([
                 key: status.value,
                 label: (_jsx("span", { className: `px-2 py-1 whitespace-nowrap rounded ${status.color}`, children: status.label })),
             }));
-            console.log("status: ", statuses.find((e) => e.label === status)?.color);
             return (_jsx(Dropdown, { menu: { items: menuItems, onClick: (e) => handleStatusChange(e.key) }, trigger: ['click'], children: _jsx("button", { className: `rounded whitespace-nowrap shadow-sm hover:shadow focus:outline-none ${statuses.find((e) => e.label === status)?.color}`, children: _jsx("span", { children: status }) }) }));
         },
     },
@@ -78,7 +77,6 @@ export const columnsSent = (handleStatusChange) => ([
                 key: status.value,
                 label: (_jsx("span", { className: `px-2 py-1 whitespace-nowrap rounded ${status.color}`, children: status.label })),
             }));
-            console.log("status: ", statuses.find((e) => e.label === status)?.color);
             return (_jsx(Dropdown, { menu: { items: menuItems, onClick: (e) => handleStatusChange(e.key) }, trigger: ['click'], children: _jsx("button", { className: `rounded whitespace-nowrap shadow-sm hover:shadow focus:outline-none ${statuses.find((e) => e.label === status)?.color}`, children: _jsx("span", { children: status }) }) }));
         },
     },

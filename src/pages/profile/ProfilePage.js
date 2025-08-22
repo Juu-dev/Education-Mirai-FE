@@ -11,10 +11,10 @@ const ProfilePage = () => {
     const [user, setUser] = useState(null);
     const usersProfile = useEditApi({
         url: `/users/profile`,
-        successMsg: "Sửa bài tập đã giao thành công!",
-        errorMsg: "Sửa bài tập đã giao thất bại, vui lòng thử lại.",
         fullResp: true,
     });
+    // () => message.success("Sửa bài tập đã giao thành công!"),
+    // () => message.success("Sửa bài tập đã giao thất bại, vui lòng thử lại."),
     // Khi có dữ liệu người dùng, cập nhật state
     useEffect(() => {
         if (me) {
@@ -22,7 +22,6 @@ const ProfilePage = () => {
         }
     }, [me]);
     const handleSubmit = async (values) => {
-        console.log('Cập nhật thông tin:', values);
         const data = {
             avatar: "",
             username: values.username,

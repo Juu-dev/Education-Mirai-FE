@@ -54,8 +54,6 @@ export const columnsReceived: (handleStatusChange: any) => ColumnsType<Task> = (
                 ),
             }));
 
-            console.log("status: ", statuses.find((e) => e.label === status)?.color)
-
             return (
                 <Dropdown
                     menu={{ items: menuItems, onClick: (e) => handleStatusChange(e.key) }}
@@ -111,8 +109,6 @@ export const columnsSent: (handleStatusChange: any) => ColumnsType<Task> = (hand
                   </span>
                 ),
             }));
-
-            console.log("status: ", statuses.find((e) => e.label === status)?.color)
 
             return (
                 <Dropdown

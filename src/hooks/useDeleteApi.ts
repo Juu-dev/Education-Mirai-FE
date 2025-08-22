@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
-import {message} from "antd";
 
 interface UseDeleteApiProps {
     url: string;
     auth?: boolean;
-    messageSuccess?: string;
+    handleSuccess?: () => any;
+    handleError?: () => any;
 }
 
 interface ApiResponse {
@@ -15,7 +15,12 @@ interface ApiResponse {
     data?: any; // Có thể tùy chỉnh theo phản hồi của API
 }
 
-export default function useDeleteApi({ url, auth = true, messageSuccess = "Delete Successfully!" }: UseDeleteApiProps) {
+export default function useDeleteApi({
+    url,
+    auth = true,
+    handleSuccess = () => {},
+    handleError = () => {}
+}: UseDeleteApiProps) {
     const [deleting, setDeleting] = useState<boolean>(false);
 
     /**
@@ -35,18 +40,14 @@ export default function useDeleteApi({ url, auth = true, messageSuccess = "Delet
             const resp: ApiResponse = await api(url, options as any, auth);
 
             if (resp.success) {
-                console.log("Deleted successfully");
-                message.success(messageSuccess);
-                return true;
+                handleSuccess()
             }
 
             if (resp.error) {
-                console.error(resp.error);
-                message.error(resp.error);
+                handleError()
             }
         } catch (e) {
-            message.error(e.response.data.message);
-            console.log("Failed to delete", e);
+            console.error(e.response.data.message);
         } finally {
             setDeleting(false);
         }

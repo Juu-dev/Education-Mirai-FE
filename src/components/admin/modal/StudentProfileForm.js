@@ -1,17 +1,16 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { Form, Input, Button, Select } from "antd";
+import { Form, Input, Button, Select, message } from "antd";
 import useEditApi from "../../../hooks/useEditApi";
 import { useEffect } from "react";
 import useFetchApi from "../../../hooks/useFetchApi";
 import { classPath } from "../../../helpers/api-params/auth";
 const StudentProfileForm = ({ studentData }) => {
-    console.log("studentData: ", studentData);
     const [form] = Form.useForm();
     const classesApi = useFetchApi(classPath);
     const studentEdit = useEditApi({
         url: `/users/student/${studentData.userId}`,
-        successMsg: "Sửa thông tin học sinh thành công!",
-        errorMsg: "Sửa thông tin học sinh thất bại, vui lòng thử lại.",
+        handleSuccess: () => message.success("Sửa thông tin học sinh thành công!"),
+        handleError: () => message.error("Sửa thông tin học sinh thất bại, vui lòng thử lại."),
         fullResp: true,
     });
     const handleFinish = async (values) => {

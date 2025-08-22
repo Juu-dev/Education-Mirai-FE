@@ -16,19 +16,27 @@ const API_PATH = {
     exercise: {
         list: "/exercises",
         pagination: "/exercises/pagination/class"
+    },
+    task: {
+        send: "/tasks/sent-mode",
+        receive: "/tasks/received-mode"
     }
 };
 export const loginPath = {
     url: API_PATH.login,
     fullResp: true,
-    isWithCredentials: true
+    isWithCredentials: true,
 };
 export const logoutPath = {
-    url: API_PATH.logout
+    url: API_PATH.logout,
+};
+export const getMePath = {
+    url: API_PATH.logout,
 };
 export const refreshTokenPath = {
     url: API_PATH.refreshToken,
-    isWithCredentials: true
+    isWithCredentials: true,
+    skipLogBug: true,
 };
 export const registerPath = {
     url: API_PATH.registerStudent,
@@ -97,7 +105,7 @@ export const exerciseCreatePath = {
     fullResp: true,
 };
 export const sentTaskPath = {
-    url: "/tasks/sent-mode",
+    url: API_PATH.task.send,
     auth: true,
     initQueries: {
         pageSize: 5
@@ -113,7 +121,7 @@ export const sentTaskPath = {
     }))
 };
 export const receivedTaskPath = {
-    url: "/tasks/received-mode",
+    url: API_PATH.task.receive,
     auth: true,
     initQueries: {
         pageSize: 5

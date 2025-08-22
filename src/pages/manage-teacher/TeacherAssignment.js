@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { Button, Card, Col, Row, Select } from 'antd';
+import { Button, Card, Col, message, Row, Select } from 'antd';
 import useFetchApi from "../../hooks/useFetchApi";
 import { useEffect, useState } from "react";
 import useCreateApi from "../../hooks/useCreateApi";
@@ -8,8 +8,6 @@ const TeacherAssignment = () => {
     const [teacherCount, setTeacherCount] = useState({});
     const assignTeachers = useCreateApi({
         url: "/users/assign-teacher",
-        successMsg: "Phân bổ giáo viên thành công!",
-        errorMsg: "Phân bổ giáo viên thất bại, vui lòng thử lại.",
         fullResp: true,
     });
     const handleTeacherChange = (classId, teacherId) => {
@@ -61,7 +59,7 @@ const TeacherAssignment = () => {
         setTeacherCount(count);
     }, [assignedTeachers, classes.data]);
     const saveAssignments = async (assignments) => {
-        await assignTeachers.handleCreate({ school: assignments });
+        await assignTeachers.handleCreate({ school: assignments }, () => message.success("Phân bổ giáo viên thành công!"), () => message.error("Phân bổ giáo viên thất bại, vui lòng thử lại."));
         classes.setFetched(false);
     };
     return (_jsxs("div", { className: "p-4 space-y-4", children: [_jsx(Row, { gutter: 16, children: _jsx(Col, { span: 24, style: { textAlign: "right", marginBottom: "16px" }, children: _jsx(Button, { type: "primary", onClick: () => {

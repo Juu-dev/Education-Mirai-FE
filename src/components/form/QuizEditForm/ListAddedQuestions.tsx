@@ -19,8 +19,6 @@ const ListAddedQuestions: React.FC<ListAddedQuestionsProps> = ({
    editQuestion,
    editingIndex
 }: ListAddedQuestionsProps) => {
-    console.log("selectedQuestions: ", selectedQuestions)
-    console.log("editingIndex: ", editingIndex)
     const isFocusText = (index: number) => editingIndex === index || selectedQuestions.includes(index)
     return (
         <>

@@ -7,14 +7,14 @@ const { Title, Text, Link } = Typography;
 const Login = () => {
     const navigate = useNavigate();
     const [savePassword, setSavePassword] = useState(false);
-    const { login } = useAuth();
+    const { login_CallFromUI } = useAuth();
     const handleLogin = async (values) => {
         const { email, password } = values;
         if (!email || !password) {
             message.error('Vui lòng nhập đủ email, mật khẩu và chọn vai trò.');
             return;
         }
-        await login({ username: email, password });
+        await login_CallFromUI({ username: email, password });
     };
     return (_jsx("div", { className: "flex items-center justify-center min-h-screen bg-gray-100 w-screen", children: _jsxs("div", { className: "flex shadow-lg rounded", children: [_jsx("div", { className: "flex w-96", children: _jsx("img", { src: "src/assets/logo/login.png", alt: "Logo", className: "w-full h-full object-contain" }) }), _jsxs("div", { className: "bg-white p-8 rounded shadow-lg w-96", children: [_jsxs("div", { className: "flex flex-col items-start mb-4", children: [_jsx(Title, { level: 3, style: { color: '#1d4ed8' }, children: "Xin ch\u00E0o !" }), _jsxs(Text, { type: "secondary", children: ["B\u1EA1n ch\u01B0a c\u00F3 t\u00E0i kho\u1EA3n?", ' ', _jsx(Link, { onClick: () => navigate('/signup'), children: "\u0110\u0103ng k\u00FD" })] })] }), _jsx(Title, { level: 4, style: { textAlign: 'center', color: '#1d4ed8' }, children: "\u0110\u0103ng nh\u1EADp" }), _jsxs(Form, { layout: "vertical", onFinish: handleLogin, initialValues: {
                                 email: localStorage.getItem('email') || '',

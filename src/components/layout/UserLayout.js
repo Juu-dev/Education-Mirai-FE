@@ -36,9 +36,8 @@ const UserLayout = () => {
         }
         return false;
     };
-    const onSearch = (value) => console.log("Search:", value);
+    const onSearch = (value) => { };
     const handleFilterChange = (value) => {
-        console.log("Selected Filter:", value);
     };
     return (_jsx("div", { className: "flex min-h-screen w-screen", children: _jsxs("div", { className: "flex flex-col flex-grow", children: [_jsxs("div", { className: "bg-white shadow p-4 flex justify-between items-center", children: [_jsx("div", { children: _jsx("img", { src: logo, alt: "logo", className: "h-8" }) }), _jsxs("nav", { className: "space-x-6", children: [_jsx("a", { href: "/student/books", className: `${isActive("/student/books")
                                         ? "text-blue-500 font-bold"

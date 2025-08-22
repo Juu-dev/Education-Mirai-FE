@@ -40,8 +40,6 @@ export const UserBookReadingList = () => {
 
     // Handle filter change
     const handleFilterChange = (value: string, filterKey: string) => {
-        console.log(`Selected ${filterKey}:`, value);
-
         // You can update your book filtering logic here
         // Example: Filter by author or genre based on filterKey and value
         // let updatedBooks = books;

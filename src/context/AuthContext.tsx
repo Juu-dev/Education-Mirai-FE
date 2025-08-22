@@ -1,79 +1,21 @@
-import { AxiosError } from 'axios';
-import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {createContext, useCallback, useEffect, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 import token from '../helpers/token';
 import useCreateApi from '../hooks/useCreateApi';
-import { Role } from '../constants/roles/role';
-import useFetchApi from '../hooks/useFetchApi';
+import {Role} from '../constants/roles/role';
+import {loginPath, logoutPath} from "../helpers/api-params/auth";
+import {IAuthContext, IAuthProviderProps, ILoginData, IUser} from "./IAuthContext";
 import {message} from "antd";
-import {loginPath, logoutPath, refreshTokenPath} from "../helpers/api-params/auth";
-
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  name: string;
-  dob: string;
-  ethnicity: string;
-  gender: string;
-  teacher?: {
-    id: string;
-    userId: string;
-    classId: string;
-    metadataUrl: string;
-    dob: string;
-    position: string;
-    createdAt: string;
-    updatedAt: string;
-
-  };
-  librarian?: object;
-  student?: object;
-  class: {
-    id: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-    _count: {
-      user: number
-    }
-  }
-  role: string;
-}
-
-interface LoginData {
-  username: string;
-  password: string;
-}
-
-interface IAuthContext {
-  isAuthenticated: boolean | null;
-  login: (
-      data: LoginData,
-      onSuccess?: () => void,
-      onError?: (error: AxiosError<unknown>) => void,
-  ) => Promise<void>;
-  logout: () => Promise<void>;
-  me: User | null;
-  saveMe: (data: User) => void;
-  isTeacher: boolean,
-  isStudent: boolean,
-  isPrincipal: boolean,
-  isLibrarian: boolean,
-  isUploadableDocument: boolean
-}
-
-interface IAuthProviderProps {
-  children?: React.ReactNode;
-}
+import useFetchApi from "../hooks/useFetchApi";
 
 export const AuthContext = createContext<IAuthContext>({
   isAuthenticated: null,
-  login: () => Promise.resolve(),
-  logout: () => Promise.resolve(),
+    login_CallFromUI: () => Promise.resolve(),
+    logout_CallFromUI: () => Promise.resolve(),
   me: null,
-  saveMe: () => {},
+    setMe: () => {
+    },
   isTeacher: false,
   isStudent: false,
   isPrincipal: false,
@@ -81,123 +23,133 @@ export const AuthContext = createContext<IAuthContext>({
   isUploadableDocument: false,
 });
 
-interface IAuthProviderProps {
-  children?: React.ReactNode;
-}
-
 const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
+    const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
+    const [me, setMe] = useState<IUser | null>(null);
 
-  const loginApi = useCreateApi(loginPath);
-  const logoutApi = useCreateApi(logoutPath);
-  const refreshTokenApi: any = useFetchApi(refreshTokenPath);
+    // const navigateRoleBasedPath = (role: Role) => {
+    //     const rolePaths = {
+    //         [Role.Teacher]: '/teacher/dashboard',
+    //         [Role.Principal]: '/principal/dashboard',
+    //         [Role.Student]: '/student/books',
+    //         [Role.Librarian]: '/librarian/dashboard',
+    //     };
+    //     navigate(rolePaths[role] || '/');
+    // };
 
-  const [isAuthenticated, setIsAuthenticated] = useState<IAuthContext['isAuthenticated']>(null);
-  const [me, setMe] = useState<User | null>(null);
+    // =======================
+    // LOGIN
+    // =======================
+    const loginApi = useCreateApi(loginPath);
 
-  const saveMe = useCallback((data: any) => {
-    setMe({
-      id: data.id,
-      username: data.username,
-      email: data.email,
-      name: data.name,
-      gender: data.gender,
-      ethnicity: data.ethnicity,
-      dob: data.birthDate,
-      teacher: data.teacher,
-      student: data.student,
-      librarian: data.librarian,
-      class: data.class,
-      role: data.roles[0].role.name,
-    });
-  }, [refreshTokenApi.data]);
+    const login_CallFromUI: IAuthContext['login_CallFromUI'] = useCallback(
+        async (data: ILoginData) => {
+            const handleSuccess = (response: any) => {
+                const {accessToken, user} = response?.result;
+                // save token and user
+                setMe({
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    name: user.name,
+                    gender: user.gender,
+                    ethnicity: user.ethnicity,
+                    dob: user.birthDate,
+                    teacher: user.teacher,
+                    student: user.student,
+                    librarian: user.librarian,
+                    class: user.class,
+                    role: user.roles[0].role.name
+                })
 
-  const login: IAuthContext['login'] = useCallback(
-      async (data: LoginData, onSuccess, onError) => {
-        try {
-          const response: any = await loginApi.handleCreate(data);
-          const { accessToken, user } = response?.result;
-          message.success('Đăng nhập thành công!')
+                token.setAccessToken(accessToken);
+                setIsAuthenticated(true);
+                // redirect
+                const role = user.roles[0].role.name;
+                // navigateRoleBasedPath(role);
+                navigate("/teacher/dashboard")
+                message.success("Đăng nhập thành công!");
+            }
 
-          console.log("user: ", user)
+            const handleError = (response: any) => {
+                message.error("Đăng nhập thất bại!");
+            }
 
-          saveMe(user as User);
-          token.setAccessToken(accessToken);
-          setIsAuthenticated(true);
+            await loginApi.handleCreate(data, handleSuccess, handleError);
+        },
+        [navigate]
+    );
 
-          const role = user.roles[0].role.name;
-          navigateRoleBasedPath(role);
+    // =======================
+    // GET ME
+    // =======================
+    const getMeApi = useFetchApi({url: "/auth/get-me", auth: true, initLoad: false});
 
-          onSuccess?.();
-        } catch (error) {
-          onError?.(error as AxiosError<unknown>);
-          message.error(`Login error:', ${(error as AxiosError).message}`)
+    useEffect(() => {
+        const data: any = getMeApi.data
+        setMe({
+            id: data.id,
+            username: data.username,
+            email: data.email,
+            name: data.name,
+            gender: data.gender,
+            ethnicity: data.ethnicity,
+            dob: data.birthDate,
+            teacher: data.teacher,
+            student: data.student,
+            librarian: data.librarian,
+            class: data.class,
+            role: data.roles?.[0]?.role?.name,
+        });
+    }, [getMeApi.data]);
+
+    useEffect(() => {
+        const fetchMe = async () => {
+            if (!me && !!token.getAccessToken()) {
+                await getMeApi.fetchApi();
+            }
+        };
+
+        fetchMe();
+    }, []);
+
+
+    // =======================
+    // LOGOUT
+    // =======================
+    const logoutApi = useCreateApi(logoutPath);
+    const logout_CallFromUI = useCallback(async () => {
+        const handleSuccess = (response: any) => {
+            token.removeAccessToken();
+            setIsAuthenticated(false);
+            setMe(null);
+            navigate('/', {replace: true});
+            message.success("Đăng xuất thành công!");
         }
-      },
-      [saveMe, navigate]
-  );
-
-  const navigateRoleBasedPath = (role: Role) => {
-    const rolePaths = {
-      [Role.Teacher]: '/teacher/dashboard',
-      [Role.Principal]: '/principal/dashboard',
-      [Role.Student]: '/student/books',
-      [Role.Librarian]: '/librarian/dashboard',
-    };
-    navigate(rolePaths[role] || '/');
-  };
-
-  const logout = useCallback(async () => {
-    try {
-      token.removeRefreshToken();
-      await logoutApi.handleCreate({});
-      console.log('Logout successful');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      token.removeAccessToken();
-      setIsAuthenticated(false);
-      setMe(null);
-      navigate('/', { replace: true });
-    }
+        const handleError = (response: any) => {
+            message.error("Đăng xuất thất bại!");
+        }
+        await logoutApi.handleCreate({}, handleSuccess, handleError);
   }, [navigate]);
 
-  const loginWithToken = useCallback(async () => {
-    try {
-      await refreshTokenApi.fetchApi();
-
-      saveMe(refreshTokenApi.data?.user as User);
-      token.setAccessToken(refreshTokenApi.data?.accessToken);
-      setIsAuthenticated(true);
-    } catch (error) {
-      token.removeAccessToken();
-      setIsAuthenticated(false);
-    }
-  }, [saveMe]);
-
-  useEffect(() => {
-    if (!me) {
-      loginWithToken().then(
-          () => {},
-          () => {},
-      );
-    }
-  }, [loginWithToken, me]);
-
-  const contextValue = useMemo(
+    // =======================
+    // CONTEXT
+    // =======================
+    const contextValue = useMemo(
       () => ({
         isAuthenticated,
-        login,
-        logout,
+          login_CallFromUI,
+          logout_CallFromUI,
         me,
-        saveMe,
+          setMe,
         isTeacher: me?.role === Role.Teacher,
         isStudent: me?.role === Role.Student,
         isPrincipal: me?.role === Role.Principal,
         isLibrarian: me?.role === Role.Librarian,
         isUploadableDocument: me?.role === Role.Teacher || me?.role === Role.Librarian
       }),
-      [isAuthenticated, login, logout, me, saveMe]
+      [isAuthenticated, login_CallFromUI, logout_CallFromUI, me, setMe]
   );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

@@ -6,7 +6,7 @@ import queryString from "query-string";
  * @param {UseFetchApiProps<T>} props - Configuration options for fetching API
  * @returns {Object} - Returns various states and methods to handle API requests
  */
-export default function useFetchApi({ url, defaultData = [], initLoad = true, presentData = (data) => data, initQueries = {}, successCallback = () => { }, method = "GET", postData = {}, auth = true, isWithCredentials = false, retryCount = 3, retryDelay = 1000, }) {
+export default function useFetchApi({ url, defaultData = [], initLoad = true, presentData = (data) => data, initQueries = {}, successCallback = () => { }, method = "GET", postData = {}, auth = true, isWithCredentials = false, retryCount = 0, retryDelay = 1000, skipLogBug = false }) {
     const [loading, setLoading] = useState(initLoad);
     const [fetched, setFetched] = useState(false);
     const [data, setData] = useState(defaultData);
@@ -47,15 +47,17 @@ export default function useFetchApi({ url, defaultData = [], initLoad = true, pr
             }
         }
         catch (e) {
-            console.error("Error fetching data:", e.message);
-            if (retriesLeft > 0) {
-                console.log(`Retrying... (${retriesLeft} retries left)`);
-                setTimeout(() => {
-                    fetchApi(apiUrl, { params }, retriesLeft - 1);
-                }, retryDelay);
-            }
-            else {
-                console.error("Max retries reached. Could not fetch data.");
+            if (!skipLogBug) {
+                console.error("Error fetching data:", e.message);
+                if (retriesLeft > 0) {
+                    console.log(`Retrying... (${retriesLeft} retries left)`);
+                    setTimeout(() => {
+                        fetchApi(apiUrl, { params }, retriesLeft - 1);
+                    }, retryDelay);
+                }
+                else {
+                    console.error("Max retries reached. Could not fetch data.");
+                }
             }
         }
         finally {

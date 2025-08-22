@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
-import { message } from "antd";
-export default function useEditApi({ url, defaultState = false, fullResp = false, useToast = true, successMsg = "Saved successfully", errorMsg = "Failed to save", }) {
+export default function useEditApi({ url, defaultState = false, fullResp = false, useToast = true, handleSuccess = () => { }, handleError = () => { } }) {
     const [editing, setEditing] = useState(defaultState);
     const [errorData, setErrorData] = useState(null);
     /**
@@ -20,11 +19,10 @@ export default function useEditApi({ url, defaultState = false, fullResp = false
                 method: "PATCH",
             });
             if (resp.success && useToast) {
-                message.success(successMsg);
-                console.log(successMsg);
+                handleSuccess();
             }
             if (resp.error) {
-                console.error(resp.error);
+                handleError();
             }
             if (!resp.success) {
                 setErrorData(resp.data);
@@ -32,8 +30,7 @@ export default function useEditApi({ url, defaultState = false, fullResp = false
             return fullResp ? resp : resp.success;
         }
         catch (e) {
-            message.error(errorMsg);
-            console.error(errorMsg, e);
+            console.error(e);
             return fullResp
                 ? {
                     success: false,

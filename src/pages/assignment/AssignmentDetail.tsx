@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchApi from "../../hooks/useFetchApi";
-import { Button, Card, Radio, Space, Typography } from "antd";
+import {Button, Card, message, Radio, Space, Typography} from "antd";
 import { useCountdown } from "../../hooks/useCountdown";
 import useAuth from "../../hooks/useAuth";
 import useCreateApi from "../../hooks/useCreateApi";
@@ -21,8 +21,6 @@ export const AssignmentDetail = () => {
 
     const answersApi = useCreateApi({
         url: "/answers",
-        successMsg: "Gửi đáp án thành công!",
-        errorMsg: "Gửi đáp án thất bại, vui lòng thử lại.",
         fullResp: true,
     });
 
@@ -55,7 +53,9 @@ export const AssignmentDetail = () => {
             })),
         };
 
-        const response: any = await answersApi.handleCreate(payload);
+        const response: any = await answersApi.handleCreate(payload,
+            () => message.success("Gửi đáp án thành công!"),
+            () => message.error("Gửi đáp án thất bại, vui lòng thử lại."));
 
         if (response?.result) {
             navigate("/student/result", {

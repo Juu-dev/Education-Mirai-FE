@@ -13,7 +13,7 @@ import useDeleteApi from "../../hooks/useDeleteApi";
 export const StudentSection = ({classId}) => {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const {me} = useAuth()
-    const url = `/students/class/${classId || me?.class.id}`
+    const url = `/students/class/${classId || me?.class?.id}`
     const studentsFetchApi = useFetchApi({url: url, auth: true})
     const deleteStudentApi = useDeleteApi({url: `/users/${selectedStudent?.userId}`})
 
@@ -59,10 +59,10 @@ export const StudentSection = ({classId}) => {
     });
 
     useEffect(() => {
-        if (me?.class.id || classId) {
+        if (me?.class?.id || classId) {
             studentsFetchApi.fetchApi(url)
         }
-    }, [me?.class.id, classId]);
+    }, [me?.class?.id, classId]);
 
     return (
         <>

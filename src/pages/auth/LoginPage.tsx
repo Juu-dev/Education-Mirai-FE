@@ -15,7 +15,7 @@ const { Title, Text, Link } = Typography;
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [savePassword, setSavePassword] = useState<boolean>(false);
-  const {login} = useAuth()
+  const {login_CallFromUI} = useAuth()
 
   const handleLogin = async (values: any) => {
     const { email, password } = values;
@@ -25,7 +25,7 @@ const Login: React.FC = () => {
       return;
     }
 
-    await login({username: email, password})
+    await login_CallFromUI({username: email, password})
   };
 
   return (

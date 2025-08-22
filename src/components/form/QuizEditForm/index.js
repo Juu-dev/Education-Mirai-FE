@@ -15,11 +15,10 @@ const QUESTION_DEFAULT = {
     ],
 };
 const QuizEditForm = ({ quiz, onSuccess }) => {
-    console.log("quiz: ", quiz);
     const quizEdit = useEditApi({
         url: `/quizzes/${quiz?.id}`,
-        successMsg: "Sửa bài quiz thành công!",
-        errorMsg: "Sửa bài quiz thất bại, vui lòng thử lại.",
+        handleSuccess: () => message.success("Sửa bài quiz thành công!"),
+        handleError: () => message.error("Sửa bài quiz thất bại, vui lòng thử lại."),
         fullResp: true,
     });
     const [selectedQuestions, setSelectedQuestions] = useState([]);

@@ -14,9 +14,9 @@ const uploadProps: UploadProps = {
   },
   onChange(info) {
     if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
+      message.success(`File ${info.file.name} được upload thành công`);
     } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      message.error(`File ${info.file.name} upload thất bại.`);
     }
   },
 };

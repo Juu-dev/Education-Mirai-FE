@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../helpers/api";
+import { message } from "antd";
 export default function useCreateApiFormData({ url, fullResp = false, successMsg = "Saved successfully", errorMsg = "Failed to save", }) {
     const [creating, setCreating] = useState(false);
     const [errorData, setErrorData] = useState(null);
@@ -17,9 +18,10 @@ export default function useCreateApiFormData({ url, fullResp = false, successMsg
             });
             const resp = response?.result || {};
             if (resp?.success) {
-                console.log(successMsg);
+                message.success(successMsg);
             }
             if (resp?.error) {
+                message.error(errorMsg);
                 console.error(resp.error);
             }
             if (!resp?.success) {

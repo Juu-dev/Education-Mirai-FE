@@ -1,4 +1,4 @@
-import {Button, Card, Modal, Pagination, Segmented, Space, Table} from "antd";
+import {Button, Card, message, Modal, Pagination, Segmented, Space, Table} from "antd";
 import {useState} from "react";
 import {columnsReceived, columnsSent} from "./column";
 import useFetchApi from "../../hooks/useFetchApi";
@@ -15,9 +15,9 @@ export const RequestTable = () => {
 
     const taskEdit = useEditApi({
         url: `/tasks/${selectedTask?.id}`,
-        successMsg: "Sửa trạng thái yêu cầu thành công!",
-        errorMsg: "Sửa trạng thái yêu cầu thất bại, vui lòng thử lại.",
         fullResp: true,
+        handleSuccess: () => message.success("Sửa trạng thái yêu cầu thành công!"),
+        handleError: () => message.error("Sửa trạng thái yêu cầu thất bại, vui lòng thử lại.")
     })
 
     const handleRowClick = (task: any) => {

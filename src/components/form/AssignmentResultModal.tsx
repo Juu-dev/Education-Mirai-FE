@@ -37,7 +37,6 @@ const AssignmentResultModal = () => {
     const viewResults = () => {
         // Simulate viewing the answers
         setIsModalVisible(false);
-        console.log("Viewing answers...");
     };
 
     return (

@@ -1,4 +1,4 @@
-import {Button, Card, Col, Row, Select} from 'antd';
+import {Button, Card, Col, message, Row, Select} from 'antd';
 import useFetchApi from "../../hooks/useFetchApi";
 import {useEffect, useState} from "react";
 import useCreateApi from "../../hooks/useCreateApi";
@@ -9,8 +9,6 @@ const TeacherAssignment = () => {
 
     const assignTeachers = useCreateApi({
         url: "/users/assign-teacher",
-        successMsg: "Phân bổ giáo viên thành công!",
-        errorMsg: "Phân bổ giáo viên thất bại, vui lòng thử lại.",
         fullResp: true,
     });
 
@@ -68,7 +66,9 @@ const TeacherAssignment = () => {
     }, [assignedTeachers, classes.data]);
 
     const saveAssignments = async (assignments: { classId: string; teacherId: string }[]) => {
-        await assignTeachers.handleCreate({school: assignments});
+        await assignTeachers.handleCreate({school: assignments},
+            () => message.success("Phân bổ giáo viên thành công!"),
+            () => message.error("Phân bổ giáo viên thất bại, vui lòng thử lại."),);
         classes.setFetched(false);
     };
 
